@@ -1,7 +1,12 @@
-
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:videos_sharing/pages/settings.dart';
+import 'package:videos_sharing/widgets/player.dart';
 
 class HomePage extends StatefulWidget {
+  HomePage({Key key, @required this.sharedPreferences,@required this.onThemeChange}) : super(key: key);
+  final SharedPreferences sharedPreferences;
+  final VoidCallback onThemeChange;
   @override
   State<StatefulWidget> createState() {
     return _HomePageState();
@@ -12,8 +17,42 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(child: Text("p2p"),)
+      appBar: AppBar(
+        title: Text("Media list"),
+        actions: <Widget>[
+          PopupMenuButton<int>(
+            itemBuilder: (context) => <PopupMenuEntry<int>>[
+              PopupMenuItem(
+                value: 1,
+                child: Text("Settings"),
+              ),
+            ],
+            onSelected: (value) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SettingsPage(sharedPreferences: widget.sharedPreferences, onThemeChange: widget.onThemeChange,),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+      body: Center(
+        child: RaisedButton(
+            child: Text("Blue"),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => VideoPlayerPage(
+                    videoUrl:
+                        "https://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4",
+                  ),
+                ),
+              );
+            }),
+      ),
     );
   }
 }
-

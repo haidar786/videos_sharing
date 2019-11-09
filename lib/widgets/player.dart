@@ -23,9 +23,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Video Demo',
-      home: Scaffold(
+    return Scaffold(
         body: Center(
           child: _controller.value.initialized
               ? AspectRatio(
@@ -46,8 +44,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
             _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
           ),
         ),
-      ),
-    );
+      );
   }
 
   @override
