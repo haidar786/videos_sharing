@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
@@ -10,46 +13,64 @@ class VideoPlayerPage extends StatefulWidget {
 
 class _VideoPlayerPageState extends State<VideoPlayerPage> {
   VideoPlayerController _controller;
+  ChewieController _chewieController;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-      });
+    _controller = VideoPlayerController.network(widget.videoUrl);
+//      ..initialize().then((_) {
+//        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+//        setState(() {});
+//      });
+    _chewieController = ChewieController(
+      videoPlayerController: _controller,
+      autoPlay: true,
+      looping: true,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
+    var aspectRatio;
+    if (mediaQuery.orientation == Orientation.portrait) {
+      _chewieController.exitFullScreen();
+      aspectRatio = 1.5;
+    } else {
+      _chewieController.enterFullScreen();
+      aspectRatio = mediaQuery.size.aspectRatio;
+    }
+
     return Scaffold(
-        body: Center(
-          child: _controller.value.initialized
-              ? AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
-                )
-              : Container(),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            setState(() {
-              _controller.value.isPlaying
-                  ? _controller.pause()
-                  : _controller.play();
-            });
-          },
-          child: Icon(
-            _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+      body: Stack(
+        alignment: Alignment.topCenter,
+        children: <Widget>[
+          AspectRatio(
+            aspectRatio: aspectRatio,
+            child: Container(
+              color: Colors.black,
+            ),
           ),
-        ),
-      );
+          AspectRatio(
+            aspectRatio: aspectRatio,
+            child: Center(
+              child: _controller.value.initialized
+                  ? Chewie(
+                      controller: _chewieController,
+                    )
+                  : CircularProgressIndicator(),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   void dispose() {
     super.dispose();
     _controller.dispose();
+    _chewieController.dispose();
   }
 }

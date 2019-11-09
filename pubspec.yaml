@@ -26,6 +26,7 @@ dependencies:
   video_player: ^0.10.2+5
   flutter_torrent_streamer: ^0.0.2
   shared_preferences: ^0.5.4+3
+  chewie: ^0.9.8+1
 
 dev_dependencies:
   flutter_test:

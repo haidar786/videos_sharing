@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
                 MaterialPageRoute(
                   builder: (context) => VideoPlayerPage(
                     videoUrl:
-                        "https://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4",
+                        "https://flutter.github.io/assets-for-api-docs/videos/butterfly.mp4",
                   ),
                 ),
               );
