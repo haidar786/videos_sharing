@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -32,37 +30,9 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
 
   @override
   Widget build(BuildContext context) {
-    var mediaQuery = MediaQuery.of(context);
-    var aspectRatio;
-    if (mediaQuery.orientation == Orientation.portrait) {
-      _chewieController.exitFullScreen();
-      aspectRatio = 1.5;
-    } else {
-      _chewieController.enterFullScreen();
-      aspectRatio = mediaQuery.size.aspectRatio;
-    }
-
     return Scaffold(
-      body: Stack(
-        alignment: Alignment.topCenter,
-        children: <Widget>[
-          AspectRatio(
-            aspectRatio: aspectRatio,
-            child: Container(
-              color: Colors.black,
-            ),
-          ),
-          AspectRatio(
-            aspectRatio: aspectRatio,
-            child: Center(
-              child: _controller.value.initialized
-                  ? Chewie(
-                      controller: _chewieController,
-                    )
-                  : CircularProgressIndicator(),
-            ),
-          ),
-        ],
+      body: Chewie(
+        controller: _chewieController,
       ),
     );
   }
@@ -74,3 +44,34 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     _chewieController.dispose();
   }
 }
+
+//      body: Stack(
+//        alignment: Alignment.topCenter,
+//        children: <Widget>[
+////          AspectRatio(
+////            aspectRatio: aspectRatio,
+////            child: Container(
+////              color: Colors.black,
+////            ),
+////          ),
+//          AspectRatio(
+//            aspectRatio: 1.5,
+//            child: Center(
+//              child:
+//                  Chewie(
+//                      controller: _chewieController,
+//                    )
+//            ),
+//          ),
+//        ],
+//      ),
+
+//    var mediaQuery = MediaQuery.of(context);
+//    var aspectRatio;
+//    if (mediaQuery.orientation == Orientation.portrait) {
+//      _chewieController.exitFullScreen();
+//      aspectRatio = 1.5;
+//    } else {
+//      _chewieController.enterFullScreen();
+//      aspectRatio = mediaQuery.size.aspectRatio;
+//    }
