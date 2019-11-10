@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:videos_sharing/pages/abc.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:videos_sharing/model/link.dart';
 import 'package:videos_sharing/pages/settings.dart';
-import 'package:videos_sharing/pages/player.dart';
-import 'package:videos_sharing/pages/torrent.dart';
+import 'package:videos_sharing/services/database.dart';
 
 class HomePage extends StatefulWidget {
   HomePage(
       {Key key,
       @required this.sharedPreferences,
       @required this.onThemeChange,
-      @required this.jsonIntent})
+      @required this.dataString,
+      @required this.baseDatabase})
       : super(key: key);
   final SharedPreferences sharedPreferences;
   final VoidCallback onThemeChange;
-  final jsonIntent;
+  final dataString;
+  final BaseDatabase baseDatabase;
   @override
   State<StatefulWidget> createState() {
     return _HomePageState();
@@ -49,43 +51,46 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Center(
-          child: Column(
-        children: <Widget>[
-          RaisedButton(
-              child: Text("Blue"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => VideoPlayerPage(
-                      videoUrl:
-                          "https://flutter.github.io/assets-for-api-docs/videos/butterfly.mp4",
-                    ),
-                  ),
-                );
-              }),
-          RaisedButton(
-              child: Text("Black"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyAppO()),
-                );
-              }),
-          RaisedButton(
-              child: Text("Orange"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        TestStuffs(jsonIntent: widget.jsonIntent),
-                  ),
-                );
-              }),
-        ],
-      )),
+      body: FutureBuilder<List<Link>>(
+        future: _retrieveLinks(),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+            case ConnectionState.active:
+            case ConnectionState.waiting:
+              return Center(child: CircularProgressIndicator());
+            case ConnectionState.done:
+              if (snapshot.hasError)
+                return Center(child: Text('Error: ${snapshot.error}'));
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: snapshot.data.length == 0
+                    ? Center(
+                        child: Text("Nothing to show."),
+                      )
+                    : ListView(
+                        children: snapshot.data.map((element) {
+                          return ListTile(
+                            title: Text(element.id.toString()),
+                            subtitle: Text(element.link),
+                          );
+                        }).toList(),
+                      ),
+              );
+          }
+          return Text("unreachable");
+        },
+      ),
     );
+  }
+
+  Future<List<Link>> _retrieveLinks() async {
+    final Database db = await widget.baseDatabase.getInstance();
+
+    final List<Map<String, dynamic>> maps = await db.query('links');
+
+    return List.generate(maps.length, (i) {
+      return Link(id: maps[i]['id'], link: maps[i]['link']);
+    });
   }
 }

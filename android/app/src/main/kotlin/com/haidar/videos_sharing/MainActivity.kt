@@ -16,20 +16,20 @@ class MainActivity: FlutterActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     GeneratedPluginRegistrant.registerWith(this)
-    val gson = Gson()
-    val pair = Pair(first = intent.dataString,second = intent.data)
+   // val gson = Gson()
+  //  val pair = Pair(first = intent.dataString,second = intent.data?.path)
 
     MethodChannel(flutterView, channel).setMethodCallHandler { call, result ->
       if (call.method.contentEquals("intent")) {
-        result.success(gson.toJson(pair))
+        result.success(intent.dataString)
       }
     }
   }
 
-  override fun onNewIntent(intent: Intent) {
-    super.onNewIntent(intent)
-    setIntent(intent)
-    recreate()
-  }
+//  override fun onNewIntent(intent: Intent) {
+//    super.onNewIntent(intent)
+//    setIntent(intent)
+//    recreate()
+//  }
 
 }

@@ -1,11 +1,8 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_json_widget/flutter_json_widget.dart';
-
 class TestStuffs extends StatefulWidget {
-  TestStuffs({Key key, @required this.jsonIntent}) : super(key: key);
-  final jsonIntent;
+  TestStuffs({Key key,@required this.dataString}) : super(key: key);
+  final dataString;
   @override
   State<StatefulWidget> createState() {
     return _TestStuffsState();
@@ -19,13 +16,10 @@ class _TestStuffsState extends State<TestStuffs> {
         "I": "How are you?",
         "You": "Excellent!"}
         ''';
-    Map<String, dynamic> jsonObj = jsonDecode(widget.jsonIntent);
+   // Map<String, dynamic> jsonObj = jsonDecode(widget.dataString);
 
     return Scaffold(
-      body: SafeArea(
-          child: SingleChildScrollView(
-        child: JsonViewerWidget(jsonObj),
-      )),
+      body: Center(child: Text(widget.dataString != null ? widget.dataString : "Null stuffs"),)
     );
   }
 }
