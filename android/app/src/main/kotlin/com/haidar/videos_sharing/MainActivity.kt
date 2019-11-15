@@ -7,7 +7,6 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 import android.content.Intent
 import android.net.Uri
 import io.flutter.plugin.common.MethodChannel
-import com.google.gson.Gson
 import java.io.File
 
 class MainActivity: FlutterActivity() {
@@ -16,9 +15,6 @@ class MainActivity: FlutterActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     GeneratedPluginRegistrant.registerWith(this)
-   // val gson = Gson()
-  //  val pair = Pair(first = intent.dataString,second = intent.data?.path)
-
     MethodChannel(flutterView, channel).setMethodCallHandler { call, result ->
       if (call.method.contentEquals("intent")) {
         result.success(intent.dataString)

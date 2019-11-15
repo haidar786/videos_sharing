@@ -1,8 +1,8 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_torrent_streamer/flutter_torrent_streamer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:videos_sharing/model/link.dart';
 import 'package:videos_sharing/pages/home.dart';
@@ -12,7 +12,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var dataString =
       await MethodChannel('haidar.channel.torrent').invokeMethod("intent");
-  await TorrentStreamer.init();
+  //await TorrentStreamer.init();
   BaseDatabase baseDatabase = TorrentStreamerDatabase();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   if (dataString != null) {
@@ -27,6 +27,22 @@ void main() async {
     baseDatabase: baseDatabase,
   ));
 }
+
+//Future<bool> checkPermission() async {
+//  PermissionStatus permission =
+//      await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
+//  if (permission != PermissionStatus.granted) {
+//    Map<PermissionGroup, PermissionStatus> permissions =
+//        await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+//    if (permissions[PermissionGroup.storage] == PermissionStatus.granted) {
+//      return true;
+//    }
+//  } else {
+//    return true;
+//  }
+//
+//  return false;
+//}
 
 class MyApp extends StatefulWidget {
   MyApp(
