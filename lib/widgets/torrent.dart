@@ -58,7 +58,7 @@ class _TorrentWidgetState extends State<TorrentWidget> {
             children: <Widget>[
               Padding(
                 padding: const EdgeInsets.only(right: 12.0),
-                child: Text('Progress: ${_progress.floor().toString()}%'),
+                child: Text('Buffering: ${_progress.floorToDouble().toString()}%'),
               ),
               Expanded(
                 child: LinearProgressIndicator(

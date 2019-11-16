@@ -6,6 +6,8 @@ import 'package:videos_sharing/model/link.dart';
 import 'package:videos_sharing/pages/settings.dart';
 import 'package:videos_sharing/services/database.dart';
 import 'package:videos_sharing/widgets/torrent.dart';
+import 'package:flutter_torrent_streamer/flutter_torrent_streamer.dart';
+
 
 class HomePage extends StatefulWidget {
   HomePage(
