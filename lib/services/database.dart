@@ -7,7 +7,7 @@ abstract class BaseDatabase {
   //link db
   Future<Database> openTheDatabase();
   Future<void> insertLink(Link link);
-  Future<void> deleteLink(int id);
+  Future<void> deleteLink(String id);
   Future<Database> getInstance();
 }
 
@@ -19,7 +19,7 @@ class TorrentStreamerDatabase implements BaseDatabase {
       join(await getDatabasesPath(), 'link_database.db'),
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE links(id INT PRIMARY KEY, link STRING)",
+          "CREATE TABLE links(link STRING PRIMARY KEY)",
         );
       },
       version: 1,
@@ -38,7 +38,7 @@ class TorrentStreamerDatabase implements BaseDatabase {
     );
   }
 
-  Future<void> deleteLink(int id) async {
+  Future<void> deleteLink(String id) async {
     final Database db =
         _database != null ? await _database : await openTheDatabase();
 

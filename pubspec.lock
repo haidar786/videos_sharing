@@ -112,9 +112,9 @@ packages:
   flutter_torrent_streamer:
     dependency: "direct main"
     description:
-      name: flutter_torrent_streamer
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: flutter_torrent_streamer
+      relative: true
+    source: path
     version: "0.0.2"
   http:
     dependency: transitive

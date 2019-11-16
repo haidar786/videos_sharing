@@ -22,10 +22,10 @@ class MainActivity: FlutterActivity() {
     }
   }
 
-//  override fun onNewIntent(intent: Intent) {
-//    super.onNewIntent(intent)
-//    setIntent(intent)
-//    recreate()
-//  }
+  override fun onNewIntent(intent: Intent) {
+    super.onNewIntent(intent)
+    setIntent(intent)
+    recreate()
+  }
 
 }
