@@ -83,13 +83,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_absolute_path:
-    dependency: "direct main"
-    description:
-      name: flutter_absolute_path
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.6"
   flutter_cache_manager:
     dependency: "direct main"
     description:
@@ -109,13 +102,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_torrent_streamer:
-    dependency: "direct main"
-    description:
-      path: flutter_torrent_streamer
-      relative: true
-    source: path
-    version: "0.0.2"
   http:
     dependency: transitive
     description:
@@ -221,6 +207,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.5.4+3"
+  simple_torrent_flutter:
+    dependency: "direct main"
+    description:
+      name: simple_torrent_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
   sky_engine:
     dependency: transitive
     description: flutter

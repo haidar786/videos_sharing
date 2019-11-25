@@ -5,9 +5,6 @@ import 'package:sqflite/sqflite.dart';
 import 'package:videos_sharing/model/link.dart';
 import 'package:videos_sharing/pages/settings.dart';
 import 'package:videos_sharing/services/database.dart';
-import 'package:videos_sharing/widgets/torrent.dart';
-import 'package:flutter_torrent_streamer/flutter_torrent_streamer.dart';
-
 
 class HomePage extends StatefulWidget {
   HomePage(
@@ -67,22 +64,25 @@ class _HomePageState extends State<HomePage> {
               if (snapshot.hasError)
                 return Center(child: Text('Error: ${snapshot.error}'));
               return snapshot.data.length == 0
-                    ? Center(
-                        child: Text("Nothing to show."),
-                      )
-                    : ListView(
-                        children: snapshot.data.map((element) {
-                          return TorrentWidget(uri: element.link);
-                        }).toList(),
-                      );
+                  ? Center(
+                      child: Text("Nothing to show."),
+                    )
+                  : ListView(
+                      children: snapshot.data.map((element) {
+                        //return TorrentWidget(uri: element.link, sharedPreferences: widget.sharedPreferences,);
+                        return ListTile(
+                          title: Text("Uri"),
+                          subtitle: Text(element.link),
+                          onTap: () async {},
+                        );
+                      }).toList(),
+                    );
           }
           return Text("unreachable");
         },
       ),
     );
   }
-
-
 
   Future<List<Link>> _retrieveLinks() async {
     final Database db = await widget.baseDatabase.getInstance();
@@ -93,6 +93,4 @@ class _HomePageState extends State<HomePage> {
       return Link(link: maps[i]['link']);
     });
   }
-
-
 }

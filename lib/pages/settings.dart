@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:videos_sharing/pages/torrent.dart';
 
 class SettingsPage extends StatefulWidget {
   SettingsPage(
@@ -31,9 +30,16 @@ class _SettingsPageState extends State<SettingsPage> {
                 widget.sharedPreferences.setBool("isDark", value);
                 widget.onThemeChange();
               }),
-          RaisedButton(child: Text("torrentPage"),onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => MyAppO()));
-          })
+          Divider(),
+          SwitchListTile(
+              title: Text("External player"),
+              subtitle: Text("Use other apps player."),
+              value: widget.sharedPreferences.getBool("isExternalPlayer") ?? false,
+              onChanged: (value) {
+                widget.sharedPreferences.setBool("isExternalPlayer", value);
+                widget.onThemeChange();
+              }),
+          Divider(),
         ],
       ),
     );
