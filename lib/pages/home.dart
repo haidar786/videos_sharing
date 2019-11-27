@@ -29,6 +29,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<VideoFiles> list;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,11 +124,14 @@ class _HomePageState extends State<HomePage> {
 
 
   Future<List<VideoFiles>> _getVideos() async {
-    String paths = await StoragePath.videoPath;
-    var response = jsonDecode(paths);
-    var videoList = response as List;
-    List<VideoFiles> list =
-        videoList.map<VideoFiles>((json) => VideoFiles.fromJson(json)).toList();
+    if(list == null) {
+      String paths = await StoragePath.videoPath;
+      var response = jsonDecode(paths);
+      var videoList = response as List;
+      list =
+          videoList.map<VideoFiles>((json) => VideoFiles.fromJson(json))
+              .toList();
+    }
     return list;
   }
 }
