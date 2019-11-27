@@ -33,6 +33,7 @@ dependencies:
   permission_handler: ^3.3.0
   path_provider: ^1.4.0
   storage_path: ^0.1.0
+  flutter_video_compress: ^0.3.7+8
   simple_torrent_flutter: ^0.0.1
 #  simple_torrent_flutter:
 #    git:

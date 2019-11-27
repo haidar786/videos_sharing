@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:videos_sharing/model/video_files.dart';
+import 'package:videos_sharing/widgets/thumbnail.dart';
 
 class VideosPage extends StatefulWidget {
   VideosPage({Key key, @required this.files, @required this.folderName})
@@ -22,12 +23,7 @@ class _VideosPageState extends State<VideosPage> {
       ),
       body: ListView(
         children: widget.files.map((video) {
-          return ListTile(
-            title: Text(video.displayName),
-            onTap: () {
-
-            },
-          );
+          return VideoThumbnailWidget(files: video,);
         }).toList(),
       ),
     );
