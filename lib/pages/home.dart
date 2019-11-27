@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:videos_sharing/model/link.dart';
+import 'package:storage_path/storage_path.dart';
+import 'package:videos_sharing/model/video_files.dart';
 import 'package:videos_sharing/pages/settings.dart';
+import 'package:videos_sharing/pages/torrent_history.dart';
+import 'package:videos_sharing/pages/videos_list.dart';
 import 'package:videos_sharing/services/database.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,68 +33,101 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Watch list"),
+        title: Text("Folders"),
         actions: <Widget>[
           PopupMenuButton<int>(
             itemBuilder: (context) => <PopupMenuEntry<int>>[
               PopupMenuItem(
                 value: 1,
+                child: Text("Torrents"),
+              ),
+              PopupMenuItem(
+                value: 2,
                 child: Text("Settings"),
               ),
             ],
             onSelected: (value) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SettingsPage(
-                    sharedPreferences: widget.sharedPreferences,
-                    onThemeChange: widget.onThemeChange,
-                  ),
-                ),
-              );
+              switch (value) {
+                case 1:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TorrentHistory(
+                          sharedPreferences: widget.sharedPreferences,
+                          dataString: widget.dataString,
+                          baseDatabase: widget.baseDatabase),
+                    ),
+                  );
+                  break;
+                case 2:
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SettingsPage(
+                        sharedPreferences: widget.sharedPreferences,
+                        onThemeChange: widget.onThemeChange,
+                      ),
+                    ),
+                  );
+                  break;
+              }
             },
           ),
         ],
       ),
-      body: FutureBuilder<List<Link>>(
-        future: _retrieveLinks(),
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.none:
-            case ConnectionState.active:
-            case ConnectionState.waiting:
-              return Center(child: CircularProgressIndicator());
-            case ConnectionState.done:
-              if (snapshot.hasError)
-                return Center(child: Text('Error: ${snapshot.error}'));
-              return snapshot.data.length == 0
-                  ? Center(
-                      child: Text("Nothing to show."),
-                    )
-                  : ListView(
-                      children: snapshot.data.map((element) {
-                        //return TorrentWidget(uri: element.link, sharedPreferences: widget.sharedPreferences,);
-                        return ListTile(
-                          title: Text("Uri"),
-                          subtitle: Text(element.link),
-                          onTap: () async {},
-                        );
-                      }).toList(),
-                    );
-          }
-          return Text("unreachable");
-        },
-      ),
+      body: FutureBuilder<List<VideoFiles>>(
+          future: _getVideos(),
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.none:
+              case ConnectionState.waiting:
+                return CircularProgressIndicator();
+                break;
+              case ConnectionState.active:
+              case ConnectionState.done:
+                if (snapshot.hasError)
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                return snapshot.data.length == 0
+                    ? Center(child: Text("Nothing to show."))
+                    : ListView(
+                        children: snapshot.data.map((element) {
+                          return ListTile(
+                            leading: Icon(
+                              Icons.folder,
+                              size: 56.0,
+                            ),
+                            title: Text(element.folderName),
+                            subtitle: Text(element.files.length == 1
+                                ? element.files.length.toString() + " video"
+                                : element.files.length.toString() + " videos"),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => VideosPage(
+                                      files: element.files,
+                                      folderName: element.folderName),
+                                ),
+                              );
+                            },
+                          );
+                        }).toList(),
+                      );
+
+                break;
+            }
+            return Text("unreachable");
+          }),
     );
   }
 
-  Future<List<Link>> _retrieveLinks() async {
-    final Database db = await widget.baseDatabase.getInstance();
 
-    final List<Map<String, dynamic>> maps = await db.query('links');
-
-    return List.generate(maps.length, (i) {
-      return Link(link: maps[i]['link']);
-    });
+  Future<List<VideoFiles>> _getVideos() async {
+    String paths = await StoragePath.videoPath;
+    var response = jsonDecode(paths);
+    var videoList = response as List;
+    List<VideoFiles> list =
+        videoList.map<VideoFiles>((json) => VideoFiles.fromJson(json)).toList();
+    return list;
   }
 }

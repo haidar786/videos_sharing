@@ -34,7 +34,7 @@ class TorrentStreamerDatabase implements BaseDatabase {
     await db.insert(
       'links',
       link.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.abort,
+      conflictAlgorithm: ConflictAlgorithm.ignore,
     );
   }
 

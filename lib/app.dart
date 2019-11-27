@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:videos_sharing/model/link.dart';
 import 'package:videos_sharing/pages/home.dart';
 import 'package:videos_sharing/pages/permission_page.dart';
 import 'package:videos_sharing/services/database.dart';
@@ -24,15 +23,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    if (widget.dataString != null) {
-      widget.baseDatabase.insertLink(
-        Link(link: widget.dataString),
-      );
-    }
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +66,8 @@ class _MyAppState extends State<MyApp> {
     bool isDark =
         (widget.sharedPreferences.getBool("isDark") ?? false) ? true : false;
     return isDark
-        ? ThemeData(brightness: Brightness.dark, primarySwatch: Colors.teal)
-        : ThemeData(brightness: Brightness.light, primarySwatch: Colors.blue);
+        ? ThemeData(brightness: Brightness.dark, primarySwatch: Colors.blueGrey)
+        : ThemeData(brightness: Brightness.light, primarySwatch: Colors.blueGrey);
   }
 
   Future<bool> _checkPermission() async {
