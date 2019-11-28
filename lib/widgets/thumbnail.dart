@@ -1,13 +1,12 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_video_compress/flutter_video_compress.dart';
-
-import 'package:videos_sharing/model/video_files.dart';
 import 'package:videos_sharing/pages/player.dart';
 
 class VideoThumbnailWidget extends StatefulWidget {
-  VideoThumbnailWidget({Key key, @required this.files}) : super(key: key);
-  final Files files;
+  VideoThumbnailWidget({Key key, @required this.file}) : super(key: key);
+  final FileSystemEntity file;
   @override
   State<StatefulWidget> createState() {
     return _VideoThumbnailWidgetState();
@@ -38,18 +37,22 @@ class _VideoThumbnailWidgetState extends State<VideoThumbnailWidget> {
                   fit: BoxFit.cover,
                 )
               : CircularProgressIndicator()),
-      title: Text(widget.files.displayName),
-      subtitle: Text(widget.files.duration),
+      title: Text(widget.file.path.split('/').last),
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => VideoPlayerPage(videoUrl: widget.files.path),),);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VideoPlayerPage(videoUrl: widget.file.path),
+          ),
+        );
       },
     );
   }
 
   _getThumbnail() {
-     _flutterVideoCompress
+    _flutterVideoCompress
         .getThumbnail(
-      widget.files.path,
+      widget.file.path,
       quality: 5,
       position: -1,
     )

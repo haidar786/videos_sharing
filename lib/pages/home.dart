@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:videos_sharing/model/video_files.dart';
 import 'package:videos_sharing/pages/settings.dart';
 import 'package:videos_sharing/pages/torrent_history.dart';
+import 'package:videos_sharing/pages/videos_list.dart';
 import 'package:videos_sharing/services/database.dart';
 
 class HomePage extends StatefulWidget {
@@ -30,7 +31,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<VideoFiles> list;
+  List<VideoModel> _videoModel;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +79,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: FutureBuilder<List<CustomVideoModel>>(
+      body: FutureBuilder<List<VideoModel>>(
           future: _getVideosFromStorage(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
@@ -104,14 +105,14 @@ class _HomePageState extends State<HomePage> {
                                 ? element.files.length.toString() + " video"
                                 : element.files.length.toString() + " videos"),
                             onTap: () {
-//                              Navigator.push(
-//                                context,
-//                                MaterialPageRoute(
-//                                  builder: (context) => VideosPage(
-//                                      files: element.files,
-//                                      folderName: element.folderName),
-//                                ),
-//                              );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => VideosPage(
+                                      files: element.files,
+                                      folderName: element.folderName),
+                                ),
+                              );
                             },
                           );
                         }).toList(),
@@ -124,40 +125,35 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<List<CustomVideoModel>> _getVideosFromStorage() async {
-    List<CustomVideoModel> customVideoModel = [];
-    List<String> directories = [];
-    List<FileSystemEntity> files = [];
-    Directory directory = Directory('/storage/emulated/0/');
-    List<FileSystemEntity> allFiles =
-        directory.listSync(recursive: true, followLinks: false);
-    allFiles.forEach((file) {
-      if (file.path.endsWith('.mp4')) {
-        directories.add(file.parent.path);
-        files.add(file);
-      }
-    });
-    directories.toSet().toList().forEach((directory) {
-      List<FileSystemEntity> videoFiles = [];
-      Directory videoDirectory = Directory(directory);
-      files = videoDirectory.listSync();
-      files.forEach((file) {
+  Future<List<VideoModel>> _getVideosFromStorage() async {
+    if (_videoModel == null) {
+      List<VideoModel> videoModel = [];
+      List<String> directories = [];
+      List<FileSystemEntity> files = [];
+      Directory directory = Directory('/storage/emulated/0/');
+      List<FileSystemEntity> allFiles =
+          directory.listSync(recursive: true, followLinks: false);
+      allFiles.forEach((file) {
         if (file.path.endsWith('.mp4')) {
-          videoFiles.add(file);
+          directories.add(file.parent.path);
+          files.add(file);
         }
       });
-
-      customVideoModel.add(
-        CustomVideoModel(directory, videoFiles),
-      );
-    });
-    return customVideoModel;
+      directories.toSet().toList().forEach((directory) {
+        List<FileSystemEntity> videoFiles = [];
+        Directory videoDirectory = Directory(directory);
+        files = videoDirectory.listSync();
+        files.forEach((file) {
+          if (file.path.endsWith('.mp4')) {
+            videoFiles.add(file);
+          }
+        });
+        videoModel.add(
+          VideoModel(directory.split('/').last, videoFiles),
+        );
+      });
+      _videoModel = videoModel;
+    }
+    return _videoModel;
   }
-}
-
-class CustomVideoModel {
-  List<FileSystemEntity> files;
-  String folderName;
-
-  CustomVideoModel(this.folderName, this.files);
 }
