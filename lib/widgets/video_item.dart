@@ -56,7 +56,7 @@ class _VideoItemState extends State<VideoItem> {
         //),
         title: Text(widget.video.file.path.split('/').last),
         subtitle: _controller.value.initialized
-            ? Text(_controller.value.duration.inMinutes.toString())
+            ? Text(_controller.dataSource)
             : Container(),
         onTap: () {
           _controller.value.initialized ?? _controller.pause();
