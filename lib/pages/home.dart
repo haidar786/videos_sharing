@@ -1,9 +1,6 @@
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
-import 'package:flutter_video_compress/flutter_video_compress.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:videos_sharing/model/video_files.dart';
 import 'package:videos_sharing/pages/settings.dart';
@@ -34,7 +31,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<VideoModel> _videoModel;
-  final _flutterVideoCompress = FlutterVideoCompress();
 
   @override
   Widget build(BuildContext context) {
@@ -161,41 +157,4 @@ class _HomePageState extends State<HomePage> {
     }
     return _videoModel;
   }
-
-  _getThumbnail(String path) async {
-    Uint8List uInt8list = await _flutterVideoCompress.getThumbnail(path);
-    return uInt8list;
-  }
 }
-
-//Future<List<VideoModel>> _getVideosFromStorage() async {
-//  if (_videoModel == null) {
-//    List<VideoModel> videoModel = [];
-//    List<String> directories = [];
-//    List<FileSystemEntity> files = [];
-//    Directory directory = Directory('/storage/emulated/0/');
-//    List<FileSystemEntity> allFiles =
-//    directory.listSync(recursive: true, followLinks: false);
-//    allFiles.forEach((file) {
-//      if (file.path.endsWith('.mp4')) {
-//        directories.add(file.parent.path);
-//        files.add(file);
-//      }
-//    });
-//    directories.toSet().toList().forEach((directory) {
-//      List<FileSystemEntity> videoFiles = [];
-//      Directory videoDirectory = Directory(directory);
-//      files = videoDirectory.listSync();
-//      files.forEach((file) {
-//        if (file.path.endsWith('.mp4')) {
-//          videoFiles.add(file);
-//        }
-//      });
-//      videoModel.add(
-//        VideoModel(directory.split('/').last, videoFiles),
-//      );
-//    });
-//    _videoModel = videoModel;
-//  }
-//  return _videoModel;
-//}

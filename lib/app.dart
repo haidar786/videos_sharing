@@ -10,13 +10,11 @@ class MyApp extends StatefulWidget {
       {Key key,
       @required this.sharedPreferences,
       @required this.dataString,
-      @required this.baseDatabase,
-      @required this.paths})
+      @required this.baseDatabase})
       : super(key: key);
   final SharedPreferences sharedPreferences;
   final dataString;
   final BaseDatabase baseDatabase;
-  final String paths;
 
   @override
   State<StatefulWidget> createState() {
@@ -49,7 +47,7 @@ class _MyAppState extends State<MyApp> {
                     setState(() {});
                   },
                   dataString: widget.dataString,
-                  baseDatabase: widget.baseDatabase, paths: widget.paths,
+                  baseDatabase: widget.baseDatabase
                 );
               } else {
                 return PermissionPage(

@@ -43,7 +43,11 @@ class _VideoItemState extends State<VideoItem> {
             )
           : CircularProgressIndicator(),
       title: Text(widget.video.file.path.split('/').last),
+      subtitle: _controller.value.initialized
+          ? Text(_controller.value.duration.inMinutes.toString())
+          : Container(),
       onTap: () {
+        _controller.value.initialized ?? _controller.pause();
         Navigator.push(
           context,
           MaterialPageRoute(
