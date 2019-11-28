@@ -20,7 +20,8 @@ class _VideoItemState extends State<VideoItem> {
     super.initState();
     _controller = VideoPlayerController.network(widget.video.file.path)
       ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        _controller.setVolume(0.0);
+        _controller.play();
         setState(() {});
       });
   }
