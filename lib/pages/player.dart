@@ -16,15 +16,15 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl);
-//      ..initialize().then((_) {
-//
-//        setState(() {});
-//      });
+    _controller = VideoPlayerController.network(widget.videoUrl)
+      ..initialize().then((_) {
+        setState(() {});
+        _controller.play();
+      });
     _chewieController = ChewieController(
       videoPlayerController: _controller,
+      fullScreenByDefault: true,
       autoPlay: true,
-      looping: true,
     );
   }
 

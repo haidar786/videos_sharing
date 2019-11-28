@@ -14,14 +14,12 @@ class HomePage extends StatefulWidget {
       @required this.sharedPreferences,
       @required this.onThemeChange,
       @required this.dataString,
-      @required this.baseDatabase,
-      @required this.paths})
+      @required this.baseDatabase})
       : super(key: key);
   final SharedPreferences sharedPreferences;
   final VoidCallback onThemeChange;
   final dataString;
   final BaseDatabase baseDatabase;
-  final String paths;
 
   @override
   State<StatefulWidget> createState() {
