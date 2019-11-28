@@ -1,12 +1,11 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:videos_sharing/widgets/thumbnail.dart';
+import 'package:videos_sharing/model/video_files.dart';
+import 'package:videos_sharing/widgets/video_item.dart';
 
 class VideosPage extends StatefulWidget {
   VideosPage({Key key, @required this.files, @required this.folderName})
       : super(key: key);
-  final List<FileSystemEntity> files;
+  final List<Files> files;
   final String folderName;
 
   @override
@@ -24,7 +23,7 @@ class _VideosPageState extends State<VideosPage> {
       ),
       body: ListView(
         children: widget.files.map((video) {
-          return VideoThumbnailWidget(file: video,);
+          return VideoItem(video: video);
         }).toList(),
       ),
     );
