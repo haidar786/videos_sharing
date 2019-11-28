@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:videos_sharing/model/video_files.dart';
 import 'package:videos_sharing/pages/settings.dart';
 import 'package:videos_sharing/pages/torrent_history.dart';
-import 'package:videos_sharing/pages/videos_list.dart';
 import 'package:videos_sharing/services/database.dart';
 
 class HomePage extends StatefulWidget {
@@ -79,8 +78,8 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: FutureBuilder<List<VideoFiles>>(
-          future: _getVideos(),
+      body: FutureBuilder<List<CustomVideoModel>>(
+          future: _getVideosFromStorage(),
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.none:
@@ -105,14 +104,14 @@ class _HomePageState extends State<HomePage> {
                                 ? element.files.length.toString() + " video"
                                 : element.files.length.toString() + " videos"),
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => VideosPage(
-                                      files: element.files,
-                                      folderName: element.folderName),
-                                ),
-                              );
+//                              Navigator.push(
+//                                context,
+//                                MaterialPageRoute(
+//                                  builder: (context) => VideosPage(
+//                                      files: element.files,
+//                                      folderName: element.folderName),
+//                                ),
+//                              );
                             },
                           );
                         }).toList(),
@@ -125,14 +124,40 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<List<VideoFiles>> _getVideos() async {
-    if (list == null) {
-      var response = jsonDecode(widget.paths);
-      var videoList = response as List;
-      list = videoList
-          .map<VideoFiles>((json) => VideoFiles.fromJson(json))
-          .toList();
-    }
-    return list;
+  Future<List<CustomVideoModel>> _getVideosFromStorage() async {
+    List<CustomVideoModel> customVideoModel = [];
+    List<String> directories = [];
+    List<FileSystemEntity> files = [];
+    Directory directory = Directory('/storage/emulated/0/');
+    List<FileSystemEntity> allFiles =
+        directory.listSync(recursive: true, followLinks: false);
+    allFiles.forEach((file) {
+      if (file.path.endsWith('.mp4')) {
+        directories.add(file.parent.path);
+        files.add(file);
+      }
+    });
+    directories.toSet().toList().forEach((directory) {
+      List<FileSystemEntity> videoFiles = [];
+      Directory videoDirectory = Directory(directory);
+      files = videoDirectory.listSync();
+      files.forEach((file) {
+        if (file.path.endsWith('.mp4')) {
+          videoFiles.add(file);
+        }
+      });
+
+      customVideoModel.add(
+        CustomVideoModel(directory, videoFiles),
+      );
+    });
+    return customVideoModel;
   }
+}
+
+class CustomVideoModel {
+  List<FileSystemEntity> files;
+  String folderName;
+
+  CustomVideoModel(this.folderName, this.files);
 }
