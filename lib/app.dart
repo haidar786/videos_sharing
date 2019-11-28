@@ -10,11 +10,13 @@ class MyApp extends StatefulWidget {
       {Key key,
       @required this.sharedPreferences,
       @required this.dataString,
-      @required this.baseDatabase})
+      @required this.baseDatabase,
+      @required this.paths})
       : super(key: key);
   final SharedPreferences sharedPreferences;
   final dataString;
   final BaseDatabase baseDatabase;
+  final String paths;
 
   @override
   State<StatefulWidget> createState() {
@@ -23,7 +25,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -48,7 +49,7 @@ class _MyAppState extends State<MyApp> {
                     setState(() {});
                   },
                   dataString: widget.dataString,
-                  baseDatabase: widget.baseDatabase,
+                  baseDatabase: widget.baseDatabase, paths: widget.paths,
                 );
               } else {
                 return PermissionPage(
@@ -67,7 +68,8 @@ class _MyAppState extends State<MyApp> {
         (widget.sharedPreferences.getBool("isDark") ?? false) ? true : false;
     return isDark
         ? ThemeData(brightness: Brightness.dark, primarySwatch: Colors.blueGrey)
-        : ThemeData(brightness: Brightness.light, primarySwatch: Colors.blueGrey);
+        : ThemeData(
+            brightness: Brightness.light, primarySwatch: Colors.blueGrey);
   }
 
   Future<bool> _checkPermission() async {

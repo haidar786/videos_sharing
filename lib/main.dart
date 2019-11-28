@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:storage_path/storage_path.dart';
 import 'package:videos_sharing/app.dart';
 import 'package:videos_sharing/services/database.dart';
 
@@ -10,10 +11,10 @@ void main() async {
       await MethodChannel('haidar.channel.torrent').invokeMethod("intent");
   BaseDatabase baseDatabase = TorrentStreamerDatabase();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-
+  String paths = await StoragePath.videoPath;
   runApp(new MyApp(
     sharedPreferences: prefs,
     dataString: dataString,
-    baseDatabase: baseDatabase,
+    baseDatabase: baseDatabase, paths: paths,
   ));
 }

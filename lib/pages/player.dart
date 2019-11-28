@@ -18,7 +18,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     super.initState();
     _controller = VideoPlayerController.network(widget.videoUrl);
 //      ..initialize().then((_) {
-//        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+//
 //        setState(() {});
 //      });
     _chewieController = ChewieController(
@@ -30,9 +30,13 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
 
   @override
   Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
     return Scaffold(
-      body: Chewie(
-        controller: _chewieController,
+      body: AspectRatio(
+        aspectRatio: mediaQuery.size.aspectRatio,
+        child: Chewie(
+          controller: _chewieController,
+        ),
       ),
     );
   }
@@ -44,34 +48,3 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     _chewieController.dispose();
   }
 }
-
-//      body: Stack(
-//        alignment: Alignment.topCenter,
-//        children: <Widget>[
-////          AspectRatio(
-////            aspectRatio: aspectRatio,
-////            child: Container(
-////              color: Colors.black,
-////            ),
-////          ),
-//          AspectRatio(
-//            aspectRatio: 1.5,
-//            child: Center(
-//              child:
-//                  Chewie(
-//                      controller: _chewieController,
-//                    )
-//            ),
-//          ),
-//        ],
-//      ),
-
-//    var mediaQuery = MediaQuery.of(context);
-//    var aspectRatio;
-//    if (mediaQuery.orientation == Orientation.portrait) {
-//      _chewieController.exitFullScreen();
-//      aspectRatio = 1.5;
-//    } else {
-//      _chewieController.enterFullScreen();
-//      aspectRatio = mediaQuery.size.aspectRatio;
-//    }

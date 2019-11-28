@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:storage_path/storage_path.dart';
 import 'package:videos_sharing/model/video_files.dart';
 import 'package:videos_sharing/pages/settings.dart';
 import 'package:videos_sharing/pages/torrent_history.dart';
@@ -16,12 +15,15 @@ class HomePage extends StatefulWidget {
       @required this.sharedPreferences,
       @required this.onThemeChange,
       @required this.dataString,
-      @required this.baseDatabase})
+      @required this.baseDatabase,
+      @required this.paths})
       : super(key: key);
   final SharedPreferences sharedPreferences;
   final VoidCallback onThemeChange;
   final dataString;
   final BaseDatabase baseDatabase;
+  final String paths;
+
   @override
   State<StatefulWidget> createState() {
     return _HomePageState();
@@ -30,12 +32,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<VideoFiles> list;
-
-  @override
-  void dispose() {
-    print("me");
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -129,15 +125,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-
   Future<List<VideoFiles>> _getVideos() async {
-    if(list == null) {
-      String paths = await StoragePath.videoPath;
-      var response = jsonDecode(paths);
+    if (list == null) {
+      var response = jsonDecode(widget.paths);
       var videoList = response as List;
-      list =
-          videoList.map<VideoFiles>((json) => VideoFiles.fromJson(json))
-              .toList();
+      list = videoList
+          .map<VideoFiles>((json) => VideoFiles.fromJson(json))
+          .toList();
     }
     return list;
   }
