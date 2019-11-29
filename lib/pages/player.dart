@@ -70,10 +70,17 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                   ],
                 ),
                 onTap: () {
-                  setState(() {
-                    _showOverlay = true;
-                  });
-                  _hideOverlay();
+                  if (_timer != null && _timer.isActive) {
+                    _timer.cancel();
+                    setState(() {
+                      _showOverlay = false;
+                    });
+                  } else {
+                    setState(() {
+                      _showOverlay = true;
+                    });
+                    _hideOverlay();
+                  }
                 },
               )
             : CircularProgressIndicator(),
