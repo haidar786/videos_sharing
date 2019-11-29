@@ -55,6 +55,14 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                       aspectRatio: _controller.value.aspectRatio,
                       child: VideoPlayer(_controller),
                     ),
+                    _showOverlay
+                        ? AspectRatio(
+                            aspectRatio: _controller.value.aspectRatio,
+                            child: Container(
+                              color: Colors.black45,
+                            ),
+                          )
+                        : Container(),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: _showOverlay ? _controllers(context) : Container(),
@@ -77,8 +85,9 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     return Row(
       children: <Widget>[
         Text(
-          _controller.value.duration.inHours.toString(),
-          style: TextStyle(color: Colors.black),
+          _controller.value.duration.inHours.toString() +
+              _controller.value.duration.inMinutes.toString() +
+              _controller.value.duration.inSeconds.toString(),
         )
       ],
     );
