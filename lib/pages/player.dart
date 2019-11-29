@@ -30,16 +30,23 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   _hideOverlay() {
     if (_timer != null && _timer.isActive) {
       _timer.cancel();
-      _timer = Timer(Duration(seconds: 2), onDoneLoading);
+      setState(() {
+        _showOverlay = false;
+      });
     } else {
+      setState(() {
+        _showOverlay = true;
+      });
       _timer = Timer(Duration(seconds: 2), onDoneLoading);
     }
   }
 
-  onDoneLoading() async {
-    setState(() {
-      _showOverlay = false;
-    });
+  onDoneLoading() {
+    if (mounted){
+      setState(() {
+        _showOverlay = false;
+      });
+    }
   }
 
   @override
@@ -69,19 +76,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                     )
                   ],
                 ),
-                onTap: () {
-                  if (_timer != null && _timer.isActive) {
-                    _timer.cancel();
-                    setState(() {
-                      _showOverlay = false;
-                    });
-                  } else {
-                    setState(() {
-                      _showOverlay = true;
-                    });
-                    _hideOverlay();
-                  }
-                },
+                onTap: _hideOverlay,
               )
             : CircularProgressIndicator(),
       ),
@@ -92,13 +87,13 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     return Row(
       children: <Widget>[
         Text(
-          _controller.value.duration.inHours.toString() +
-              _controller.value.duration.inMinutes.toString() +
-              _controller.value.duration.inSeconds.toString(),
+          format(_controller.value.duration)
         )
       ],
     );
   }
+
+  format(Duration d) => d.toString().split('.').first.padLeft(8, "0");
 
   @override
   void dispose() {
