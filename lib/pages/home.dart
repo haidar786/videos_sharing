@@ -53,7 +53,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => TorrentHistory(
+                      builder: (context1) => TorrentHistory(
                           sharedPreferences: widget.sharedPreferences,
                           dataString: widget.dataString,
                           baseDatabase: widget.baseDatabase),
@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => SettingsPage(
+                      builder: (context1) => SettingsPage(
                         sharedPreferences: widget.sharedPreferences,
                         onThemeChange: widget.onThemeChange,
                       ),

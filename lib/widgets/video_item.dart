@@ -35,6 +35,7 @@ class _VideoItemState extends State<VideoItem> {
 
   @override
   Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
     return VisibilityDetector(
       child: ListTile(
         leading:
@@ -64,7 +65,7 @@ class _VideoItemState extends State<VideoItem> {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  VideoPlayerPage(videoUrl: widget.video.file.path),
+                  VideoPlayerPage(videoUrl: widget.video.file.path, mediaQuery: mediaQuery,),
             ),
           );
         },
