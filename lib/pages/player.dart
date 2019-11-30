@@ -25,7 +25,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   bool _showOverlay = true;
   Timer _timer;
 
-  double _continuousValue = 0.0;
+  //double _continuousValue = 0.0;
 
   @override
   void initState() {
@@ -84,31 +84,34 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                       : Container(),
                   Align(
                     alignment: Alignment.topCenter,
-                    child: Container(
-                      height: kToolbarHeight + 24.0,
-                      child: AppBar(
-                        backgroundColor: Colors.transparent,
-                        title: AutoSizeText(
-                          widget.videoName,
-                          maxLines: 1,
-                        ),
-                        actions: <Widget>[
-                          InkWell(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Icon(Icons.more_vert),
+                    child: _showOverlay
+                        ? Container(
+                            height: kToolbarHeight + 24.0,
+                            child: AppBar(
+                              backgroundColor: Colors.transparent,
+                              title: AutoSizeText(
+                                widget.videoName,
+                                maxLines: 1,
+                              ),
+                              actions: <Widget>[
+                                InkWell(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(Icons.more_vert),
+                                  ),
+                                  onTap: () {},
+                                )
+                              ],
                             ),
-                            onTap: () {},
                           )
-                        ],
-                      ),
-                    ),
+                        : Container(),
                   ),
                   Align(
-                      alignment: Alignment.center,
-                      child: _showOverlay
-                          ? _showCenterController(mediaQuery, theme)
-                          : Container()),
+                    alignment: Alignment.center,
+                    child: _showOverlay
+                        ? _showCenterController(mediaQuery, theme)
+                        : Container(),
+                  ),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: _showOverlay
@@ -143,34 +146,30 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
       children: <Widget>[
         Row(
           children: <Widget>[
-            AutoSizeText(
-              format(_controller.value.duration),
-              style: TextStyle(color: Colors.white, fontSize: 12.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: AutoSizeText(
+                _controller.value.position.inSeconds.toString(),
+                style: TextStyle(color: Colors.white, fontSize: 12.0),
+              ),
             ),
             Expanded(
               child: Slider(
-                value: _continuousValue,
+                value: _controller.value.position.inSeconds.toDouble(),
                 min: 0.0,
-                max: 50.0,
+                max: _controller.value.duration.inSeconds.toDouble(),
                 onChanged: (double value) {
-                  setState(() {
-                    _continuousValue = value;
-                  });
+                  setState(() {});
                 },
               ),
             ),
-            AutoSizeText(
-              format(_controller.value.duration),
-              style: TextStyle(color: Colors.white, fontSize: 12.0),
-            ),
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
-              child: Icon(
-                Icons.lock,
-                color: Colors.white,
+              padding: const EdgeInsets.only(right: 8.0),
+              child: AutoSizeText(
+                format(_controller.value.duration),
+                style: TextStyle(color: Colors.white, fontSize: 12.0),
               ),
-            )
+            ),
           ],
         ),
       ],
