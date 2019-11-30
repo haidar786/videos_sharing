@@ -83,9 +83,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: _showOverlay
-                        ? ListView(
-                            children: <Widget>[_showBottomControllers(context)],
-                          )
+                        ? _showBottomControllers(context, mediaQuery)
                         : Container(),
                   ),
                 ],
@@ -98,35 +96,41 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     );
   }
 
-  Widget _showBottomControllers(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Text(
-          format(_controller.value.duration),
-          style: TextStyle(color: Colors.white),
-        ),
-        Expanded(
-          child: Slider(
-            value: _continuousValue,
-            min: 0.0,
-            max: 50.0,
-            onChanged: (double value) {
-              setState(() {
-                _continuousValue = value;
-              });
-            },
+  Widget _showBottomControllers(
+      BuildContext context, MediaQueryData mediaQuery) {
+    return Container(
+      color: Colors.red,
+      height: mediaQuery.orientation == Orientation.portrait
+          ? mediaQuery.size.height / 20
+          : mediaQuery.size.width / 20,
+      child: Row(
+        children: <Widget>[
+          Text(
+            format(_controller.value.duration),
+            style: TextStyle(color: Colors.white),
           ),
-        ),
-        Text(
-          format(_controller.value.duration),
-          style: TextStyle(color: Colors.white),
-        ),
-      ],
+          Expanded(
+            child: Slider(
+              value: _continuousValue,
+              min: 0.0,
+              max: 50.0,
+              onChanged: (double value) {
+                setState(() {
+                  _continuousValue = value;
+                });
+              },
+            ),
+          ),
+          Text(
+            format(_controller.value.duration),
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _showCenterController(MediaQueryData mediaQuery, ThemeData theme) {
-
     return Container(
       width: mediaQuery.orientation == Orientation.portrait
           ? mediaQuery.size.width
