@@ -27,7 +27,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
       });
   }
 
-  _hideOverlay() {
+  _hideShowOverlay() {
     if (_timer != null && _timer.isActive) {
       _timer.cancel();
       setState(() {
@@ -42,7 +42,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   }
 
   onDoneLoading() {
-    if (mounted){
+    if (mounted) {
       setState(() {
         _showOverlay = false;
       });
@@ -51,12 +51,14 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: _controller.value.initialized
-            ? GestureDetector(
-                child: Stack(
+    var mediaQuery = MediaQuery.of(context);
+    return GestureDetector(
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Container(
+          child: _controller.value.initialized
+              ? Stack(
+                  alignment: Alignment.center,
                   children: <Widget>[
                     AspectRatio(
                       aspectRatio: _controller.value.aspectRatio,
@@ -64,7 +66,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                     ),
                     _showOverlay
                         ? AspectRatio(
-                            aspectRatio: _controller.value.aspectRatio,
+                            aspectRatio: mediaQuery.size.aspectRatio,
                             child: Container(
                               color: Colors.black45,
                             ),
@@ -73,23 +75,21 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: _showOverlay ? _controllers(context) : Container(),
-                    )
+                    ),
                   ],
+                )
+              : Center(
+                  child: CircularProgressIndicator(),
                 ),
-                onTap: _hideOverlay,
-              )
-            : CircularProgressIndicator(),
+        ),
       ),
+      onTap: _hideShowOverlay,
     );
   }
 
   Widget _controllers(BuildContext context) {
     return Row(
-      children: <Widget>[
-        Text(
-          format(_controller.value.duration)
-        )
-      ],
+      children: <Widget>[Text(format(_controller.value.duration))],
     );
   }
 
