@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerPage extends StatefulWidget {
@@ -14,8 +15,10 @@ class VideoPlayerPage extends StatefulWidget {
 
 class _VideoPlayerPageState extends State<VideoPlayerPage> {
   VideoPlayerController _controller;
-  bool _showOverlay = false;
+  bool _showOverlay = true;
   Timer _timer;
+
+  double _continuousValue = 0.0;
 
   @override
   void initState() {
@@ -37,7 +40,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
       setState(() {
         _showOverlay = true;
       });
-      _timer = Timer(Duration(seconds: 2), onDoneLoading);
+      _timer = Timer(Duration(seconds: 3), onDoneLoading);
     }
   }
 
@@ -52,44 +55,112 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
+    var theme = Theme.of(context);
     return GestureDetector(
       child: Scaffold(
         backgroundColor: Colors.black,
-        body: Container(
-          child: _controller.value.initialized
-              ? Stack(
-                  alignment: Alignment.center,
-                  children: <Widget>[
-                    AspectRatio(
-                      aspectRatio: _controller.value.aspectRatio,
-                      child: VideoPlayer(_controller),
-                    ),
-                    _showOverlay
-                        ? AspectRatio(
-                            aspectRatio: mediaQuery.size.aspectRatio,
-                            child: Container(
-                              color: Colors.black45,
-                            ),
+        body: _controller.value.initialized
+            ? Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: VideoPlayer(_controller),
+                  ),
+                  _showOverlay
+                      ? AspectRatio(
+                          aspectRatio: mediaQuery.size.aspectRatio,
+                          child: Container(
+                            color: Colors.black45,
+                          ),
+                        )
+                      : Container(),
+                  Align(
+                      alignment: Alignment.center,
+                      child: _showOverlay
+                          ? _showCenterController(mediaQuery, theme)
+                          : Container()),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: _showOverlay
+                        ? ListView(
+                            children: <Widget>[_showBottomControllers(context)],
                           )
                         : Container(),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: _showOverlay ? _controllers(context) : Container(),
-                    ),
-                  ],
-                )
-              : Center(
-                  child: CircularProgressIndicator(),
-                ),
-        ),
+                  ),
+                ],
+              )
+            : Center(
+                child: CircularProgressIndicator(),
+              ),
       ),
       onTap: _hideShowOverlay,
     );
   }
 
-  Widget _controllers(BuildContext context) {
+  Widget _showBottomControllers(BuildContext context) {
     return Row(
-      children: <Widget>[Text(format(_controller.value.duration))],
+      children: <Widget>[
+        Text(
+          format(_controller.value.duration),
+          style: TextStyle(color: Colors.white),
+        ),
+        Expanded(
+          child: Slider(
+            value: _continuousValue,
+            min: 0.0,
+            max: 50.0,
+            onChanged: (double value) {
+              setState(() {
+                _continuousValue = value;
+              });
+            },
+          ),
+        ),
+        Text(
+          format(_controller.value.duration),
+          style: TextStyle(color: Colors.white),
+        ),
+      ],
+    );
+  }
+
+  Widget _showCenterController(MediaQueryData mediaQuery, ThemeData theme) {
+
+    return Container(
+      width: mediaQuery.orientation == Orientation.portrait
+          ? mediaQuery.size.width
+          : mediaQuery.size.height,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Icon(
+            Icons.skip_previous,
+            size: 32.0,
+            color: Colors.grey[600],
+          ),
+          GestureDetector(
+            child: Icon(
+              _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+              size: 56.0,
+              color: Colors.white,
+            ),
+            onTap: () {
+              if (_controller.value.isPlaying) {
+                _controller.pause();
+              } else {
+                _controller.play();
+              }
+              setState(() {});
+            },
+          ),
+          Icon(
+            Icons.skip_next,
+            size: 32.0,
+            color: Colors.grey[600],
+          ),
+        ],
+      ),
     );
   }
 
