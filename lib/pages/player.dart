@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
 
@@ -98,35 +99,34 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
 
   Widget _showBottomControllers(
       BuildContext context, MediaQueryData mediaQuery) {
-    return Container(
-      color: Colors.red,
-      height: mediaQuery.orientation == Orientation.portrait
-          ? mediaQuery.size.height / 20
-          : mediaQuery.size.width / 20,
-      child: Row(
-        children: <Widget>[
-          Text(
-            format(_controller.value.duration),
-            style: TextStyle(color: Colors.white),
-          ),
-          Expanded(
-            child: Slider(
-              value: _continuousValue,
-              min: 0.0,
-              max: 50.0,
-              onChanged: (double value) {
-                setState(() {
-                  _continuousValue = value;
-                });
-              },
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Text(
+              format(_controller.value.duration),
+              style: TextStyle(color: Colors.white),
             ),
-          ),
-          Text(
-            format(_controller.value.duration),
-            style: TextStyle(color: Colors.white),
-          ),
-        ],
-      ),
+            Expanded(
+              child: Slider(
+                value: _continuousValue,
+                min: 0.0,
+                max: 50.0,
+                onChanged: (double value) {
+                  setState(() {
+                    _continuousValue = value;
+                  });
+                },
+              ),
+            ),
+            Text(
+              format(_controller.value.duration),
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        )
+      ],
     );
   }
 
