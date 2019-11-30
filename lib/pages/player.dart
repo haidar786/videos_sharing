@@ -85,14 +85,24 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                   Align(
                     alignment: Alignment.topCenter,
                     child: Container(
-                        height: kToolbarHeight + 24.0,
-                        child: AppBar(
-                          backgroundColor: Colors.transparent,
-                          title: AutoSizeText(
-                            widget.videoName,
-                            maxLines: 1,
-                          ),
-                        )),
+                      height: kToolbarHeight + 24.0,
+                      child: AppBar(
+                        backgroundColor: Colors.transparent,
+                        title: AutoSizeText(
+                          widget.videoName,
+                          maxLines: 1,
+                        ),
+                        actions: <Widget>[
+                          InkWell(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Icon(Icons.more_vert),
+                            ),
+                            onTap: () {},
+                          )
+                        ],
+                      ),
+                    ),
                   ),
                   Align(
                       alignment: Alignment.center,
@@ -107,8 +117,19 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                   ),
                 ],
               )
-            : Center(
-                child: CircularProgressIndicator(),
+            : Stack(
+                children: <Widget>[
+                  AppBar(
+                    backgroundColor: Colors.transparent,
+                    title: AutoSizeText(
+                      widget.videoName,
+                      maxLines: 1,
+                    ),
+                  ),
+                  Align(
+                      alignment: Alignment.center,
+                      child: CircularProgressIndicator())
+                ],
               ),
       ),
       onTap: _hideShowOverlay,
@@ -169,7 +190,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
             size: 40.0,
             color: Colors.grey[600],
           ),
-          GestureDetector(
+          InkWell(
             child: Icon(
               _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
               size: 56.0,
