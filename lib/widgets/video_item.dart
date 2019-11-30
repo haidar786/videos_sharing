@@ -39,21 +39,21 @@ class _VideoItemState extends State<VideoItem> {
     return VisibilityDetector(
       child: ListTile(
         leading:
-        //Card(
-          //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0),),
-          //child:
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10.0),
-            child: AspectRatio(
-              aspectRatio: 1.5,
-              child: _controller.value.initialized
-                  ? VideoPlayer(_controller)
-                  : Icon(
-                      Icons.music_video,
-                      size: 56.0,
-                    ),
-            ),
+            //Card(
+            //shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0),),
+            //child:
+            ClipRRect(
+          borderRadius: BorderRadius.circular(10.0),
+          child: AspectRatio(
+            aspectRatio: 1.5,
+            child: _controller.value.initialized
+                ? VideoPlayer(_controller)
+                : Icon(
+                    Icons.music_video,
+                    size: 56.0,
+                  ),
           ),
+        ),
         //),
         title: Text(widget.video.file.path.split('/').last),
         subtitle: _controller.value.initialized
@@ -64,8 +64,11 @@ class _VideoItemState extends State<VideoItem> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  VideoPlayerPage(videoUrl: widget.video.file.path, mediaQuery: mediaQuery,),
+              builder: (context) => VideoPlayerPage(
+                videoUrl: widget.video.file.path,
+                mediaQuery: mediaQuery,
+                videoName: widget.video.file.path.split('/').last,
+              ),
             ),
           );
         },

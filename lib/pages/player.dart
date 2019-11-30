@@ -1,15 +1,21 @@
 import 'dart:async';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerPage extends StatefulWidget {
-  VideoPlayerPage({Key key, @required this.videoUrl, @required this.mediaQuery})
+  VideoPlayerPage(
+      {Key key,
+      @required this.videoUrl,
+      @required this.videoName,
+      @required this.mediaQuery})
       : super(key: key);
   final String videoUrl;
   final MediaQueryData mediaQuery;
+  final String videoName;
   @override
   _VideoPlayerPageState createState() => _VideoPlayerPageState();
 }
@@ -77,6 +83,18 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                         )
                       : Container(),
                   Align(
+                    alignment: Alignment.topCenter,
+                    child: Container(
+                        height: kToolbarHeight + 24.0,
+                        child: AppBar(
+                          backgroundColor: Colors.transparent,
+                          title: AutoSizeText(
+                            widget.videoName,
+                            maxLines: 1,
+                          ),
+                        )),
+                  ),
+                  Align(
                       alignment: Alignment.center,
                       child: _showOverlay
                           ? _showCenterController(mediaQuery, theme)
@@ -104,9 +122,9 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
       children: <Widget>[
         Row(
           children: <Widget>[
-            Text(
+            AutoSizeText(
               format(_controller.value.duration),
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.white, fontSize: 12.0),
             ),
             Expanded(
               child: Slider(
@@ -120,12 +138,20 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                 },
               ),
             ),
-            Text(
+            AutoSizeText(
               format(_controller.value.duration),
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: Colors.white, fontSize: 12.0),
             ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+              child: Icon(
+                Icons.lock,
+                color: Colors.white,
+              ),
+            )
           ],
-        )
+        ),
       ],
     );
   }
@@ -140,7 +166,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
         children: <Widget>[
           Icon(
             Icons.skip_previous,
-            size: 32.0,
+            size: 40.0,
             color: Colors.grey[600],
           ),
           GestureDetector(
@@ -160,7 +186,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
           ),
           Icon(
             Icons.skip_next,
-            size: 32.0,
+            size: 40.0,
             color: Colors.grey[600],
           ),
         ],
