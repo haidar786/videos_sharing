@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerPage extends StatefulWidget {
@@ -21,8 +19,10 @@ class VideoPlayerPage extends StatefulWidget {
   _VideoPlayerPageState createState() => _VideoPlayerPageState();
 }
 
-class _VideoPlayerPageState extends State<VideoPlayerPage> {
+class _VideoPlayerPageState extends State<VideoPlayerPage>
+    with SingleTickerProviderStateMixin {
   VideoPlayerController _controller;
+  AnimationController _animationController;
   bool _showOverlay = true;
   Timer _timer;
 
@@ -31,7 +31,8 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   @override
   void initState() {
     super.initState();
-//    SystemChrome.setEnabledSystemUIOverlays([]);
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     _controller = VideoPlayerController.network(widget.videoUrl)
       ..initialize().then((_) {
         setState(() {});
@@ -46,6 +47,11 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
       setState(() {
         _showOverlay = false;
       });
+    } else if (_showOverlay) {
+      SystemChrome.setEnabledSystemUIOverlays([]);
+      setState(() {
+        _showOverlay = false;
+      });
     } else {
       SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
       setState(() {
@@ -56,7 +62,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   }
 
   onDoneLoading() {
-    if (mounted) {
+    if (mounted && _controller.value.isPlaying) {
       setState(() {
         _showOverlay = false;
       });
@@ -195,16 +201,48 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
             color: Colors.grey[600],
           ),
           InkWell(
-            child: Icon(
-              _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+//            child: AnimatedCrossFade(
+//              firstChild: Icon(
+//                Icons.pause,
+//                size: 56.0,
+//                color: Colors.white,
+//              ),
+//              secondChild: Icon(
+//                Icons.play_arrow,
+//                size: 56.0,
+//                color: Colors.white,
+//              ),
+//              crossFadeState: _controller.value.isPlaying
+//                  ? CrossFadeState.showFirst
+//                  : CrossFadeState.showSecond,
+//              duration: Duration(seconds: 1),
+//            ),
+//              child: Icon(
+//                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+//                size: 56.0,
+//                color: Colors.white,
+//              ),
+            child: AnimatedIcon(
+              icon: AnimatedIcons.pause_play,
+              progress: _animationController,
               size: 56.0,
               color: Colors.white,
             ),
+
             onTap: () {
+              _controller.value.isPlaying
+                  ? _animationController.forward()
+                  : _animationController.reverse();
               if (_controller.value.isPlaying) {
                 _controller.pause();
               } else {
                 _controller.play();
+                if(_timer != null && _timer.isActive){
+                  _timer.cancel();
+                  _timer = Timer(Duration(seconds: 1), onDoneLoading);
+                }else{
+                  _timer = Timer(Duration(seconds: 1), onDoneLoading);
+                }
               }
               setState(() {});
             },
@@ -226,5 +264,6 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     super.dispose();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     _controller.dispose();
+    _animationController.dispose();
   }
 }
