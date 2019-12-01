@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
 
@@ -30,6 +31,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   @override
   void initState() {
     super.initState();
+//    SystemChrome.setEnabledSystemUIOverlays([]);
     _controller = VideoPlayerController.network(widget.videoUrl)
       ..initialize().then((_) {
         setState(() {});
@@ -40,10 +42,12 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   _hideShowOverlay() {
     if (_timer != null && _timer.isActive) {
       _timer.cancel();
+      SystemChrome.setEnabledSystemUIOverlays([]);
       setState(() {
         _showOverlay = false;
       });
     } else {
+      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
       setState(() {
         _showOverlay = true;
       });
@@ -56,6 +60,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
       setState(() {
         _showOverlay = false;
       });
+      SystemChrome.setEnabledSystemUIOverlays([]);
     }
   }
 
@@ -219,6 +224,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   @override
   void dispose() {
     super.dispose();
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     _controller.dispose();
   }
 }

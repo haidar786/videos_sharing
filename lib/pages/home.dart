@@ -87,15 +87,19 @@ class _HomePageState extends State<HomePage> {
               case ConnectionState.active:
               case ConnectionState.done:
                 if (snapshot.hasError)
-                  return Center(child: Text('Error: ${snapshot.error}'));
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
                 return snapshot.data.length == 0
-                    ? Center(child: Text("Nothing to show."))
+                    ? Center(
+                        child: Text("Nothing to show."),
+                      )
                     : ListView(
                         children: snapshot.data.map((element) {
                           return ListTile(
                             leading: Icon(
                               Icons.folder,
-                              size: 56.0,
+                              size: 64.0,
                             ),
                             title: Text(element.folderName),
                             subtitle: Text(element.files.length == 1
