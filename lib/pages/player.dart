@@ -23,7 +23,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
     with SingleTickerProviderStateMixin {
   VideoPlayerController _controller;
   AnimationController _animationController;
-  bool _showOverlay = true;
+  bool _showOverlay = false;
   Timer _timer;
 
   //double _continuousValue = 0.0;
@@ -31,6 +31,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   @override
   void initState() {
     super.initState();
+    SystemChrome.setEnabledSystemUIOverlays([]);
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     _controller = VideoPlayerController.network(widget.videoUrl)
@@ -57,7 +58,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
       setState(() {
         _showOverlay = true;
       });
-      _timer = Timer(Duration(seconds: 3), onDoneLoading);
+      _timer = Timer(Duration(seconds: 2), onDoneLoading);
     }
   }
 
@@ -201,34 +202,12 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
             color: Colors.grey[600],
           ),
           InkWell(
-//            child: AnimatedCrossFade(
-//              firstChild: Icon(
-//                Icons.pause,
-//                size: 56.0,
-//                color: Colors.white,
-//              ),
-//              secondChild: Icon(
-//                Icons.play_arrow,
-//                size: 56.0,
-//                color: Colors.white,
-//              ),
-//              crossFadeState: _controller.value.isPlaying
-//                  ? CrossFadeState.showFirst
-//                  : CrossFadeState.showSecond,
-//              duration: Duration(seconds: 1),
-//            ),
-//              child: Icon(
-//                _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-//                size: 56.0,
-//                color: Colors.white,
-//              ),
             child: AnimatedIcon(
               icon: AnimatedIcons.pause_play,
               progress: _animationController,
               size: 56.0,
               color: Colors.white,
             ),
-
             onTap: () {
               _controller.value.isPlaying
                   ? _animationController.forward()
@@ -237,10 +216,10 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                 _controller.pause();
               } else {
                 _controller.play();
-                if(_timer != null && _timer.isActive){
+                if (_timer != null && _timer.isActive) {
                   _timer.cancel();
                   _timer = Timer(Duration(seconds: 1), onDoneLoading);
-                }else{
+                } else {
                   _timer = Timer(Duration(seconds: 1), onDoneLoading);
                 }
               }
