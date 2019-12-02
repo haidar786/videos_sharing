@@ -26,7 +26,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   bool _showOverlay = false;
   Timer _timer;
 
-  //double _continuousValue = 0.0;
+  double _continuousValue = 0.0;
 
   @override
   void initState() {
@@ -35,6 +35,11 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     _controller = VideoPlayerController.network(widget.videoUrl)
+      ..addListener(() {
+        setState(() {
+          _continuousValue = _controller.value.position.inSeconds.toDouble();
+        });
+      })
       ..initialize().then((_) {
         setState(() {});
         _controller.play();
@@ -161,13 +166,13 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: AutoSizeText(
-                _controller.value.position.inSeconds.toString(),
+                _continuousValue.toString(),
                 style: TextStyle(color: Colors.white, fontSize: 12.0),
               ),
             ),
             Expanded(
               child: Slider(
-                value: _controller.value.position.inSeconds.toDouble(),
+                value: _continuousValue,
                 min: 0.0,
                 max: _controller.value.duration.inSeconds.toDouble(),
                 onChanged: (double value) {
@@ -202,11 +207,14 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
             color: Colors.grey[600],
           ),
           InkWell(
-            child: AnimatedIcon(
-              icon: AnimatedIcons.pause_play,
-              progress: _animationController,
-              size: 56.0,
-              color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: AnimatedIcon(
+                icon: AnimatedIcons.pause_play,
+                progress: _animationController,
+                size: 56.0,
+                color: Colors.white,
+              ),
             ),
             onTap: () {
               _controller.value.isPlaying
