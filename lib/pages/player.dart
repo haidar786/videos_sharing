@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
+import 'package:wakelock/wakelock.dart';
 
 class VideoPlayerPage extends StatefulWidget {
   VideoPlayerPage(
@@ -31,6 +33,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   @override
   void initState() {
     super.initState();
+    Wakelock.enable();
     SystemChrome.setEnabledSystemUIOverlays([]);
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
@@ -43,6 +46,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
       ..initialize().then((_) {
         setState(() {});
         _controller.play();
+        _controller.setLooping(true);
       });
   }
 
@@ -173,10 +177,25 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
             Expanded(
               child: Slider(
                 value: _continuousValue,
+                label: _continuousValue.toString(),
                 min: 0.0,
                 max: _controller.value.duration.inSeconds.toDouble(),
                 onChanged: (double value) {
-                  setState(() {});
+                  int seconds = value.toInt();
+                  Duration duration = Duration(
+                    hours: (seconds / 3600).floor(),
+                    minutes: ((seconds % 3600) / 60).floor(),
+                    seconds: (seconds % 60).floor(),
+                  );
+                  _controller.seekTo(duration);
+                  print(duration);
+
+                  },
+                onChangeStart: (value) {
+                  _controller.pause();
+                },
+                onChangeEnd: (value) {
+                  _controller.play();
                 },
               ),
             ),
@@ -249,6 +268,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   @override
   void dispose() {
     super.dispose();
+    Wakelock.disable();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
     _controller.dispose();
     _animationController.dispose();
