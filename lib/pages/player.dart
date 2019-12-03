@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
+import 'package:volume/volume.dart';
 import 'package:wakelock/wakelock.dart';
 
 class VideoPlayerPage extends StatefulWidget {
@@ -24,6 +25,8 @@ class VideoPlayerPage extends StatefulWidget {
 
 class _VideoPlayerPageState extends State<VideoPlayerPage>
     with SingleTickerProviderStateMixin {
+  AudioManager audioManager;
+  int maxVol, currentVol;
   VideoPlayerController _controller;
   AnimationController _animationController;
   bool _showOverlay = false;
@@ -31,9 +34,16 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
 
   double _continuousValue = 0.0;
 
+  //Vertical drag details
+  DragStartDetails startVerticalDragDetails;
+  DragUpdateDetails updateVerticalDragDetails;
+
   @override
   void initState() {
     super.initState();
+    audioManager = AudioManager.STREAM_SYSTEM;
+    initPlatformState();
+    updateVolumes();
     Wakelock.enable();
     SystemChrome.setEnabledSystemUIOverlays([]);
     _animationController =
@@ -114,9 +124,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                               elevation: 0.0,
                               title: Text(
                                 widget.videoName,
-                                style: TextStyle(
-                                  fontSize: 15.0
-                                ),
+                                style: TextStyle(fontSize: 15.0),
                               ),
                               actions: <Widget>[
 //                                InkWell(
@@ -180,6 +188,25 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                         : Container(),
                   ),
                   Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      child: Container(
+                        width: mediaQuery.size.width/2,
+
+                        color: Colors.red,
+                      ),
+                      onVerticalDragUpdate: (update) {
+                      //  double position = update.globalPosition;
+                      //  print(position);
+//                        if (position.isNegative) {
+//                          print("negative");
+//                        }else{
+//                          print("positive");
+//                        }
+                      },
+                    ),
+                  ),
+                  Align(
                     alignment: Alignment.center,
                     child: _showOverlay
                         ? _showCenterController(mediaQuery, theme)
@@ -209,6 +236,15 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
               ),
       ),
       onTap: _hideShowOverlay,
+//      onVerticalDragStart: (details) {
+//
+//      },
+//      onVerticalDragDown: (details) {
+//
+//      },
+//      onVerticalDragUpdate: (update) {
+//
+//      },
     );
   }
 
@@ -227,31 +263,26 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
               ),
             ),
             Expanded(
-              child: GestureDetector(
-                child: Slider(
-                  value: _continuousValue,
-                  label: _continuousValue.toString(),
-                  min: 0.0,
-                  max: _controller.value.duration.inSeconds.toDouble(),
-                  onChanged: (double value) {
-                    int seconds = value.toInt();
-                    Duration duration = Duration(
-                      hours: (seconds / 3600).floor(),
-                      minutes: ((seconds % 3600) / 60).floor(),
-                      seconds: (seconds % 60).floor(),
-                    );
-                    _controller.seekTo(duration);
-                  },
-                  onChangeStart: (value) {
-                    if (_timer != null && _timer.isActive) {
-                      _timer.cancel();
-                    }
-
-                  },
-                  onChangeEnd: (value) {
-
-                  },
-                ),
+              child: Slider(
+                value: _continuousValue,
+                label: _continuousValue.toString(),
+                min: 0.0,
+                max: _controller.value.duration.inSeconds.toDouble(),
+                onChanged: (double value) {
+                  int seconds = value.toInt();
+                  Duration duration = Duration(
+                    hours: (seconds / 3600).floor(),
+                    minutes: ((seconds % 3600) / 60).floor(),
+                    seconds: (seconds % 60).floor(),
+                  );
+                  _controller.seekTo(duration);
+                },
+                onChangeStart: (value) {
+                  if (_timer != null && _timer.isActive) {
+                    _timer.cancel();
+                  }
+                },
+                onChangeEnd: (value) {},
               ),
             ),
             Padding(
@@ -316,6 +347,22 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
         ],
       ),
     );
+  }
+
+  Future<void> initPlatformState() async {
+    await Volume.controlVolume(AudioManager.STREAM_MUSIC);
+  }
+
+  updateVolumes() async {
+    // get Max Volume
+    maxVol = await Volume.getMaxVol;
+    // get Current Volume
+    currentVol = await Volume.getVol;
+    setState(() {});
+  }
+
+  setVol(int i) async {
+    await Volume.setVol(i);
   }
 
   format(Duration d) => d.toString().split('.').first.padLeft(8, "0");
