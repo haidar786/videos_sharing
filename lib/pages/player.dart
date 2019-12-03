@@ -111,25 +111,28 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                             height: kToolbarHeight + 24.0,
                             child: AppBar(
                               backgroundColor: Colors.transparent,
-                              title: AutoSizeText(
+                              elevation: 0.0,
+                              title: Text(
                                 widget.videoName,
-                                maxLines: 1,
+                                style: TextStyle(
+                                  fontSize: 15.0
+                                ),
                               ),
                               actions: <Widget>[
-                                InkWell(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(Icons.subtitles),
-                                  ),
-                                  onTap: () {},
-                                ),
-                                InkWell(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(Icons.crop),
-                                  ),
-                                  onTap: () {},
-                                ),
+//                                InkWell(
+//                                  child: Padding(
+//                                    padding: const EdgeInsets.all(8.0),
+//                                    child: Icon(Icons.subtitles),
+//                                  ),
+//                                  onTap: () {},
+//                                ),
+//                                InkWell(
+//                                  child: Padding(
+//                                    padding: const EdgeInsets.all(8.0),
+//                                    child: Icon(Icons.crop),
+//                                  ),
+//                                  onTap: () {},
+//                                ),
                                 InkWell(
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -224,27 +227,31 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
               ),
             ),
             Expanded(
-              child: Slider(
-                value: _continuousValue,
-                label: _continuousValue.toString(),
-                min: 0.0,
-                max: _controller.value.duration.inSeconds.toDouble(),
-                onChanged: (double value) {
-                  int seconds = value.toInt();
-                  Duration duration = Duration(
-                    hours: (seconds / 3600).floor(),
-                    minutes: ((seconds % 3600) / 60).floor(),
-                    seconds: (seconds % 60).floor(),
-                  );
-                  _controller.seekTo(duration);
-                  print(duration);
-                },
-                onChangeStart: (value) {
-                  _controller.pause();
-                },
-                onChangeEnd: (value) {
-                  _controller.play();
-                },
+              child: GestureDetector(
+                child: Slider(
+                  value: _continuousValue,
+                  label: _continuousValue.toString(),
+                  min: 0.0,
+                  max: _controller.value.duration.inSeconds.toDouble(),
+                  onChanged: (double value) {
+                    int seconds = value.toInt();
+                    Duration duration = Duration(
+                      hours: (seconds / 3600).floor(),
+                      minutes: ((seconds % 3600) / 60).floor(),
+                      seconds: (seconds % 60).floor(),
+                    );
+                    _controller.seekTo(duration);
+                  },
+                  onChangeStart: (value) {
+                    if (_timer != null && _timer.isActive) {
+                      _timer.cancel();
+                    }
+
+                  },
+                  onChangeEnd: (value) {
+
+                  },
+                ),
               ),
             ),
             Padding(
@@ -270,7 +277,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
         children: <Widget>[
           Icon(
             Icons.skip_previous,
-            size: 40.0,
+            size: 36.0,
             color: Colors.grey[600],
           ),
           InkWell(
@@ -279,7 +286,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
               child: AnimatedIcon(
                 icon: AnimatedIcons.pause_play,
                 progress: _animationController,
-                size: 56.0,
+                size: 52.0,
                 color: Colors.white,
               ),
             ),
@@ -303,7 +310,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
           ),
           Icon(
             Icons.skip_next,
-            size: 40.0,
+            size: 36.0,
             color: Colors.grey[600],
           ),
         ],
