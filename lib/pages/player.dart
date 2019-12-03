@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
@@ -37,7 +38,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
     SystemChrome.setEnabledSystemUIOverlays([]);
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    _controller = VideoPlayerController.network(widget.videoUrl)
+    _controller = VideoPlayerController.file(File(widget.videoUrl))
       ..addListener(() {
         setState(() {
           _continuousValue = _controller.value.position.inSeconds.toDouble();
@@ -118,11 +119,59 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                                 InkWell(
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
+                                    child: Icon(Icons.subtitles),
+                                  ),
+                                  onTap: () {},
+                                ),
+                                InkWell(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(Icons.crop),
+                                  ),
+                                  onTap: () {},
+                                ),
+                                InkWell(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
                                     child: Icon(Icons.more_vert),
                                   ),
                                   onTap: () {},
                                 )
                               ],
+                            ),
+                          )
+                        : Container(),
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: _showOverlay
+                        ? Container(
+                            alignment: Alignment.bottomCenter,
+                            width: 56.0,
+                            height: kToolbarHeight + 72.0,
+                            child: InkWell(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Icon(
+                                  Icons.screen_rotation,
+                                  color: Colors.white,
+                                  size: 24.0,
+                                ),
+                              ),
+                              onTap: () {
+                                if (mediaQuery.orientation ==
+                                    Orientation.portrait) {
+                                  SystemChrome.setPreferredOrientations([
+                                    DeviceOrientation.landscapeLeft,
+                                    DeviceOrientation.landscapeRight
+                                  ]);
+                                } else {
+                                  SystemChrome.setPreferredOrientations([
+                                    DeviceOrientation.portraitUp,
+                                    DeviceOrientation.portraitDown
+                                  ]);
+                                }
+                              },
                             ),
                           )
                         : Container(),
@@ -189,8 +238,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                   );
                   _controller.seekTo(duration);
                   print(duration);
-
-                  },
+                },
                 onChangeStart: (value) {
                   _controller.pause();
                 },
@@ -270,6 +318,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
     super.dispose();
     Wakelock.disable();
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     _controller.dispose();
     _animationController.dispose();
   }
