@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
@@ -34,9 +35,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
 
   double _continuousValue = 0.0;
 
-  //Vertical drag details
-  DragStartDetails startVerticalDragDetails;
-  DragUpdateDetails updateVerticalDragDetails;
+  double initial = 0.0;
 
   @override
   void initState() {
@@ -192,17 +191,32 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                     child: GestureDetector(
                       child: Container(
                         width: mediaQuery.size.width/2,
-
-                        color: Colors.red,
                       ),
+                      onVerticalDragStart: (details) {
+                        initial = details.globalPosition.dy;
+                        setVol(currentVol);
+                        updateVolumes();
+
+                      },
+                      onVerticalDragEnd: (details) {
+                        initial = 0.0;
+                      },
                       onVerticalDragUpdate: (update) {
-                      //  double position = update.globalPosition;
-                      //  print(position);
-//                        if (position.isNegative) {
-//                          print("negative");
-//                        }else{
-//                          print("positive");
-//                        }
+                        double position = update.globalPosition.dy - initial;
+                        print(position);
+                        if (position.isNegative) {
+                          if(true) {
+                            setVol(++currentVol);
+                            updateVolumes();
+                          }
+                          print("negative is postive");
+                        }else{
+                          if(true) {
+                            setVol(--currentVol);
+                            updateVolumes();
+                          }
+                          print("positive is negative");
+                        }
                       },
                     ),
                   ),
@@ -236,15 +250,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
               ),
       ),
       onTap: _hideShowOverlay,
-//      onVerticalDragStart: (details) {
-//
-//      },
-//      onVerticalDragDown: (details) {
-//
-//      },
-//      onVerticalDragUpdate: (update) {
-//
-//      },
+
     );
   }
 

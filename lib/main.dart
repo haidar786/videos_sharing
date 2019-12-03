@@ -42,7 +42,7 @@ void main() async {
 //  }
 //
 //  Future<void> initPlatformState() async {
-//    await Volume.controlVolume(AudioManager.STREAM_MUSIC);
+//    await Volume.controlVolume(AudioManager.STREAM_SYSTEM);
 //  }
 //
 //  updateVolumes() async {
