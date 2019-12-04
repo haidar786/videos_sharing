@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
@@ -28,6 +27,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
     with SingleTickerProviderStateMixin {
   AudioManager audioManager;
   int maxVol, currentVol;
+  double vol = 8.0;
   VideoPlayerController _controller;
   AnimationController _animationController;
   bool _showOverlay = false;
@@ -120,26 +120,11 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                             height: kToolbarHeight + 24.0,
                             child: AppBar(
                               backgroundColor: Colors.transparent,
-                              elevation: 0.0,
                               title: Text(
                                 widget.videoName,
                                 style: TextStyle(fontSize: 15.0),
                               ),
                               actions: <Widget>[
-//                                InkWell(
-//                                  child: Padding(
-//                                    padding: const EdgeInsets.all(8.0),
-//                                    child: Icon(Icons.subtitles),
-//                                  ),
-//                                  onTap: () {},
-//                                ),
-//                                InkWell(
-//                                  child: Padding(
-//                                    padding: const EdgeInsets.all(8.0),
-//                                    child: Icon(Icons.crop),
-//                                  ),
-//                                  onTap: () {},
-//                                ),
                                 InkWell(
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
@@ -190,34 +175,16 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
                       child: Container(
-                        width: mediaQuery.size.width/2,
+                        color: Colors.red.withOpacity(0.0),
+                        width: mediaQuery.size.width / 2,
                       ),
-                      onVerticalDragStart: (details) {
-                        initial = details.globalPosition.dy;
-                        setVol(currentVol);
-                        updateVolumes();
-
-                      },
-                      onVerticalDragEnd: (details) {
-                        initial = 0.0;
-                      },
                       onVerticalDragUpdate: (update) {
-                        double position = update.globalPosition.dy - initial;
-                        print(position);
-                        if (position.isNegative) {
-                          if(true) {
-                            setVol(++currentVol);
-                            updateVolumes();
-                          }
-                          print("negative is postive");
-                        }else{
-                          if(true) {
-                            setVol(--currentVol);
-                            updateVolumes();
-                          }
-                          print("positive is negative");
-                        }
-                      },
+                          vol -= (update.primaryDelta * 0.10);
+                          vol = vol.clamp(0.0, 15.0);
+                          print(vol);
+                          setVol(vol.toInt());
+                          updateVolumes();
+                      }
                     ),
                   ),
                   Align(
@@ -250,7 +217,6 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
               ),
       ),
       onTap: _hideShowOverlay,
-
     );
   }
 
