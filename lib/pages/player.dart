@@ -179,8 +179,8 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                         width: mediaQuery.size.width / 2,
                       ),
                       onVerticalDragUpdate: (update) {
-                          vol -= (update.primaryDelta * 0.10);
-                          vol = vol.clamp(0.0, 15.0);
+                          vol -= (update.primaryDelta * 0.07);
+                          vol = vol.clamp(0.0, maxVol.toDouble());
                           print(vol);
                           setVol(vol.toInt());
                           updateVolumes();
