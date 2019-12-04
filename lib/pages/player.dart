@@ -37,6 +37,8 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
 
   double initial = 0.0;
 
+  double _opacity = 1.0;
+
   @override
   void initState() {
     super.initState();
@@ -104,6 +106,12 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                   AspectRatio(
                     aspectRatio: _controller.value.aspectRatio,
                     child: VideoPlayer(_controller),
+                  ),
+                  AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: Container(
+                      color: Colors.black.withOpacity(_opacity),
+                    ),
                   ),
                   _showOverlay
                       ? AspectRatio(
@@ -174,18 +182,33 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                   Align(
                     alignment: Alignment.centerRight,
                     child: GestureDetector(
-                      child: Container(
-                        color: Colors.red.withOpacity(0.0),
-                        width: mediaQuery.size.width / 2,
-                      ),
-                      onVerticalDragUpdate: (update) {
-                          vol -= (update.primaryDelta * 0.07);
+                        child: Container(
+                          color: Colors.red.withOpacity(0.0),
+                          width: mediaQuery.size.width / 2,
+                        ),
+                        onVerticalDragUpdate: (update) {
+                          vol -= (update.primaryDelta * 0.06);
                           vol = vol.clamp(0.0, maxVol.toDouble());
                           print(vol);
                           setVol(vol.toInt());
                           updateVolumes();
-                      }
-                    ),
+                        }),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: GestureDetector(
+                        child: Container(
+                          color: Colors.green.withOpacity(0.0),
+                          width: mediaQuery.size.width / 2,
+                        ),
+                        onVerticalDragUpdate: (update) {
+                          _opacity += update.primaryDelta * 0.005;
+                          _opacity = _opacity.clamp(0.1, 1.0);
+                          print(_opacity);
+                          setState(() {
+                            _opacity = _opacity;
+                          });
+                        }),
                   ),
                   Align(
                     alignment: Alignment.center,
