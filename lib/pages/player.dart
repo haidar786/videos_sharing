@@ -181,34 +181,40 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                   ),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                        child: Container(
-                          color: Colors.red.withOpacity(0.0),
-                          width: mediaQuery.size.width / 2,
-                        ),
-                        onVerticalDragUpdate: (update) {
-                          vol -= (update.primaryDelta * 0.06);
-                          vol = vol.clamp(0.0, maxVol.toDouble());
-                          print(vol);
-                          setVol(vol.toInt());
-                          updateVolumes();
-                        }),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: kToolbarHeight+24.0),
+                      child: GestureDetector(
+                          child: Container(
+                            color: Colors.red.withOpacity(0.0),
+                            width: mediaQuery.size.width / 2,
+                          ),
+                          onVerticalDragUpdate: (update) {
+                            vol -= (update.primaryDelta * 0.05);
+                            vol = vol.clamp(0.0, maxVol.toDouble());
+                            print(vol);
+                            setVol(vol.toInt());
+                            updateVolumes();
+                          }),
+                    ),
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: GestureDetector(
-                        child: Container(
-                          color: Colors.green.withOpacity(0.0),
-                          width: mediaQuery.size.width / 2,
-                        ),
-                        onVerticalDragUpdate: (update) {
-                          _opacity += update.primaryDelta * 0.005;
-                          _opacity = _opacity.clamp(0.1, 1.0);
-                          print(_opacity);
-                          setState(() {
-                            _opacity = _opacity;
-                          });
-                        }),
+                    child: Padding(
+                      padding: EdgeInsets.only(top: kToolbarHeight+24.0),
+                      child: GestureDetector(
+                          child: Container(
+                            color: Colors.green.withOpacity(0.0),
+                            width: mediaQuery.size.width / 2,
+                          ),
+                          onVerticalDragUpdate: (update) {
+                            _opacity += update.primaryDelta * 0.003;
+                            _opacity = _opacity.clamp(0.0, 1.0);
+                            print(_opacity);
+                            setState(() {
+                              _opacity = _opacity;
+                            });
+                          }),
+                    ),
                   ),
                   Align(
                     alignment: Alignment.center,
