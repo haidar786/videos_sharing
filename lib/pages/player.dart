@@ -33,12 +33,15 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   AnimationController _animationController;
   bool _showOverlay = false;
   Timer _timer;
+  Timer _volumeTimer;
+  Timer _brightnessTimer;
 
   double _continuousValue = 0.0;
 
-  double _opacity = 0.0;
+  double _opacity = 1.0;
 
   bool _isBrightnessChanging = false;
+  bool _isVolumeChanging = false;
 
   @override
   void initState() {
@@ -96,6 +99,12 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   onBrightnessDone() {
     setState(() {
       _isBrightnessChanging = false;
+    });
+  }
+
+  onVolumeDone() {
+    setState(() {
+      _isVolumeChanging = false;
     });
   }
 
@@ -188,29 +197,39 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Container(
-                      height: 10,
-                      width: mediaQuery.size.height / 4,
-                      child: Transform.rotate(
-                        angle: -pi / 2,
-                        child: LinearProgressIndicator(
-                          value: _opacity,
-                        ),
-                      ),
-                    ),
+                    child: _isBrightnessChanging
+                        ? Container(
+                            height: 10,
+                            width:
+                                mediaQuery.orientation == Orientation.landscape
+                                    ? mediaQuery.size.height / 4
+                                    : mediaQuery.size.width / 3,
+                            child: Transform.rotate(
+                              angle: -pi / 2,
+                              child: LinearProgressIndicator(
+                                value: _opacity,
+                              ),
+                            ),
+                          )
+                        : Container(),
                   ),
                   Align(
                     alignment: Alignment.center,
-                    child: Container(
-                      height: 10,
-                      width: mediaQuery.size.height / 4,
-                      child: Transform.rotate(
-                        angle: -pi / 2,
-                        child: LinearProgressIndicator(
-                          value: vol/maxVol.toDouble(),
-                        ),
-                      ),
-                    ),
+                    child: _isVolumeChanging
+                        ? Container(
+                            height: 10,
+                            width:
+                                mediaQuery.orientation == Orientation.landscape
+                                    ? mediaQuery.size.height / 4
+                                    : mediaQuery.size.width / 3,
+                            child: Transform.rotate(
+                              angle: -pi / 2,
+                              child: LinearProgressIndicator(
+                                value: vol / maxVol.toDouble(),
+                              ),
+                            ),
+                          )
+                        : Container(),
                   ),
                   Align(
                     alignment: Alignment.centerRight,
@@ -218,39 +237,82 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                       padding:
                           const EdgeInsets.only(top: kToolbarHeight + 24.0),
                       child: GestureDetector(
-                          child: Container(
-                            color: Colors.red.withOpacity(0.0),
-                            width: mediaQuery.size.width / 2,
-                          ),
-                          onVerticalDragUpdate: (update) {
-                            vol -= (update.primaryDelta * 0.07);
-                            vol = vol.clamp(0.0, maxVol.toDouble());
-                            print(vol/maxVol);
-                            setVol(vol.toInt());
-                            setState(() {
-                              vol = vol;
-                            });
-                          }),
+                        child: Container(
+                          color: Colors.red.withOpacity(0.0),
+                          width: mediaQuery.size.width / 2,
+                        ),
+                        onVerticalDragUpdate: (update) {
+                          vol -= (update.primaryDelta * 0.07);
+                          vol = vol.clamp(0.0, maxVol.toDouble());
+                          print(vol / maxVol);
+                          setVol(vol.toInt());
+                          setState(() {
+                            vol = vol;
+                          });
+                        },
+                        onVerticalDragStart: (details) {
+                          setState(
+                            () {
+                              _isVolumeChanging = true;
+                            },
+                          );
+                          if (_volumeTimer != null && _volumeTimer.isActive) {
+                            _volumeTimer.cancel();
+                          }
+                        },
+                        onVerticalDragEnd: (details) {
+                          if (_volumeTimer != null && _volumeTimer.isActive) {
+                            _volumeTimer.cancel();
+                            _volumeTimer =
+                                Timer(Duration(seconds: 1), onVolumeDone);
+                          } else {
+                            _volumeTimer =
+                                Timer(Duration(seconds: 1), onVolumeDone);
+                          }
+                        },
+                      ),
                     ),
                   ),
-
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
                       padding: EdgeInsets.only(top: kToolbarHeight + 24.0),
                       child: GestureDetector(
-                          child: Container(
-                            color: Colors.green.withOpacity(0.0),
-                            width: mediaQuery.size.width / 2,
-                          ),
-                          onVerticalDragUpdate: (update) {
-                            _opacity -= update.primaryDelta * 0.004;
-                            _opacity = _opacity.clamp(0.0, 1.0);
-                            print((_opacity - 1.0).abs());
-                            setState(() {
-                              _opacity = _opacity;
-                            });
-                          }),
+                        child: Container(
+                          color: Colors.green.withOpacity(0.0),
+                          width: mediaQuery.size.width / 2,
+                        ),
+                        onVerticalDragUpdate: (update) {
+                          _opacity -= update.primaryDelta * 0.004;
+                          _opacity = _opacity.clamp(0.0, 1.0);
+                          print((_opacity - 1.0).abs());
+                          setState(() {
+                            _opacity = _opacity;
+                          });
+                        },
+                        onVerticalDragStart: (details) {
+                          setState(
+                            () {
+                              _isBrightnessChanging = true;
+                            },
+                          );
+                          if (_brightnessTimer != null &&
+                              _brightnessTimer.isActive) {
+                            _brightnessTimer.cancel();
+                          }
+                        },
+                        onVerticalDragEnd: (details) {
+                          if (_brightnessTimer != null &&
+                              _brightnessTimer.isActive) {
+                            _brightnessTimer.cancel();
+                            _brightnessTimer =
+                                Timer(Duration(seconds: 1), onBrightnessDone);
+                          } else {
+                            _brightnessTimer =
+                                Timer(Duration(seconds: 1), onBrightnessDone);
+                          }
+                        },
+                      ),
                     ),
                   ),
                   Align(
