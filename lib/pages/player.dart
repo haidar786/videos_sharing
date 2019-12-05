@@ -25,7 +25,6 @@ class VideoPlayerPage extends StatefulWidget {
 
 class _VideoPlayerPageState extends State<VideoPlayerPage>
     with SingleTickerProviderStateMixin {
- // int maxVol, currentVol;
   double vol = 0.0;
   VideoPlayerController _controller;
   AnimationController _animationController;
@@ -463,8 +462,6 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
       vol = initVolume.toDouble();
     });
   }
-
-
 
   format(Duration d) => d.toString().split('.').first.padLeft(8, "0");
 
