@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class SettingsPage extends StatefulWidget {
   SettingsPage(
       {Key key, @required this.sharedPreferences, @required this.onThemeChange})
@@ -14,6 +15,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +36,8 @@ class _SettingsPageState extends State<SettingsPage> {
           SwitchListTile(
               title: Text("External player"),
               subtitle: Text("Use other apps player."),
-              value: widget.sharedPreferences.getBool("isExternalPlayer") ?? false,
+              value:
+                  widget.sharedPreferences.getBool("isExternalPlayer") ?? false,
               onChanged: (value) {
                 widget.sharedPreferences.setBool("isExternalPlayer", value);
                 widget.onThemeChange();

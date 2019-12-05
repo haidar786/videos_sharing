@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -7,7 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
-import 'package:volume/volume.dart';
+import 'package:volume_watcher/volume_watcher.dart';
 import 'package:wakelock/wakelock.dart';
 
 class VideoPlayerPage extends StatefulWidget {
@@ -26,9 +25,8 @@ class VideoPlayerPage extends StatefulWidget {
 
 class _VideoPlayerPageState extends State<VideoPlayerPage>
     with SingleTickerProviderStateMixin {
-  AudioManager audioManager;
-  int maxVol, currentVol;
-  double vol = 8.0;
+ // int maxVol, currentVol;
+  double vol = 0.0;
   VideoPlayerController _controller;
   AnimationController _animationController;
   bool _showOverlay = false;
@@ -43,17 +41,20 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   bool _isBrightnessChanging = false;
   bool _isVolumeChanging = false;
 
+  //num currentVolume = 0;
+  num initVolume = 0;
+  num maxVolume = 0;
+
   @override
   void initState() {
     super.initState();
-    audioManager = AudioManager.STREAM_SYSTEM;
     initPlatformState();
-    updateVolumes();
+
     Wakelock.enable();
     SystemChrome.setEnabledSystemUIOverlays([]);
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 300));
-    _controller = VideoPlayerController.file(File(widget.videoUrl))
+    _controller = VideoPlayerController.network(widget.videoUrl)
       ..addListener(() {
         setState(() {
           _continuousValue = _controller.value.position.inSeconds.toDouble();
@@ -214,7 +215,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                         : Container(),
                   ),
                   Align(
-                    alignment: Alignment.center,
+                    alignment: Alignment.centerRight,
                     child: _isVolumeChanging
                         ? Container(
                             height: 10,
@@ -225,7 +226,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                             child: Transform.rotate(
                               angle: -pi / 2,
                               child: LinearProgressIndicator(
-                                value: vol / maxVol.toDouble(),
+                                value: vol / maxVolume.toDouble(),
                               ),
                             ),
                           )
@@ -243,14 +244,15 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                         ),
                         onVerticalDragUpdate: (update) {
                           vol -= (update.primaryDelta * 0.07);
-                          vol = vol.clamp(0.0, maxVol.toDouble());
-                          print(vol / maxVol);
-                          setVol(vol.toInt());
+                          vol = vol.clamp(0.0, maxVolume.toDouble());
+                          print(vol / maxVolume);
+                          VolumeWatcher.setVolume(vol);
                           setState(() {
                             vol = vol;
                           });
                         },
                         onVerticalDragStart: (details) {
+                          initPlatformState();
                           setState(
                             () {
                               _isVolumeChanging = true;
@@ -450,22 +452,19 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   }
 
   Future<void> initPlatformState() async {
-    await Volume.controlVolume(AudioManager.STREAM_MUSIC);
-  }
+    num initVolume = await VolumeWatcher.getCurrentVolume;
+    num maxVolume = await VolumeWatcher.getMaxVolume;
 
-  updateVolumes() async {
-    // get Max Volume
-    maxVol = await Volume.getMaxVol;
-    // get Current Volume
-    currentVol = await Volume.getVol;
+    if (!mounted) return;
+
     setState(() {
-      vol = currentVol.toDouble();
+      this.initVolume = initVolume;
+      this.maxVolume = maxVolume;
+      vol = initVolume.toDouble();
     });
   }
 
-  setVol(int i) async {
-    await Volume.setVol(i);
-  }
+
 
   format(Duration d) => d.toString().split('.').first.padLeft(8, "0");
 
