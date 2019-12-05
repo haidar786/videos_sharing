@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,9 +36,9 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
 
   double _continuousValue = 0.0;
 
-  double initial = 0.0;
+  double _opacity = 0.0;
 
-  double _opacity = 1.0;
+  bool _isBrightnessChanging = false;
 
   @override
   void initState() {
@@ -92,6 +93,12 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
     }
   }
 
+  onBrightnessDone() {
+    setState(() {
+      _isBrightnessChanging = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var mediaQuery = MediaQuery.of(context);
@@ -110,7 +117,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                   AspectRatio(
                     aspectRatio: _controller.value.aspectRatio,
                     child: Container(
-                      color: Colors.black.withOpacity(_opacity),
+                      color: Colors.black.withOpacity((_opacity - 1.0).abs()),
                     ),
                   ),
                   _showOverlay
@@ -180,36 +187,66 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                         : Container(),
                   ),
                   Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      height: 10,
+                      width: mediaQuery.size.height / 4,
+                      child: Transform.rotate(
+                        angle: -pi / 2,
+                        child: LinearProgressIndicator(
+                          value: _opacity,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                      height: 10,
+                      width: mediaQuery.size.height / 4,
+                      child: Transform.rotate(
+                        angle: -pi / 2,
+                        child: LinearProgressIndicator(
+                          value: vol/maxVol.toDouble(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Align(
                     alignment: Alignment.centerRight,
                     child: Padding(
-                      padding: const EdgeInsets.only(top: kToolbarHeight+24.0),
+                      padding:
+                          const EdgeInsets.only(top: kToolbarHeight + 24.0),
                       child: GestureDetector(
                           child: Container(
                             color: Colors.red.withOpacity(0.0),
                             width: mediaQuery.size.width / 2,
                           ),
                           onVerticalDragUpdate: (update) {
-                            vol -= (update.primaryDelta * 0.05);
+                            vol -= (update.primaryDelta * 0.07);
                             vol = vol.clamp(0.0, maxVol.toDouble());
-                            print(vol);
+                            print(vol/maxVol);
                             setVol(vol.toInt());
-                            updateVolumes();
+                            setState(() {
+                              vol = vol;
+                            });
                           }),
                     ),
                   ),
+
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
-                      padding: EdgeInsets.only(top: kToolbarHeight+24.0),
+                      padding: EdgeInsets.only(top: kToolbarHeight + 24.0),
                       child: GestureDetector(
                           child: Container(
                             color: Colors.green.withOpacity(0.0),
                             width: mediaQuery.size.width / 2,
                           ),
                           onVerticalDragUpdate: (update) {
-                            _opacity += update.primaryDelta * 0.003;
+                            _opacity -= update.primaryDelta * 0.004;
                             _opacity = _opacity.clamp(0.0, 1.0);
-                            print(_opacity);
+                            print((_opacity - 1.0).abs());
                             setState(() {
                               _opacity = _opacity;
                             });
@@ -359,7 +396,9 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
     maxVol = await Volume.getMaxVol;
     // get Current Volume
     currentVol = await Volume.getVol;
-    setState(() {});
+    setState(() {
+      vol = currentVol.toDouble();
+    });
   }
 
   setVol(int i) async {
