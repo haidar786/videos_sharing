@@ -5,6 +5,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:video_player/video_player.dart';
 import 'package:volume_watcher/volume_watcher.dart';
 import 'package:wakelock/wakelock.dart';
@@ -34,6 +35,8 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   Timer _volumeTimer;
   Timer _brightnessTimer;
   Timer _bottomTimer;
+  Timer _seekForwardTimer;
+  Timer _seekBackwardTimer;
 
   double _continuousValue = 0.0;
 
@@ -41,6 +44,8 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
 
   bool _isBrightnessChanging = false;
   bool _isVolumeChanging = false;
+  bool _isForwardSeeking = false;
+  bool _isBackwardSeeking = false;
 
   //num currentVolume = 0;
   num initVolume = 0;
@@ -113,6 +118,18 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   onSeekingDone() {
     setState(() {
       _showBottom = false;
+    });
+  }
+
+  onSeekForwardDone() {
+    setState(() {
+      _isForwardSeeking = false;
+    });
+  }
+
+  onSeekBackwardDone() {
+    setState(() {
+      _isBackwardSeeking = false;
     });
   }
 
@@ -241,6 +258,59 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                   ),
                   Align(
                     alignment: Alignment.centerRight,
+                    child: _isForwardSeeking
+                        ? Container(
+                            width: 100.0,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Shimmer.fromColors(
+                                  period: Duration(milliseconds: 900),
+                                  baseColor: Colors.white,
+                                  highlightColor: Colors.black,
+                                  child: Icon(
+                                    Icons.fast_forward,
+                                    color: Colors.white,
+                                    size: 32.0,
+                                  ),
+                                ),
+                                AutoSizeText(
+                                  "+10 seconds",
+                                  maxLines: 1,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Container(),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: _isBackwardSeeking
+                        ? Container(
+                            width: 100.0,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Shimmer.fromColors(
+                                  direction: ShimmerDirection.rtl,
+                                  period: Duration(milliseconds: 900),
+                                  baseColor: Colors.white,
+                                  highlightColor: Colors.black,
+                                  child: Icon(Icons.fast_rewind,size: 32.0,),
+                                ),
+                                AutoSizeText(
+                                  "-10 seconds",
+                                  maxLines: 1,
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Container(),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
                     child: Padding(
                       padding:
                           const EdgeInsets.only(top: kToolbarHeight + 24.0),
@@ -280,6 +350,9 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                           }
                         },
                         onDoubleTap: () {
+                          setState(() {
+                            _isForwardSeeking = true;
+                          });
                           int seconds =
                               _controller.value.position.inSeconds + 10;
                           Duration duration = Duration(
@@ -288,6 +361,15 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                             seconds: (seconds % 60).floor(),
                           );
                           _controller.seekTo(duration);
+                          if (_seekForwardTimer != null &&
+                              _seekForwardTimer.isActive) {
+                            _seekForwardTimer.cancel();
+                            _seekForwardTimer =
+                                Timer(Duration(seconds: 1), onSeekForwardDone);
+                          } else {
+                            _seekForwardTimer =
+                                Timer(Duration(seconds: 1), onSeekForwardDone);
+                          }
                         },
                       ),
                     ),
@@ -332,6 +414,9 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                           }
                         },
                         onDoubleTap: () {
+                          setState(() {
+                            _isBackwardSeeking = true;
+                          });
                           int seconds =
                               _controller.value.position.inSeconds - 10;
                           Duration duration = Duration(
@@ -340,6 +425,15 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                             seconds: (seconds % 60).floor(),
                           );
                           _controller.seekTo(duration);
+                          if (_seekBackwardTimer != null &&
+                              _seekBackwardTimer.isActive) {
+                            _seekBackwardTimer.cancel();
+                            _seekBackwardTimer =
+                                Timer(Duration(seconds: 1), onSeekBackwardDone);
+                          } else {
+                            _seekBackwardTimer =
+                                Timer(Duration(seconds: 1), onSeekBackwardDone);
+                          }
                         },
                       ),
                     ),
