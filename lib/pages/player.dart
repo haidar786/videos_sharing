@@ -265,7 +265,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Shimmer.fromColors(
-                                  period: Duration(milliseconds: 900),
+                                  period: Duration(milliseconds: 800),
                                   baseColor: Colors.white,
                                   highlightColor: Colors.black,
                                   child: Icon(
@@ -294,7 +294,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                               children: <Widget>[
                                 Shimmer.fromColors(
                                   direction: ShimmerDirection.rtl,
-                                  period: Duration(milliseconds: 900),
+                                  period: Duration(milliseconds: 800),
                                   baseColor: Colors.white,
                                   highlightColor: Colors.black,
                                   child: Icon(Icons.fast_rewind,size: 32.0,),
@@ -343,10 +343,10 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                           if (_volumeTimer != null && _volumeTimer.isActive) {
                             _volumeTimer.cancel();
                             _volumeTimer =
-                                Timer(Duration(seconds: 1), onVolumeDone);
+                                Timer(Duration(microseconds: 1000), onVolumeDone);
                           } else {
                             _volumeTimer =
-                                Timer(Duration(seconds: 1), onVolumeDone);
+                                Timer(Duration(milliseconds: 1000), onVolumeDone);
                           }
                         },
                         onDoubleTap: () {
@@ -365,10 +365,10 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                               _seekForwardTimer.isActive) {
                             _seekForwardTimer.cancel();
                             _seekForwardTimer =
-                                Timer(Duration(seconds: 1), onSeekForwardDone);
+                                Timer(Duration(milliseconds: 600), onSeekForwardDone);
                           } else {
                             _seekForwardTimer =
-                                Timer(Duration(seconds: 1), onSeekForwardDone);
+                                Timer(Duration(milliseconds: 600), onSeekForwardDone);
                           }
                         },
                       ),
@@ -429,10 +429,10 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                               _seekBackwardTimer.isActive) {
                             _seekBackwardTimer.cancel();
                             _seekBackwardTimer =
-                                Timer(Duration(seconds: 1), onSeekBackwardDone);
+                                Timer(Duration(milliseconds: 600), onSeekBackwardDone);
                           } else {
                             _seekBackwardTimer =
-                                Timer(Duration(seconds: 1), onSeekBackwardDone);
+                                Timer(Duration(milliseconds: 600), onSeekBackwardDone);
                           }
                         },
                       ),
