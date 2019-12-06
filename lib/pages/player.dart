@@ -29,9 +29,11 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   VideoPlayerController _controller;
   AnimationController _animationController;
   bool _showOverlay = false;
+  bool _showBottom = false;
   Timer _timer;
   Timer _volumeTimer;
   Timer _brightnessTimer;
+  Timer _bottomTimer;
 
   double _continuousValue = 0.0;
 
@@ -105,6 +107,12 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   onVolumeDone() {
     setState(() {
       _isVolumeChanging = false;
+    });
+  }
+
+  onSeekingDone() {
+    setState(() {
+      _showBottom = false;
     });
   }
 
@@ -271,6 +279,16 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                                 Timer(Duration(seconds: 1), onVolumeDone);
                           }
                         },
+                        onDoubleTap: () {
+                          int seconds =
+                              _controller.value.position.inSeconds + 10;
+                          Duration duration = Duration(
+                            hours: (seconds / 3600).floor(),
+                            minutes: ((seconds % 3600) / 60).floor(),
+                            seconds: (seconds % 60).floor(),
+                          );
+                          _controller.seekTo(duration);
+                        },
                       ),
                     ),
                   ),
@@ -313,6 +331,16 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                                 Timer(Duration(seconds: 1), onBrightnessDone);
                           }
                         },
+                        onDoubleTap: () {
+                          int seconds =
+                              _controller.value.position.inSeconds - 10;
+                          Duration duration = Duration(
+                            hours: (seconds / 3600).floor(),
+                            minutes: ((seconds % 3600) / 60).floor(),
+                            seconds: (seconds % 60).floor(),
+                          );
+                          _controller.seekTo(duration);
+                        },
                       ),
                     ),
                   ),
@@ -324,7 +352,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: _showOverlay
+                    child: _showOverlay || _showBottom
                         ? _showBottomControllers(context, mediaQuery)
                         : Container(),
                   ),
@@ -348,7 +376,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
       onTap: _hideShowOverlay,
       onHorizontalDragUpdate: (update) {
         double a = _controller.value.position.inSeconds.toDouble();
-        a += update.primaryDelta * 0.6;
+        a += update.primaryDelta * 0.5;
         a = a.clamp(0.0, _controller.value.duration.inSeconds.toDouble());
         int seconds = a.toInt();
         Duration duration = Duration(
@@ -358,6 +386,22 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
         );
         print(duration);
         _controller.seekTo(duration);
+      },
+      onHorizontalDragStart: (details) {
+        setState(() {
+          _showBottom = true;
+        });
+        if (_bottomTimer != null && _bottomTimer.isActive) {
+          _bottomTimer.cancel();
+        }
+      },
+      onHorizontalDragEnd: (details) {
+        if (_bottomTimer != null && _bottomTimer.isActive) {
+          _bottomTimer.cancel();
+          _bottomTimer = Timer(Duration(seconds: 1), onSeekingDone);
+        } else {
+          _bottomTimer = Timer(Duration(seconds: 1), onSeekingDone);
+        }
       },
     );
   }
