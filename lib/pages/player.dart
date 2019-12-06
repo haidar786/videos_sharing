@@ -242,7 +242,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                           width: mediaQuery.size.width / 2,
                         ),
                         onVerticalDragUpdate: (update) {
-                          vol -= (update.primaryDelta * 0.07);
+                          vol -= (update.primaryDelta * maxVolume / 300);
                           vol = vol.clamp(0.0, maxVolume.toDouble());
                           print(vol / maxVolume);
                           VolumeWatcher.setVolume(vol);
@@ -346,6 +346,19 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
               ),
       ),
       onTap: _hideShowOverlay,
+      onHorizontalDragUpdate: (update) {
+        double a = _controller.value.position.inSeconds.toDouble();
+        a += update.primaryDelta * 0.6;
+        a = a.clamp(0.0, _controller.value.duration.inSeconds.toDouble());
+        int seconds = a.toInt();
+        Duration duration = Duration(
+          hours: (seconds / 3600).floor(),
+          minutes: ((seconds % 3600) / 60).floor(),
+          seconds: (seconds % 60).floor(),
+        );
+        print(duration);
+        _controller.seekTo(duration);
+      },
     );
   }
 
@@ -359,7 +372,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: AutoSizeText(
-                _continuousValue.toString(),
+                format(_controller.value.position),
                 style: TextStyle(color: Colors.white, fontSize: 12.0),
               ),
             ),
