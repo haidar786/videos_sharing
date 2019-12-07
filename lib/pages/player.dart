@@ -163,64 +163,6 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                         )
                       : Container(),
                   Align(
-                    alignment: Alignment.topCenter,
-                    child: _showOverlay
-                        ? Container(
-                            height: kToolbarHeight + 24.0,
-                            child: AppBar(
-                              backgroundColor: Colors.transparent,
-                              title: Text(
-                                widget.videoName,
-                                style: TextStyle(fontSize: 15.0),
-                              ),
-                              actions: <Widget>[
-                                InkWell(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(Icons.more_vert),
-                                  ),
-                                  onTap: () {},
-                                )
-                              ],
-                            ),
-                          )
-                        : Container(),
-                  ),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: _showOverlay
-                        ? Container(
-                            alignment: Alignment.bottomCenter,
-                            width: 56.0,
-                            height: kToolbarHeight + 72.0,
-                            child: InkWell(
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Icon(
-                                  Icons.screen_rotation,
-                                  color: Colors.white,
-                                  size: 24.0,
-                                ),
-                              ),
-                              onTap: () {
-                                if (mediaQuery.orientation ==
-                                    Orientation.portrait) {
-                                  SystemChrome.setPreferredOrientations([
-                                    DeviceOrientation.landscapeLeft,
-                                    DeviceOrientation.landscapeRight
-                                  ]);
-                                } else {
-                                  SystemChrome.setPreferredOrientations([
-                                    DeviceOrientation.portraitUp,
-                                    DeviceOrientation.portraitDown
-                                  ]);
-                                }
-                              },
-                            ),
-                          )
-                        : Container(),
-                  ),
-                  Align(
                     alignment: Alignment.centerLeft,
                     child: _isBrightnessChanging
                         ? Container(
@@ -297,7 +239,10 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                                   period: Duration(milliseconds: 800),
                                   baseColor: Colors.white,
                                   highlightColor: Colors.black,
-                                  child: Icon(Icons.fast_rewind,size: 32.0,),
+                                  child: Icon(
+                                    Icons.fast_rewind,
+                                    size: 32.0,
+                                  ),
                                 ),
                                 AutoSizeText(
                                   "-10 seconds",
@@ -312,8 +257,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                   Align(
                     alignment: Alignment.centerRight,
                     child: Padding(
-                      padding:
-                          const EdgeInsets.only(top: kToolbarHeight + 24.0),
+                      padding: const EdgeInsets.only(top: 24.0),
                       child: GestureDetector(
                         child: Container(
                           color: Colors.red.withOpacity(0.0),
@@ -342,11 +286,11 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                         onVerticalDragEnd: (details) {
                           if (_volumeTimer != null && _volumeTimer.isActive) {
                             _volumeTimer.cancel();
-                            _volumeTimer =
-                                Timer(Duration(microseconds: 1000), onVolumeDone);
+                            _volumeTimer = Timer(
+                                Duration(microseconds: 1000), onVolumeDone);
                           } else {
-                            _volumeTimer =
-                                Timer(Duration(milliseconds: 1000), onVolumeDone);
+                            _volumeTimer = Timer(
+                                Duration(milliseconds: 1000), onVolumeDone);
                           }
                         },
                         onDoubleTap: () {
@@ -364,11 +308,11 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                           if (_seekForwardTimer != null &&
                               _seekForwardTimer.isActive) {
                             _seekForwardTimer.cancel();
-                            _seekForwardTimer =
-                                Timer(Duration(milliseconds: 600), onSeekForwardDone);
+                            _seekForwardTimer = Timer(
+                                Duration(milliseconds: 600), onSeekForwardDone);
                           } else {
-                            _seekForwardTimer =
-                                Timer(Duration(milliseconds: 600), onSeekForwardDone);
+                            _seekForwardTimer = Timer(
+                                Duration(milliseconds: 600), onSeekForwardDone);
                           }
                         },
                       ),
@@ -377,7 +321,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Padding(
-                      padding: EdgeInsets.only(top: kToolbarHeight + 24.0),
+                      padding: EdgeInsets.only(top: 24.0),
                       child: GestureDetector(
                         child: Container(
                           color: Colors.green.withOpacity(0.0),
@@ -428,15 +372,75 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                           if (_seekBackwardTimer != null &&
                               _seekBackwardTimer.isActive) {
                             _seekBackwardTimer.cancel();
-                            _seekBackwardTimer =
-                                Timer(Duration(milliseconds: 600), onSeekBackwardDone);
+                            _seekBackwardTimer = Timer(
+                                Duration(milliseconds: 600),
+                                onSeekBackwardDone);
                           } else {
-                            _seekBackwardTimer =
-                                Timer(Duration(milliseconds: 600), onSeekBackwardDone);
+                            _seekBackwardTimer = Timer(
+                                Duration(milliseconds: 600),
+                                onSeekBackwardDone);
                           }
                         },
                       ),
                     ),
+                  ),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: _showOverlay
+                        ? Container(
+                            height: kToolbarHeight + 24.0,
+                            child: AppBar(
+                              backgroundColor: Colors.transparent,
+                              title: Text(
+                                widget.videoName,
+                                style: TextStyle(fontSize: 15.0),
+                              ),
+                              actions: <Widget>[
+                                InkWell(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(Icons.more_vert),
+                                  ),
+                                  onTap: () {},
+                                )
+                              ],
+                            ),
+                          )
+                        : Container(),
+                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: _showOverlay
+                        ? Container(
+                            alignment: Alignment.bottomCenter,
+                            width: 56.0,
+                            height: kToolbarHeight + 72.0,
+                            child: InkWell(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Icon(
+                                  Icons.screen_rotation,
+                                  color: Colors.white,
+                                  size: 24.0,
+                                ),
+                              ),
+                              onTap: () {
+                                if (mediaQuery.orientation ==
+                                    Orientation.portrait) {
+                                  SystemChrome.setPreferredOrientations([
+                                    DeviceOrientation.landscapeLeft,
+                                    DeviceOrientation.landscapeRight
+                                  ]);
+                                } else {
+                                  SystemChrome.setPreferredOrientations([
+                                    DeviceOrientation.portraitUp,
+                                    DeviceOrientation.portraitDown
+                                  ]);
+                                }
+                              },
+                            ),
+                          )
+                        : Container(),
                   ),
                   Align(
                     alignment: Alignment.center,
@@ -497,6 +501,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
           _bottomTimer = Timer(Duration(seconds: 1), onSeekingDone);
         }
       },
+      onVerticalDragUpdate: (update) {},
     );
   }
 
