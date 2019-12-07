@@ -65,9 +65,9 @@ class _MyAppState extends State<MyApp> {
     bool isDark =
         (widget.sharedPreferences.getBool("isDark") ?? false) ? true : false;
     return isDark
-        ? ThemeData(brightness: Brightness.dark, primarySwatch: Colors.blueGrey)
+        ? ThemeData(brightness: Brightness.dark, primarySwatch: Colors.red)
         : ThemeData(
-            brightness: Brightness.light, primarySwatch: Colors.blueGrey);
+            brightness: Brightness.light, primarySwatch: Colors.red);
   }
 
   Future<bool> _checkPermission() async {
