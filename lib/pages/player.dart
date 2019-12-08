@@ -289,55 +289,69 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                           width: mediaQuery.size.width / 2,
                         ),
                         onVerticalDragUpdate: (update) {
-                          vol -= (update.primaryDelta * maxVolume / 300);
-                          vol = vol.clamp(0.0, maxVolume.toDouble());
-                          print(vol / maxVolume);
-                          VolumeWatcher.setVolume(vol);
-                          setState(() {
-                            vol = vol;
-                          });
+                          if (!_isLocked) {
+                            vol -= (update.primaryDelta * maxVolume / 300);
+                            vol = vol.clamp(0.0, maxVolume.toDouble());
+                            print(vol / maxVolume);
+                            VolumeWatcher.setVolume(vol);
+                            setState(() {
+                              vol = vol;
+                            });
+                          }
                         },
                         onVerticalDragStart: (details) {
-                          initPlatformState();
-                          setState(
-                            () {
-                              _isVolumeChanging = true;
-                            },
-                          );
-                          if (_volumeTimer != null && _volumeTimer.isActive) {
-                            _volumeTimer.cancel();
+                          if (!_isLocked) {
+                            initPlatformState();
+                            setState(
+                              () {
+                                _isVolumeChanging = true;
+                              },
+                            );
+                            if (_volumeTimer != null && _volumeTimer.isActive) {
+                              _volumeTimer.cancel();
+                            }
+                          } else {
+                            _hideShowLockIcon();
                           }
                         },
                         onVerticalDragEnd: (details) {
-                          if (_volumeTimer != null && _volumeTimer.isActive) {
-                            _volumeTimer.cancel();
-                            _volumeTimer = Timer(
-                                Duration(microseconds: 1000), onVolumeDone);
-                          } else {
-                            _volumeTimer = Timer(
-                                Duration(milliseconds: 1000), onVolumeDone);
+                          if (!_isLocked) {
+                            if (_volumeTimer != null && _volumeTimer.isActive) {
+                              _volumeTimer.cancel();
+                              _volumeTimer = Timer(
+                                  Duration(microseconds: 1000), onVolumeDone);
+                            } else {
+                              _volumeTimer = Timer(
+                                  Duration(milliseconds: 1000), onVolumeDone);
+                            }
                           }
                         },
                         onDoubleTap: () {
-                          setState(() {
-                            _isForwardSeeking = true;
-                          });
-                          int seconds =
-                              _controller.value.position.inSeconds + 10;
-                          Duration duration = Duration(
-                            hours: (seconds / 3600).floor(),
-                            minutes: ((seconds % 3600) / 60).floor(),
-                            seconds: (seconds % 60).floor(),
-                          );
-                          _controller.seekTo(duration);
-                          if (_seekForwardTimer != null &&
-                              _seekForwardTimer.isActive) {
-                            _seekForwardTimer.cancel();
-                            _seekForwardTimer = Timer(
-                                Duration(milliseconds: 600), onSeekForwardDone);
+                          if (!_isLocked) {
+                            setState(() {
+                              _isForwardSeeking = true;
+                            });
+                            int seconds =
+                                _controller.value.position.inSeconds + 10;
+                            Duration duration = Duration(
+                              hours: (seconds / 3600).floor(),
+                              minutes: ((seconds % 3600) / 60).floor(),
+                              seconds: (seconds % 60).floor(),
+                            );
+                            _controller.seekTo(duration);
+                            if (_seekForwardTimer != null &&
+                                _seekForwardTimer.isActive) {
+                              _seekForwardTimer.cancel();
+                              _seekForwardTimer = Timer(
+                                  Duration(milliseconds: 600),
+                                  onSeekForwardDone);
+                            } else {
+                              _seekForwardTimer = Timer(
+                                  Duration(milliseconds: 600),
+                                  onSeekForwardDone);
+                            }
                           } else {
-                            _seekForwardTimer = Timer(
-                                Duration(milliseconds: 600), onSeekForwardDone);
+                            _hideShowLockIcon();
                           }
                         },
                       ),
@@ -353,57 +367,69 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                           width: mediaQuery.size.width / 2,
                         ),
                         onVerticalDragUpdate: (update) {
-                          _opacity -= update.primaryDelta * 0.004;
-                          _opacity = _opacity.clamp(0.0, 1.0);
-                          print((_opacity - 1.0).abs());
-                          setState(() {
-                            _opacity = _opacity;
-                          });
+                          if (!_isLocked) {
+                            _opacity -= update.primaryDelta * 0.004;
+                            _opacity = _opacity.clamp(0.0, 1.0);
+                            print((_opacity - 1.0).abs());
+                            setState(() {
+                              _opacity = _opacity;
+                            });
+                          }
                         },
                         onVerticalDragStart: (details) {
-                          setState(
-                            () {
-                              _isBrightnessChanging = true;
-                            },
-                          );
-                          if (_brightnessTimer != null &&
-                              _brightnessTimer.isActive) {
-                            _brightnessTimer.cancel();
+                          if (!_isLocked) {
+                            setState(
+                              () {
+                                _isBrightnessChanging = true;
+                              },
+                            );
+                            if (_brightnessTimer != null &&
+                                _brightnessTimer.isActive) {
+                              _brightnessTimer.cancel();
+                            }
+                          }else{
+                            _hideShowLockIcon();
                           }
                         },
                         onVerticalDragEnd: (details) {
-                          if (_brightnessTimer != null &&
-                              _brightnessTimer.isActive) {
-                            _brightnessTimer.cancel();
-                            _brightnessTimer =
-                                Timer(Duration(seconds: 1), onBrightnessDone);
-                          } else {
-                            _brightnessTimer =
-                                Timer(Duration(seconds: 1), onBrightnessDone);
+                          if (!_isLocked) {
+                            if (_brightnessTimer != null &&
+                                _brightnessTimer.isActive) {
+                              _brightnessTimer.cancel();
+                              _brightnessTimer =
+                                  Timer(Duration(seconds: 1), onBrightnessDone);
+                            } else {
+                              _brightnessTimer =
+                                  Timer(Duration(seconds: 1), onBrightnessDone);
+                            }
                           }
                         },
                         onDoubleTap: () {
-                          setState(() {
-                            _isBackwardSeeking = true;
-                          });
-                          int seconds =
-                              _controller.value.position.inSeconds - 10;
-                          Duration duration = Duration(
-                            hours: (seconds / 3600).floor(),
-                            minutes: ((seconds % 3600) / 60).floor(),
-                            seconds: (seconds % 60).floor(),
-                          );
-                          _controller.seekTo(duration);
-                          if (_seekBackwardTimer != null &&
-                              _seekBackwardTimer.isActive) {
-                            _seekBackwardTimer.cancel();
-                            _seekBackwardTimer = Timer(
-                                Duration(milliseconds: 600),
-                                onSeekBackwardDone);
-                          } else {
-                            _seekBackwardTimer = Timer(
-                                Duration(milliseconds: 600),
-                                onSeekBackwardDone);
+                          if (!_isLocked) {
+                            setState(() {
+                              _isBackwardSeeking = true;
+                            });
+                            int seconds =
+                                _controller.value.position.inSeconds - 10;
+                            Duration duration = Duration(
+                              hours: (seconds / 3600).floor(),
+                              minutes: ((seconds % 3600) / 60).floor(),
+                              seconds: (seconds % 60).floor(),
+                            );
+                            _controller.seekTo(duration);
+                            if (_seekBackwardTimer != null &&
+                                _seekBackwardTimer.isActive) {
+                              _seekBackwardTimer.cancel();
+                              _seekBackwardTimer = Timer(
+                                  Duration(milliseconds: 600),
+                                  onSeekBackwardDone);
+                            } else {
+                              _seekBackwardTimer = Timer(
+                                  Duration(milliseconds: 600),
+                                  onSeekBackwardDone);
+                            }
+                          }else{
+                            _hideShowLockIcon();
                           }
                         },
                       ),
@@ -558,7 +584,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
           if (_bottomTimer != null && _bottomTimer.isActive) {
             _bottomTimer.cancel();
           }
-        }else {
+        } else {
           _hideShowLockIcon();
         }
       },
@@ -671,7 +697,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                 _hideShowOverlay();
                 setState(() {
                   _isLocked = true;
-                 // _showLock = true;
+                  // _showLock = true;
                 });
                 _hideShowLockIcon();
 //                if (_lockTimer != null && _lockTimer.isActive) {
