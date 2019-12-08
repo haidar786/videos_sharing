@@ -38,6 +38,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   Timer _seekForwardTimer;
   Timer _seekBackwardTimer;
   Timer _lockTimer;
+  Timer _aspectRatioTimer;
 
   double _continuousValue = 0.0;
 
@@ -49,12 +50,19 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   bool _isBackwardSeeking = false;
   bool _isLocked = false;
   bool _showLock = false;
+  bool _showAspectRatioText = false;
 
   //num currentVolume = 0;
   num initVolume = 0;
   num maxVolume = 0;
 
   double _aspectRatio;
+
+  int _cropNo = 1;
+
+  IconData _cropIcon;
+
+  String _aspectRatioText = "3:2";
 
   @override
   void initState() {
@@ -115,6 +123,22 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
     }
   }
 
+  _showAspectRatio() {
+    if (_aspectRatioTimer != null && _aspectRatioTimer.isActive) {
+      _aspectRatioTimer.cancel();
+      _aspectRatioTimer = Timer(Duration(seconds: 1), onAspectRatioChanging);
+    } else if (_showAspectRatioText) {
+      setState(() {
+        _showAspectRatioText = false;
+      });
+    } else {
+      setState(() {
+        _showAspectRatioText = true;
+      });
+      _aspectRatioTimer = Timer(Duration(seconds: 1), onAspectRatioChanging);
+    }
+  }
+
   onDoneLoading() {
     if (mounted && _controller.value.isPlaying) {
       setState(() {
@@ -157,6 +181,12 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   onShowLockDone() {
     setState(() {
       _showLock = false;
+    });
+  }
+
+  onAspectRatioChanging() {
+    setState(() {
+      _showAspectRatioText = false;
     });
   }
 
@@ -533,6 +563,16 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                             },
                           )
                         : Container(),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: _showAspectRatioText
+                        ? Text(
+                            _aspectRatioText,
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 40.0),
+                          )
+                        : Container(),
                   )
                 ],
               )
@@ -652,24 +692,24 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                 style: TextStyle(color: Colors.white, fontSize: 12.0),
               ),
             ),
-            GestureDetector(
-              child: Padding(
-                padding: EdgeInsets.only(right: 16.0),
-                child: Icon(
-                  _controller.value.volume == 0.0
-                      ? Icons.volume_off
-                      : Icons.volume_up,
-                  color: Colors.white,
-                ),
-              ),
-              onTap: () {
-                if (_controller.value.volume == 0.0) {
-                  _controller.setVolume(100.0);
-                }else {
-                  _controller.setVolume(0.0);
-                }
-              },
-            ),
+//            GestureDetector(
+//              child: Padding(
+//                padding: EdgeInsets.only(right: 16.0),
+//                child: Icon(
+//                  _controller.value.volume == 0.0
+//                      ? Icons.volume_off
+//                      : Icons.volume_up,
+//                  color: Colors.white,
+//                ),
+//              ),
+//              onTap: () {
+//                if (_controller.value.volume == 0.0) {
+//                  _controller.setVolume(100.0);
+//                }else {
+//                  _controller.setVolume(0.0);
+//                }
+//              },
+//            ),
           ],
         ),
       ],
@@ -717,12 +757,74 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
           InkWell(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Icon(Icons.crop),
+              child: Icon(_cropIcon == null ? Icons.crop : _cropIcon),
             ),
             onTap: () {
               setState(() {
                 _showTop = true;
               });
+
+              switch (_cropNo) {
+                case 0:
+                  _cropIcon = Icons.crop;
+                  _aspectRatio = _controller.value.aspectRatio;
+                  _cropNo = _cropNo + 1;
+                  _aspectRatioText = "Original";
+                  _showAspectRatio();
+                  break;
+                case 1:
+                  _cropIcon = Icons.crop_3_2;
+                  _aspectRatio = 3 / 2;
+                  _cropNo = _cropNo + 1;
+                  _aspectRatioText = "3:2";
+                  _showAspectRatio();
+                  break;
+                case 2:
+                  _cropIcon = Icons.crop_5_4;
+                  _aspectRatio = 5 / 4;
+                  _cropNo = _cropNo + 1;
+                  _aspectRatioText = "5:4";
+                  _showAspectRatio();
+                  break;
+                case 3:
+                  _cropIcon = Icons.crop_7_5;
+                  _aspectRatio = 7 / 5;
+                  _cropNo = _cropNo + 1;
+                  _aspectRatioText = "7:5";
+                  _showAspectRatio();
+                  break;
+                case 4:
+                  _cropIcon = Icons.crop_16_9;
+                  _aspectRatio = 16 / 9;
+                  _cropNo = _cropNo + 1;
+                  _cropNo = 0;
+                  _aspectRatioText = "16:9";
+                  _showAspectRatio();
+                  break;
+//                case 5:
+//                  _cropIcon = Icons.crop_landscape;
+//                  _aspectRatio = mediaQuery.size.aspectRatio;
+//                  _cropNo = 0;
+//                  break;
+              }
+            },
+          ),
+          InkWell(
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(
+                _controller.value.volume == 0.0
+                    ? Icons.volume_off
+                    : Icons.volume_up,
+                color: Colors.white,
+              ),
+            ),
+            onTap: () {
+              if (_controller.value.volume == 0.0) {
+                _controller.setVolume(100.0);
+              } else {
+                _controller.setVolume(0.0);
+              }
             },
           ),
           InkWell(
