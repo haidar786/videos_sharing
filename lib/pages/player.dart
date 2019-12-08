@@ -37,6 +37,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   Timer _bottomTimer;
   Timer _seekForwardTimer;
   Timer _seekBackwardTimer;
+  Timer _lockTimer;
 
   double _continuousValue = 0.0;
 
@@ -46,6 +47,8 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   bool _isVolumeChanging = false;
   bool _isForwardSeeking = false;
   bool _isBackwardSeeking = false;
+  bool _isLocked = false;
+  bool _showLock = false;
 
   //num currentVolume = 0;
   num initVolume = 0;
@@ -130,6 +133,12 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   onSeekBackwardDone() {
     setState(() {
       _isBackwardSeeking = false;
+    });
+  }
+
+  onShowLockDone() {
+    setState(() {
+      _showLock = false;
     });
   }
 
@@ -388,40 +397,40 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                     alignment: Alignment.topCenter,
                     child: _showOverlay ? _showAppBar(context) : Container(),
                   ),
-//                  Align(
-//                    alignment: Alignment.topLeft,
-//                    child: _showOverlay
-//                        ? Container(
-//                            alignment: Alignment.bottomCenter,
-//                            width: 56.0,
-//                            height: kToolbarHeight + 72.0,
-//                            child: InkWell(
-//                              child: Padding(
-//                                padding: const EdgeInsets.all(16.0),
-//                                child: Icon(
-//                                  Icons.screen_rotation,
-//                                  color: Colors.white,
-//                                  size: 24.0,
-//                                ),
-//                              ),
-//                              onTap: () {
-//                                if (mediaQuery.orientation ==
-//                                    Orientation.portrait) {
-//                                  SystemChrome.setPreferredOrientations([
-//                                    DeviceOrientation.landscapeLeft,
-//                                    DeviceOrientation.landscapeRight
-//                                  ]);
-//                                } else {
-//                                  SystemChrome.setPreferredOrientations([
-//                                    DeviceOrientation.portraitUp,
-//                                    DeviceOrientation.portraitDown
-//                                  ]);
-//                                }
-//                              },
-//                            ),
-//                          )
-//                        : Container(),
-//                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: _showOverlay
+                        ? Container(
+                            alignment: Alignment.bottomCenter,
+                            width: 56.0,
+                            height: kToolbarHeight + 72.0,
+                            child: InkWell(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: Icon(
+                                  Icons.screen_rotation,
+                                  color: Colors.white,
+                                  size: 24.0,
+                                ),
+                              ),
+                              onTap: () {
+                                if (mediaQuery.orientation ==
+                                    Orientation.portrait) {
+                                  SystemChrome.setPreferredOrientations([
+                                    DeviceOrientation.landscapeLeft,
+                                    DeviceOrientation.landscapeRight
+                                  ]);
+                                } else {
+                                  SystemChrome.setPreferredOrientations([
+                                    DeviceOrientation.portraitUp,
+                                    DeviceOrientation.portraitDown
+                                  ]);
+                                }
+                              },
+                            ),
+                          )
+                        : Container(),
+                  ),
                   Align(
                     alignment: Alignment.center,
                     child: _showOverlay
@@ -451,7 +460,32 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
 //                            ],
 //                          )),
 //                    ),
-//                  )
+//                  ),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: _showLock
+                        ? InkWell(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 28.0, left: 16.0),
+                              child: Card(
+                                color: Colors.grey.withOpacity(0.5),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Icon(Icons.lock),
+                                ),
+                              ),
+                            ),
+                            onTap: () {
+                              setState(() {
+                                _showLock = false;
+                                _isLocked = false;
+                              });
+                              _hideShowOverlay();
+                            },
+                          )
+                        : Container(),
+                  )
                 ],
               )
             : Stack(
@@ -469,7 +503,21 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                 ],
               ),
       ),
-      onTap: _hideShowOverlay,
+      onTap: () {
+        if (_isLocked) {
+          setState(() {
+            _showLock = true;
+          });
+          if (_lockTimer != null && _lockTimer.isActive) {
+            _lockTimer.cancel();
+            _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
+          } else {
+            _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
+          }
+        } else {
+          _hideShowOverlay();
+        }
+      },
       onHorizontalDragUpdate: (update) {
         double a = _controller.value.position.inSeconds.toDouble();
         a += update.primaryDelta * 0.5;
@@ -547,30 +595,30 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                 style: TextStyle(color: Colors.white, fontSize: 12.0),
               ),
             ),
-            InkWell(
-              child: Padding(
-                padding: EdgeInsets.only(right: 16.0),
-                child: Icon(
-                  mediaQuery.orientation == Orientation.portrait
-                      ? Icons.crop_landscape
-                      : Icons.crop_portrait,
-                  color: Colors.white,
-                ),
-              ),
-              onTap: () {
-                if (mediaQuery.orientation == Orientation.portrait) {
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.landscapeLeft,
-                    DeviceOrientation.landscapeRight
-                  ]);
-                } else {
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.portraitUp,
-                    DeviceOrientation.portraitDown
-                  ]);
-                }
-              },
-            ),
+//            InkWell(
+//              child: Padding(
+//                padding: EdgeInsets.only(right: 16.0),
+//                child: Icon(
+//                  mediaQuery.orientation == Orientation.portrait
+//                      ? Icons.crop_landscape
+//                      : Icons.crop_portrait,
+//                  color: Colors.white,
+//                ),
+//              ),
+//              onTap: () {
+//                if (mediaQuery.orientation == Orientation.portrait) {
+//                  SystemChrome.setPreferredOrientations([
+//                    DeviceOrientation.landscapeLeft,
+//                    DeviceOrientation.landscapeRight
+//                  ]);
+//                } else {
+//                  SystemChrome.setPreferredOrientations([
+//                    DeviceOrientation.portraitUp,
+//                    DeviceOrientation.portraitDown
+//                  ]);
+//                }
+//              },
+//            ),
           ],
         ),
       ],
@@ -594,6 +642,19 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
               child: Icon(Icons.lock_outline),
             ),
             onTap: () {
+              setState(() {
+                _hideShowOverlay();
+                setState(() {
+                  _isLocked = true;
+                  _showLock = true;
+                });
+                if (_lockTimer != null && _lockTimer.isActive) {
+                  _lockTimer.cancel();
+                  _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
+                } else {
+                  _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
+                }
+              });
 //              showModalBottomSheet(
 //                  context: buildContext,
 //                  builder: (builderContext) {
