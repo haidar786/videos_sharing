@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
@@ -31,6 +30,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   AnimationController _animationController;
   bool _showOverlay = false;
   bool _showBottom = false;
+  bool _showTop = false;
   Timer _timer;
   Timer _volumeTimer;
   Timer _brightnessTimer;
@@ -53,6 +53,8 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   //num currentVolume = 0;
   num initVolume = 0;
   num maxVolume = 0;
+
+  double _aspectRatio;
 
   @override
   void initState() {
@@ -100,7 +102,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   _hideShowLockIcon() {
     if (_lockTimer != null && _lockTimer.isActive) {
       _lockTimer.cancel();
-      _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
+      _lockTimer = Timer(Duration(seconds: 2), onShowLockDone);
     } else if (_showLock) {
       setState(() {
         _showLock = false;
@@ -109,7 +111,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
       setState(() {
         _showLock = true;
       });
-      _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
+      _lockTimer = Timer(Duration(seconds: 2), onShowLockDone);
     }
   }
 
@@ -170,7 +172,9 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                 alignment: Alignment.center,
                 children: <Widget>[
                   AspectRatio(
-                    aspectRatio: mediaQuery.size.aspectRatio,
+                    aspectRatio: _aspectRatio == null
+                        ? _controller.value.aspectRatio
+                        : _aspectRatio,
                     child: VideoPlayer(_controller),
                   ),
                   AspectRatio(
@@ -387,7 +391,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                                 _brightnessTimer.isActive) {
                               _brightnessTimer.cancel();
                             }
-                          }else{
+                          } else {
                             _hideShowLockIcon();
                           }
                         },
@@ -428,7 +432,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                                   Duration(milliseconds: 600),
                                   onSeekBackwardDone);
                             }
-                          }else{
+                          } else {
                             _hideShowLockIcon();
                           }
                         },
@@ -437,7 +441,9 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                   ),
                   Align(
                     alignment: Alignment.topCenter,
-                    child: _showOverlay ? _showAppBar(context) : Container(),
+                    child: _showOverlay || _showTop
+                        ? _showAppBar(context, mediaQuery)
+                        : Container(),
                   ),
                   Align(
                     alignment: Alignment.topLeft,
@@ -611,7 +617,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.only(left: 16.0),
+              padding: const EdgeInsets.only(left: 12.0),
               child: AutoSizeText(
                 format(_controller.value.position),
                 style: TextStyle(color: Colors.white, fontSize: 12.0),
@@ -640,51 +646,50 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(right: 16.0),
+              padding: const EdgeInsets.only(right: 12.0),
               child: AutoSizeText(
                 format(_controller.value.duration),
                 style: TextStyle(color: Colors.white, fontSize: 12.0),
               ),
             ),
-//            InkWell(
-//              child: Padding(
-//                padding: EdgeInsets.only(right: 16.0),
-//                child: Icon(
-//                  mediaQuery.orientation == Orientation.portrait
-//                      ? Icons.crop_landscape
-//                      : Icons.crop_portrait,
-//                  color: Colors.white,
-//                ),
-//              ),
-//              onTap: () {
-//                if (mediaQuery.orientation == Orientation.portrait) {
-//                  SystemChrome.setPreferredOrientations([
-//                    DeviceOrientation.landscapeLeft,
-//                    DeviceOrientation.landscapeRight
-//                  ]);
-//                } else {
-//                  SystemChrome.setPreferredOrientations([
-//                    DeviceOrientation.portraitUp,
-//                    DeviceOrientation.portraitDown
-//                  ]);
-//                }
-//              },
-//            ),
+            GestureDetector(
+              child: Padding(
+                padding: EdgeInsets.only(right: 16.0),
+                child: Icon(
+                  _controller.value.volume == 0.0
+                      ? Icons.volume_off
+                      : Icons.volume_up,
+                  color: Colors.white,
+                ),
+              ),
+              onTap: () {
+                if (_controller.value.volume == 0.0) {
+                  _controller.setVolume(100.0);
+                }else {
+                  _controller.setVolume(0.0);
+                }
+              },
+            ),
           ],
         ),
       ],
     );
   }
 
-  Widget _showAppBar(BuildContext buildContext) {
+  Widget _showAppBar(BuildContext buildContext, MediaQueryData mediaQuery) {
     return Container(
       height: kToolbarHeight + 24.0,
       child: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        title: Text(
-          widget.videoName,
-          style: TextStyle(fontSize: 15.0),
+        title: Container(
+          width: mediaQuery.orientation == Orientation.portrait
+              ? mediaQuery.size.width / 3
+              : mediaQuery.size.width / 4,
+          child: Text(
+            widget.videoName,
+            style: TextStyle(fontSize: 15.0),
+          ),
         ),
         actions: <Widget>[
           InkWell(
@@ -697,79 +702,27 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                 _hideShowOverlay();
                 setState(() {
                   _isLocked = true;
-                  // _showLock = true;
                 });
                 _hideShowLockIcon();
-//                if (_lockTimer != null && _lockTimer.isActive) {
-//                  _lockTimer.cancel();
-//                  _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
-//                } else {
-//                  _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
-//                }
               });
-//              showModalBottomSheet(
-//                  context: buildContext,
-//                  builder: (builderContext) {
-//                    return ListView(
-//                      children: <Widget>[
-//                        ListTile(
-//                          title: Text("Crop 3 2"),
-//                          leading: Icon(Icons.crop_3_2),
-//                          onTap: () {},
-//                        ),
-//                        ListTile(
-//                          title: Text("Crop 5 4"),
-//                          leading: Icon(Icons.crop_5_4),
-//                          onTap: () {},
-//                        ),
-//                        ListTile(
-//                          title: Text("Crop 7 5"),
-//                          leading: Icon(Icons.crop_7_5),
-//                          onTap: () {},
-//                        ),
-//                        ListTile(
-//                          title: Text("Crop 16 9"),
-//                          leading: Icon(Icons.crop_16_9),
-//                          onTap: () {},
-//                        ),
-//                        ListTile(
-//                          title: Text("Crop din"),
-//                          leading: Icon(Icons.crop_din),
-//                          onTap: () {},
-//                        ),
-//                        ListTile(
-//                          title: Text("Crop 3 2"),
-//                          leading: Icon(Icons.crop_free),
-//                          onTap: () {},
-//                        ),
-//                        ListTile(
-//                          title: Text("Crop landscape"),
-//                          leading: Icon(Icons.crop_landscape),
-//                          onTap: () {},
-//                        ),
-//                        ListTile(
-//                          title: Text("Crop original"),
-//                          leading: Icon(Icons.crop_original),
-//                          onTap: () {},
-//                        ),
-//                        ListTile(
-//                          title: Text("Crop portrait"),
-//                          leading: Icon(Icons.crop_portrait),
-//                          onTap: () {},
-//                        ),
-//                        ListTile(
-//                          title: Text("Crop rotate"),
-//                          leading: Icon(Icons.crop_rotate),
-//                          onTap: () {},
-//                        ),
-//                        ListTile(
-//                          title: Text("Crop square"),
-//                          leading: Icon(Icons.crop_square),
-//                          onTap: () {},
-//                        ),
-//                      ],
-//                    );
-//                  });
+            },
+          ),
+          InkWell(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.subtitles),
+            ),
+            onTap: () {},
+          ),
+          InkWell(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.crop),
+            ),
+            onTap: () {
+              setState(() {
+                _showTop = true;
+              });
             },
           ),
           InkWell(
@@ -792,7 +745,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                     );
                   });
             },
-          )
+          ),
         ],
       ),
     );
