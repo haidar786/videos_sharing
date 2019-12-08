@@ -97,6 +97,22 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
     }
   }
 
+  _hideShowLockIcon() {
+    if (_lockTimer != null && _lockTimer.isActive) {
+      _lockTimer.cancel();
+      _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
+    } else if (_showLock) {
+      setState(() {
+        _showLock = false;
+      });
+    } else {
+      setState(() {
+        _showLock = true;
+      });
+      _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
+    }
+  }
+
   onDoneLoading() {
     if (mounted && _controller.value.isPlaying) {
       setState(() {
@@ -505,46 +521,55 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
       ),
       onTap: () {
         if (_isLocked) {
-          setState(() {
-            _showLock = true;
-          });
-          if (_lockTimer != null && _lockTimer.isActive) {
-            _lockTimer.cancel();
-            _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
-          } else {
-            _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
-          }
+          _hideShowLockIcon();
+//          setState(() {
+//            _showLock = true;
+//          });
+//          if (_lockTimer != null && _lockTimer.isActive) {
+//            _lockTimer.cancel();
+//            _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
+//          } else {
+//            _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
+//          }
         } else {
           _hideShowOverlay();
         }
       },
       onHorizontalDragUpdate: (update) {
-        double a = _controller.value.position.inSeconds.toDouble();
-        a += update.primaryDelta * 0.5;
-        a = a.clamp(0.0, _controller.value.duration.inSeconds.toDouble());
-        int seconds = a.toInt();
-        Duration duration = Duration(
-          hours: (seconds / 3600).floor(),
-          minutes: ((seconds % 3600) / 60).floor(),
-          seconds: (seconds % 60).floor(),
-        );
-        print(duration);
-        _controller.seekTo(duration);
+        if (!_isLocked) {
+          double a = _controller.value.position.inSeconds.toDouble();
+          a += update.primaryDelta * 0.5;
+          a = a.clamp(0.0, _controller.value.duration.inSeconds.toDouble());
+          int seconds = a.toInt();
+          Duration duration = Duration(
+            hours: (seconds / 3600).floor(),
+            minutes: ((seconds % 3600) / 60).floor(),
+            seconds: (seconds % 60).floor(),
+          );
+          print(duration);
+          _controller.seekTo(duration);
+        }
       },
       onHorizontalDragStart: (details) {
-        setState(() {
-          _showBottom = true;
-        });
-        if (_bottomTimer != null && _bottomTimer.isActive) {
-          _bottomTimer.cancel();
+        if (!_isLocked) {
+          setState(() {
+            _showBottom = true;
+          });
+          if (_bottomTimer != null && _bottomTimer.isActive) {
+            _bottomTimer.cancel();
+          }
+        }else {
+          _hideShowLockIcon();
         }
       },
       onHorizontalDragEnd: (details) {
-        if (_bottomTimer != null && _bottomTimer.isActive) {
-          _bottomTimer.cancel();
-          _bottomTimer = Timer(Duration(seconds: 1), onSeekingDone);
-        } else {
-          _bottomTimer = Timer(Duration(seconds: 1), onSeekingDone);
+        if (!_isLocked) {
+          if (_bottomTimer != null && _bottomTimer.isActive) {
+            _bottomTimer.cancel();
+            _bottomTimer = Timer(Duration(seconds: 1), onSeekingDone);
+          } else {
+            _bottomTimer = Timer(Duration(seconds: 1), onSeekingDone);
+          }
         }
       },
       onVerticalDragUpdate: (update) {},
@@ -646,14 +671,15 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                 _hideShowOverlay();
                 setState(() {
                   _isLocked = true;
-                  _showLock = true;
+                 // _showLock = true;
                 });
-                if (_lockTimer != null && _lockTimer.isActive) {
-                  _lockTimer.cancel();
-                  _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
-                } else {
-                  _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
-                }
+                _hideShowLockIcon();
+//                if (_lockTimer != null && _lockTimer.isActive) {
+//                  _lockTimer.cancel();
+//                  _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
+//                } else {
+//                  _lockTimer = Timer(Duration(seconds: 1), onShowLockDone);
+//                }
               });
 //              showModalBottomSheet(
 //                  context: buildContext,
@@ -739,28 +765,6 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                       ],
                     );
                   });
-//              showCupertinoModalPopup(
-//                  context: buildContext,
-//                  builder: (builderContext) {
-//                    return CupertinoActionSheet(
-//                      title: const Text('Choose Options'),
-//                      message: const Text('Your options are '),
-//                      actions: <Widget>[
-//                        CupertinoActionSheetAction(
-//                          child: const Text('One'),
-//                          onPressed: () {
-//                            Navigator.pop(context, 'One');
-//                          },
-//                        ),
-//                        CupertinoActionSheetAction(
-//                          child: const Text('Two'),
-//                          onPressed: () {
-//                            Navigator.pop(context, 'Two');
-//                          },
-//                        )
-//                      ],
-//                    );
-//                  });
             },
           )
         ],
