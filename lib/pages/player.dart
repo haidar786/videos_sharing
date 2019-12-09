@@ -773,34 +773,41 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                   _showAspectRatio();
                   break;
                 case 1:
+                  _cropIcon = Icons.aspect_ratio;
+                  _aspectRatio = mediaQuery.size.aspectRatio;
+                  _cropNo = _cropNo + 1;
+                  _aspectRatioText = "Stretch";
+                  _showAspectRatio();
+                  break;
+                case 2:
                   _cropIcon = Icons.crop_landscape;
                   _aspectRatio = 2 / 1;
                   _cropNo = _cropNo + 1;
                   _aspectRatioText = "2:1";
                   _showAspectRatio();
                   break;
-                case 2:
+                case 3:
                   _cropIcon = Icons.crop_3_2;
                   _aspectRatio = 3 / 2;
                   _cropNo = _cropNo + 1;
                   _aspectRatioText = "3:2";
                   _showAspectRatio();
                   break;
-                case 3:
+                case 4:
                   _cropIcon = Icons.crop_5_4;
                   _aspectRatio = 5 / 4;
                   _cropNo = _cropNo + 1;
                   _aspectRatioText = "5:4";
                   _showAspectRatio();
                   break;
-                case 4:
+                case 5:
                   _cropIcon = Icons.crop_7_5;
                   _aspectRatio = 7 / 5;
                   _cropNo = _cropNo + 1;
                   _aspectRatioText = "7:5";
                   _showAspectRatio();
                   break;
-                case 5:
+                case 6:
                   _cropIcon = Icons.crop_16_9;
                   _aspectRatio = 16 / 9;
                   _cropNo = _cropNo + 1;
