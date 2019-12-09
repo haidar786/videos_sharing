@@ -31,6 +31,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   bool _showOverlay = false;
   bool _showBottom = false;
   bool _showTop = false;
+
   Timer _timer;
   Timer _volumeTimer;
   Timer _brightnessTimer;
@@ -39,6 +40,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   Timer _seekBackwardTimer;
   Timer _lockTimer;
   Timer _aspectRatioTimer;
+  Timer _topTimer;
 
   double _continuousValue = 0.0;
 
@@ -139,6 +141,22 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
     }
   }
 
+  _showHideTopBar() {
+    if (_topTimer != null && _topTimer.isActive) {
+      _topTimer.cancel();
+      _topTimer = Timer(Duration(seconds: 2), onTopBarShowDone);
+    } else if (_showTop) {
+      setState(() {
+        _showTop = false;
+      });
+    } else {
+      setState(() {
+        _showTop = true;
+      });
+      _topTimer = Timer(Duration(seconds: 2), onTopBarShowDone);
+    }
+  }
+
   onDoneLoading() {
     if (mounted && _controller.value.isPlaying) {
       setState(() {
@@ -187,6 +205,12 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
   onAspectRatioChanging() {
     setState(() {
       _showAspectRatioText = false;
+    });
+  }
+
+  onTopBarShowDone() {
+    setState(() {
+      _showTop = false;
     });
   }
 
@@ -760,9 +784,14 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
               child: Icon(_cropIcon == null ? Icons.crop : _cropIcon),
             ),
             onTap: () {
-              setState(() {
-                _showTop = true;
-              });
+              if (_timer != null && _timer.isActive) {
+                _timer.cancel();
+                setState(() {
+                  SystemChrome.setEnabledSystemUIOverlays([]);
+                  _showOverlay = false;
+                });
+              }
+              _showHideTopBar();
 
               switch (_cropNo) {
                 case 0:
