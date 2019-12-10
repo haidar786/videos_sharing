@@ -14,10 +14,12 @@ class PermissionPage extends StatelessWidget {
   final SharedPreferences sharedPreferences;
   final dataString;
   final BaseDatabase baseDatabase;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         title: Text("Grant permission"),
       ),
@@ -29,25 +31,26 @@ class PermissionPage extends StatelessWidget {
               style: theme.textTheme.display1,
             ),
             RaisedButton(
-                child: Text("Give Permission"),
-                onPressed: () async {
-                  bool isGranted = await _checkPermission();
-                  isGranted
-                      ? Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MyApp(
-                                sharedPreferences: sharedPreferences,
-                                dataString: dataString,
-                                baseDatabase: baseDatabase),
-                          ),
-                        )
-                      : Scaffold.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text("Without Permission app won't run."),
-                          ),
-                        );
-                })
+              child: Text("Give Permission"),
+              onPressed: () async {
+                bool isGranted = await _checkPermission();
+                isGranted
+                    ? Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyApp(
+                              sharedPreferences: sharedPreferences,
+                              dataString: dataString,
+                              baseDatabase: baseDatabase),
+                        ),
+                      )
+                    : _scaffoldKey.currentState.showSnackBar(
+                        SnackBar(
+                          content: Text("Without Permission app won't run."),
+                        ),
+                      );
+              },
+            )
           ],
         ),
       ),
