@@ -1,12 +1,10 @@
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatelessWidget {
-  SettingsPage(
-      {Key key, @required this.sharedPreferences, @required this.onThemeChange})
-      : super(key: key);
+  SettingsPage({Key key, @required this.sharedPreferences}) : super(key: key);
   final SharedPreferences sharedPreferences;
-  final VoidCallback onThemeChange;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +19,10 @@ class SettingsPage extends StatelessWidget {
               subtitle: Text("Reduce glare and improve night viewing"),
               value: sharedPreferences.getBool("isDark") ?? false,
               onChanged: (value) {
-                sharedPreferences.setBool("isDark", value);
-                onThemeChange();
+                DynamicTheme.of(context).setBrightness(
+                    Theme.of(context).brightness == Brightness.dark
+                        ? Brightness.light
+                        : Brightness.dark);
               }),
           Divider(),
           SwitchListTile(
@@ -31,7 +31,6 @@ class SettingsPage extends StatelessWidget {
               value: sharedPreferences.getBool("isExternalPlayer") ?? false,
               onChanged: (value) {
                 sharedPreferences.setBool("isExternalPlayer", value);
-                onThemeChange();
               }),
           Divider(),
         ],

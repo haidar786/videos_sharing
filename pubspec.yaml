@@ -34,6 +34,8 @@ dependencies:
   volume_watcher: ^1.1.0
   flutter_spinkit: ^4.0.0
   shimmer: ^1.0.1
+  dynamic_theme: ^1.0.1
+
 #  simple_torrent_flutter:
 #    git:
 #      url: git://github.com/haidar786/simple_torrent_flutter.git
