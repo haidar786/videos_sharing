@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class SettingsPage extends StatefulWidget {
   SettingsPage(
       {Key key, @required this.sharedPreferences, @required this.onThemeChange})
@@ -15,7 +14,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,8 +37,9 @@ class _SettingsPageState extends State<SettingsPage> {
               value:
                   widget.sharedPreferences.getBool("isExternalPlayer") ?? false,
               onChanged: (value) {
-                widget.sharedPreferences.setBool("isExternalPlayer", value);
-                widget.onThemeChange();
+                setState(() {
+                  widget.sharedPreferences.setBool("isExternalPlayer", value);
+                });
               }),
           Divider(),
         ],
