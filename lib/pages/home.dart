@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:videos_sharing/model/video_files.dart';
 import 'package:videos_sharing/pages/settings.dart';
@@ -12,10 +13,12 @@ class HomePage extends StatelessWidget {
   HomePage(
       {Key key,
       @required this.sharedPreferences,
+      @required this.onThemeChange,
       @required this.dataString,
       @required this.baseDatabase})
       : super(key: key);
   final SharedPreferences sharedPreferences;
+  final VoidCallback onThemeChange;
   final dataString;
   final BaseDatabase baseDatabase;
 
@@ -57,6 +60,7 @@ class HomePage extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context1) => SettingsPage(
                         sharedPreferences: sharedPreferences,
+                        onThemeChange: onThemeChange,
                       ),
                     ),
                   );
