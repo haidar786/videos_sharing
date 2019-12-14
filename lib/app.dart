@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
     return isDark
         ? ThemeData(brightness: Brightness.dark, primarySwatch: Colors.cyan)
         : ThemeData(
-            brightness: Brightness.light, primarySwatch: Colors.blueGrey);
+            brightness: Brightness.light, primarySwatch: Colors.cyan);
   }
 
   Future<bool> _checkPermission() async {

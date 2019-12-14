@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends StatelessWidget {
   SettingsPage(
       {Key key, @required this.sharedPreferences, @required this.onThemeChange})
       : super(key: key);
   final SharedPreferences sharedPreferences;
   final VoidCallback onThemeChange;
-  @override
-  State<StatefulWidget> createState() {
-    return _SettingsPageState();
-  }
-}
-
-class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -27,20 +19,19 @@ class _SettingsPageState extends State<SettingsPage> {
           SwitchListTile(
               title: Text("Dark theme"),
               subtitle: Text("Reduce glare and improve night viewing"),
-              value: widget.sharedPreferences.getBool("isDark") ?? false,
+              value: sharedPreferences.getBool("isDark") ?? false,
               onChanged: (value) {
-                widget.sharedPreferences.setBool("isDark", value);
-                widget.onThemeChange();
+                sharedPreferences.setBool("isDark", value);
+                onThemeChange();
               }),
           Divider(),
           SwitchListTile(
               title: Text("External player"),
               subtitle: Text("Use other apps player."),
-              value:
-                  widget.sharedPreferences.getBool("isExternalPlayer") ?? false,
+              value: sharedPreferences.getBool("isExternalPlayer") ?? false,
               onChanged: (value) {
-                widget.sharedPreferences.setBool("isExternalPlayer", value);
-                widget.onThemeChange();
+                sharedPreferences.setBool("isExternalPlayer", value);
+                onThemeChange();
               }),
           Divider(),
         ],
