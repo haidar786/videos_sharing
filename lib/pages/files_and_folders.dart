@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:videos_sharing/model/files_and_folder.dart';
 import 'package:videos_sharing/pages/player.dart';
+import 'package:videos_sharing/pages/player_.dart';
 
 class FilesAndFoldersPage extends StatelessWidget {
   FilesAndFoldersPage({Key key, @required this.ffModel}) : super(key: key);
@@ -55,10 +56,14 @@ class FilesAndFoldersPage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => VideoPlayerPage(
-                                  videoUrl: element.path,
-                                  videoName: element.path.split('/').last,
-                                  mediaQuery: mediaQuery),
+                              builder: (context) {
+//                                return VideoPlayerPage(
+//                                    videoUrl: element.path,
+//                                    videoName: element.path.split('/').last,
+//                                    mediaQuery: mediaQuery);
+                              return PlayerPage(videoPath: element.path,);
+
+                              }
                             ),
                           );
                         },

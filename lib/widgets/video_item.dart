@@ -19,12 +19,13 @@ class VideoItems extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => VideoPlayerPage(
-                videoUrl: video.file.path,
-                mediaQuery: mediaQuery,
-                videoName: video.file.path.split('/').last,
-              ),
-            ),
+                builder: (context) => PlayerPage(videoPath: video.file.path)
+//                  VideoPlayerPage(
+//                videoUrl: video.file.path,
+//                mediaQuery: mediaQuery,
+//                videoName: video.file.path.split('/').last,
+//              ),
+                ),
           );
         });
   }
