@@ -106,12 +106,12 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   title: Text(_getVideosFromStorage()[index].folderName),
-//                  subtitle: Text(_getVideosFromStorage()[index].files.length ==
-//                          1
-//                      ? _getVideosFromStorage()[index].files.length.toString() +
-//                          " video"
-//                      : _getVideosFromStorage()[index].files.length.toString() +
-//                          " videos"),
+                  subtitle: Text(_getVideosFromStorage()[index].files.length ==
+                          1
+                      ? _getVideosFromStorage()[index].files.length.toString() +
+                          " video"
+                      : _getVideosFromStorage()[index].files.length.toString() +
+                          " videos"),
                   onTap: () {
                     Navigator.push(
                       context,
