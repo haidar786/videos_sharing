@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_player/video_player.dart';
 import 'package:videos_sharing/bloc/ratio/aspect_ratio_bloc.dart';
 import 'package:wakelock/wakelock.dart';
@@ -30,12 +31,10 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   @override
   Widget build(BuildContext context) {
     return _controller.value.initialized
-        ? StreamBuilder(
-            stream: aspectRatioBloc.aspectRationStream,
-            initialData: _controller.value.aspectRatio,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
+        ? BlocBuilder<AspectRatioBloc, double>(
+            builder: (context, ratio) {
               return AspectRatio(
-                aspectRatio: snapshot.data,
+                aspectRatio: ratio,
                 child: VideoPlayer(_controller),
               );
             },
@@ -47,7 +46,6 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   @override
   void dispose() {
-    aspectRatioBloc.dispose();
     _controller.dispose();
     Wakelock.disable();
     super.dispose();

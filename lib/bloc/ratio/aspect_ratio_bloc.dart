@@ -1,26 +1,22 @@
-import 'dart:async';
+import 'package:bloc/bloc.dart';
 
-import 'package:rxdart/rxdart.dart';
-import 'package:videos_sharing/bloc/bloc.dart';
+enum AspectRatioEvents { original, stretch }
 
-class AspectRatioBloc implements Bloc {
-//  double _aspectRatio;
-//
-//  double get aspectRatio => _aspectRatio;
-
-  final _aspectRatioController = PublishSubject<double>();
-
-  Stream<double> get aspectRationStream => _aspectRatioController.stream;
-
-  void updateAspectRatio(double aspectRatio) {
-    // _aspectRatio = aspectRatio;
-    _aspectRatioController.sink.add(aspectRatio);
-  }
+class AspectRatioBloc extends Bloc<AspectRatioEvents, double> {
+  @override
+  double get initialState => 1.0;
 
   @override
-  void dispose() {
-    _aspectRatioController.close();
+  Stream<double> mapEventToState(AspectRatioEvents event) async* {
+    switch (event) {
+      case AspectRatioEvents.original:
+        yield 1.0;
+        break;
+      case AspectRatioEvents.stretch:
+        yield 2.0;
+        break;
+      default:
+        throw Exception('unhandled event: $event');
+    }
   }
 }
-
-final aspectRatioBloc = AspectRatioBloc();

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:videos_sharing/bloc/ratio/aspect_ratio_bloc.dart';
 class TopBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -29,7 +28,7 @@ class TopBarWidget extends StatelessWidget {
                 child: Icon(Icons.aspect_ratio),
               ),
               onTap: () {
-                aspectRatioBloc.updateAspectRatio(2.0);
+
               },
             ),
           ],
