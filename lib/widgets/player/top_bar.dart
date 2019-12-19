@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:videos_sharing/bloc/ratio/aspect_ratio_bloc.dart';
+import 'package:videos_sharing/model/aspect_ratio_model.dart';
+
 class TopBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -22,13 +26,18 @@ class TopBarWidget extends StatelessWidget {
               ),
               onTap: () {},
             ),
-            InkWell(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Icon(Icons.aspect_ratio),
-              ),
-              onTap: () {
-
+            BlocBuilder<AspectRatioBloc, AspectRatioModel>(
+              builder: (context, ratioModelState) {
+                return InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Icon(ratioModelState.icon),
+                  ),
+                  onTap: () {
+                    BlocProvider.of<AspectRatioBloc>(context)
+                        .add(AspectRatioEvents.stretch);
+                  },
+                );
               },
             ),
           ],
