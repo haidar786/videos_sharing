@@ -34,8 +34,24 @@ class TopBarWidget extends StatelessWidget {
                     child: Icon(ratioModelState.icon),
                   ),
                   onTap: () {
-                    BlocProvider.of<AspectRatioBloc>(context)
-                        .add(AspectRatioEvents.stretch);
+                    switch (ratioModelState.aspectRatioEvents) {
+                      case AspectRatioEvents.original:
+                        BlocProvider.of<AspectRatioBloc>(context)
+                            .add(AspectRatioEvents.twoBYOne);
+                        break;
+                      case AspectRatioEvents.twoBYOne:
+                        BlocProvider.of<AspectRatioBloc>(context)
+                            .add(AspectRatioEvents.fourByThree);
+                        break;
+                      case AspectRatioEvents.fourByThree:
+                        BlocProvider.of<AspectRatioBloc>(context)
+                            .add(AspectRatioEvents.sixteenByNine);
+                        break;
+                      case AspectRatioEvents.sixteenByNine:
+                        BlocProvider.of<AspectRatioBloc>(context)
+                            .add(AspectRatioEvents.original);
+                        break;
+                    }
                   },
                 );
               },
