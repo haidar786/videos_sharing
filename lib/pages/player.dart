@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:videos_sharing/bloc/ratio/aspect_ratio_bloc.dart';
 import 'package:videos_sharing/widgets/player/aspect_ratio_name.dart';
+import 'package:videos_sharing/widgets/player/player_controllers.dart';
 import 'package:videos_sharing/widgets/player/rotate.dart';
 import 'package:videos_sharing/widgets/player/top_bar.dart';
 import 'package:videos_sharing/widgets/player/video_player.dart';
@@ -31,6 +32,10 @@ class PlayerPage extends StatelessWidget {
             Align(
               alignment: Alignment.topLeft,
               child: RotateWidget(),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: PlayerControllerWidget(),
             )
           ],
         ),
