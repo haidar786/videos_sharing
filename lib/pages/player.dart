@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:videos_sharing/bloc/ratio/aspect_ratio_bloc.dart';
-import 'package:videos_sharing/bloc/ratio/controller_bloc.dart';
+import 'package:videos_sharing/bloc/player/aspect_ratio_bloc.dart';
+import 'package:videos_sharing/bloc/player/controller_bloc.dart';
 import 'package:videos_sharing/widgets/player/aspect_ratio_name.dart';
 import 'package:videos_sharing/widgets/player/player_controllers.dart';
 import 'package:videos_sharing/widgets/player/rotate.dart';
@@ -22,7 +22,9 @@ class PlayerPage extends StatelessWidget {
               create: (context) => AspectRatioBloc(),
             ),
             BlocProvider<ControllerBloc>(
-              create: (BuildContext context) => ControllerBloc(videoPath),
+              create: (BuildContext context){
+                return ControllerBloc(videoPath);
+              },
             )
           ],
           child: Stack(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:videos_sharing/bloc/ratio/aspect_ratio_bloc.dart';
+import 'package:videos_sharing/bloc/player/aspect_ratio_bloc.dart';
 
 class AspectRatioModel {
   IconData icon;

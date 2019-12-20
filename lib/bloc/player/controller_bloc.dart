@@ -5,11 +5,8 @@ enum ControllerEvents { play, pause }
 
 class ControllerBloc extends Bloc<ControllerEvents, VideoPlayerController> {
   VideoPlayerController _controller;
-  String _videoPath;
-
-  ControllerBloc(String videoPath) {
-    _videoPath = videoPath;
-  }
+  final String videoPath;
+  ControllerBloc(this.videoPath);
 
   @override
   VideoPlayerController get initialState => initializePlayer();
@@ -29,10 +26,16 @@ class ControllerBloc extends Bloc<ControllerEvents, VideoPlayerController> {
   }
 
   VideoPlayerController initializePlayer() {
-    _controller = VideoPlayerController.network("https://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4");
+    _controller = VideoPlayerController.network(videoPath);
     _controller.initialize().then((_) {
       _controller.play();
     });
     return _controller;
+  }
+
+  @override
+  Future<void> close() {
+    _controller.dispose();
+    return super.close();
   }
 }

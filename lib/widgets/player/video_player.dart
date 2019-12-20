@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_player/video_player.dart';
-import 'package:videos_sharing/bloc/ratio/aspect_ratio_bloc.dart';
-import 'package:videos_sharing/bloc/ratio/controller_bloc.dart';
+import 'package:videos_sharing/bloc/player/aspect_ratio_bloc.dart';
+import 'package:videos_sharing/bloc/player/controller_bloc.dart';
 import 'package:videos_sharing/model/aspect_ratio_model.dart';
 import 'package:wakelock/wakelock.dart';
 
