@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:video_player/video_player.dart';
 
-enum ControllerEvents { aspectRatio ,play, pause }
+enum ControllerEvents { play, pause }
 
 class ControllerBloc extends Bloc<ControllerEvents, VideoPlayerController> {
   VideoPlayerController _controller;
@@ -19,9 +19,6 @@ class ControllerBloc extends Bloc<ControllerEvents, VideoPlayerController> {
         break;
       case ControllerEvents.pause:
         _controller.pause();
-        break;
-      case ControllerEvents.aspectRatio:
-        yield this.state;
         break;
       default:
         throw "unhandled exception $event";
