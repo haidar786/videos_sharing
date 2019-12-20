@@ -26,16 +26,26 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   Widget build(BuildContext context) {
     return BlocBuilder<ControllerBloc, VideoPlayerController>(
       builder: (BuildContext context, VideoPlayerController controller) {
-        return BlocBuilder<AspectRatioBloc, AspectRatioModel>(
-          builder: (context, ratioModel) {
-            return AspectRatio(
-              aspectRatio: ratioModel.aspectRatio == 0.0
-                  ? controller.value.aspectRatio
-                  : ratioModel.aspectRatio,
-              child: VideoPlayer(controller),
-            );
-          },
-        );
+        if (controller.value.initialized) {
+          return BlocBuilder<AspectRatioBloc, AspectRatioModel>(
+            builder: (context, ratioModel) {
+              return AspectRatio(
+                aspectRatio: ratioModel.aspectRatio == 0.0
+                    ? controller.value.aspectRatio
+                    : ratioModel.aspectRatio,
+                child: VideoPlayer(controller),
+              );
+            },
+          );
+        } else {
+          controller.initialize().then((_) {
+            controller.play();
+            setState(() {});
+          });
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
       },
     );
   }
