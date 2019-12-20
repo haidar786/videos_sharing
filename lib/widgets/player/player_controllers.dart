@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:video_player/video_player.dart';
+import 'package:videos_sharing/bloc/ratio/controller_bloc.dart';
 
 class PlayerControllerWidget extends StatefulWidget {
   @override
@@ -10,8 +13,6 @@ class PlayerControllerWidget extends StatefulWidget {
 class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
     with SingleTickerProviderStateMixin {
   AnimationController _animationController;
-
-  bool _isPlaying = true;
 
   @override
   void initState() {
@@ -27,37 +28,44 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
       width: mediaQuery.orientation == Orientation.portrait
           ? mediaQuery.size.width
           : mediaQuery.size.height,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Icon(
-            Icons.skip_previous,
-            size: 36.0,
-            color: Colors.grey[600],
-          ),
-          InkWell(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: AnimatedIcon(
-                icon: AnimatedIcons.pause_play,
-                size: 56.0,
-                color: Colors.white,
-                progress: _animationController,
+      child: BlocBuilder<ControllerBloc, VideoPlayerController>(
+        builder: (BuildContext context, VideoPlayerController state) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Icon(
+                Icons.skip_previous,
+                size: 36.0,
+                color: Colors.grey[600],
               ),
-            ),
-            onTap: () {
-              _isPlaying
-                  ? _animationController.forward()
-                  : _animationController.reverse();
-              _isPlaying = !_isPlaying;
-            },
-          ),
-          Icon(
-            Icons.skip_next,
-            size: 36.0,
-            color: Colors.grey[600],
-          ),
-        ],
+              InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: AnimatedIcon(
+                    icon: AnimatedIcons.pause_play,
+                    size: 56.0,
+                    color: Colors.white,
+                    progress: _animationController,
+                  ),
+                ),
+                onTap: () {
+                  if (state.value.isPlaying) {
+                    _animationController.forward();
+                    state.pause();
+                  } else {
+                    _animationController.reverse();
+                    state.play();
+                  }
+                },
+              ),
+              Icon(
+                Icons.skip_next,
+                size: 36.0,
+                color: Colors.grey[600],
+              ),
+            ],
+          );
+        },
       ),
     );
   }
