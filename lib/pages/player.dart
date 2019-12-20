@@ -22,7 +22,7 @@ class PlayerPage extends StatelessWidget {
               create: (context) => AspectRatioBloc(),
             ),
             BlocProvider<ControllerBloc>(
-              create: (BuildContext context){
+              create: (BuildContext context) {
                 return ControllerBloc(videoPath);
               },
             )
