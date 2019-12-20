@@ -11,10 +11,12 @@ import 'package:videos_sharing/widgets/player/video_player.dart';
 class PlayerPage extends StatelessWidget {
   PlayerPage({Key key, @required this.videoPath}) : super(key: key);
   final String videoPath;
+  GlobalKey<ScaffoldState> _globalKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _globalKey,
         backgroundColor: Colors.black,
         body: MultiBlocProvider(
           providers: [
@@ -30,7 +32,7 @@ class PlayerPage extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: <Widget>[
-              VideoPlayerWidget(videoPath: videoPath),
+              VideoPlayerWidget(videoPath: videoPath, globalKey: _globalKey,),
               Align(
                 alignment: Alignment.topCenter,
                 child: TopBarWidget(),

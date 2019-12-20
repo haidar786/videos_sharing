@@ -7,8 +7,11 @@ import 'package:videos_sharing/model/aspect_ratio_model.dart';
 import 'package:wakelock/wakelock.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
-  VideoPlayerWidget({Key key, @required this.videoPath}) : super(key: key);
+  VideoPlayerWidget(
+      {Key key, @required this.videoPath, @required this.globalKey})
+      : super(key: key);
   final videoPath;
+  final GlobalKey<ScaffoldState> globalKey;
   @override
   State<StatefulWidget> createState() {
     return _VideoPlayerWidgetState();
@@ -38,6 +41,17 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
             },
           );
         } else {
+          controller.addListener(() {
+            if (controller.value.hasError) {
+              print(controller.value.errorDescription);
+              widget.globalKey.currentState.showSnackBar(
+                SnackBar(
+                  content: Text(
+                      "This file has error or not supported by this video player."),
+                ),
+              );
+            }
+          });
           controller.initialize().then((_) {
             controller.play();
             setState(() {});
