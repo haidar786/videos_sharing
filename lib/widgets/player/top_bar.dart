@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_player/video_player.dart';
 import 'package:videos_sharing/bloc/player/aspect_ratio_bloc.dart';
 import 'package:videos_sharing/bloc/player/controller_bloc.dart';
-import 'package:videos_sharing/model/aspect_ratio_model.dart';
+import 'package:videos_sharing/bloc/state/aspect_ratio.dart';
 
 class TopBarWidget extends StatelessWidget {
   @override
@@ -28,7 +28,7 @@ class TopBarWidget extends StatelessWidget {
               ),
               onTap: () {},
             ),
-            BlocBuilder<AspectRatioBloc, AspectRatioModel>(
+            BlocBuilder<AspectRatioBloc, AspectRatioState>(
               builder: (context, ratioModelState) {
                 return InkWell(
                   child: Padding(

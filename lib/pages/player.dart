@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:videos_sharing/bloc/player/aspect_ratio_bloc.dart';
 import 'package:videos_sharing/bloc/player/controller_bloc.dart';
+import 'package:videos_sharing/bloc/player/volume_bloc.dart';
 import 'package:videos_sharing/widgets/player/aspect_ratio_name.dart';
 import 'package:videos_sharing/widgets/player/bottom_widgets.dart';
 import 'package:videos_sharing/widgets/player/seek_drag_container.dart';
 import 'package:videos_sharing/widgets/player/player_controllers.dart';
-import 'package:videos_sharing/widgets/player/right_container.dart';
+import 'package:videos_sharing/widgets/player/volume_container.dart';
 import 'package:videos_sharing/widgets/player/rotate.dart';
 import 'package:videos_sharing/widgets/player/top_bar.dart';
 import 'package:videos_sharing/widgets/player/video_player.dart';
@@ -27,9 +28,10 @@ class PlayerPage extends StatelessWidget {
               create: (context) => AspectRatioBloc(),
             ),
             BlocProvider<ControllerBloc>(
-              create: (BuildContext context) {
-                return ControllerBloc(videoPath);
-              },
+              create: (BuildContext context) => ControllerBloc(videoPath),
+            ),
+            BlocProvider<VolumeBloc>(
+              create: (BuildContext context) => VolumeBloc(),
             )
           ],
           child: Stack(
@@ -40,10 +42,10 @@ class PlayerPage extends StatelessWidget {
                 globalKey: _globalKey,
               ),
               SeekDragContainer(),
-//              Align(
-//                alignment: Alignment.centerRight,
-//                child: RightContainerWidget(),
-//              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: VolumeContainerWidget(),
+              ),
               Align(
                 alignment: Alignment.topCenter,
                 child: TopBarWidget(),

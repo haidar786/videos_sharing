@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:videos_sharing/bloc/player/aspect_ratio_bloc.dart';
-import 'package:videos_sharing/model/aspect_ratio_model.dart';
+import 'package:videos_sharing/bloc/state/aspect_ratio.dart';
 
 class AspectRatioNameWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AspectRatioBloc, AspectRatioModel>(
-      builder: (BuildContext context, AspectRatioModel state) {
+    return BlocBuilder<AspectRatioBloc, AspectRatioState>(
+      builder: (BuildContext context, AspectRatioState state) {
         return Visibility(
           visible: true,
           child: Text(

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_player/video_player.dart';
 import 'package:videos_sharing/bloc/player/aspect_ratio_bloc.dart';
 import 'package:videos_sharing/bloc/player/controller_bloc.dart';
-import 'package:videos_sharing/model/aspect_ratio_model.dart';
+import 'package:videos_sharing/bloc/state/aspect_ratio.dart';
 import 'package:wakelock/wakelock.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
@@ -32,7 +32,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     return BlocBuilder<ControllerBloc, VideoPlayerController>(
       builder: (BuildContext context, VideoPlayerController controller) {
         if (controller.value.initialized) {
-          return BlocBuilder<AspectRatioBloc, AspectRatioModel>(
+          return BlocBuilder<AspectRatioBloc, AspectRatioState>(
             builder: (context, ratioModel) {
               return AspectRatio(
                 aspectRatio: ratioModel.aspectRatio == 0.0
