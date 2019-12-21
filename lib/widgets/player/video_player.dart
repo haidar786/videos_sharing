@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_player/video_player.dart';
 import 'package:videos_sharing/bloc/player/aspect_ratio_bloc.dart';
@@ -22,6 +23,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   @override
   void initState() {
     Wakelock.enable();
+   // SystemChrome.setEnabledSystemUIOverlays([]);
     super.initState();
   }
 
@@ -54,6 +56,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           });
           controller.initialize().then((_) {
             controller.play();
+            controller.setLooping(true);
             setState(() {});
           });
           return Center(
@@ -67,6 +70,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   @override
   void dispose() {
     Wakelock.disable();
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+    SystemChrome.setPreferredOrientations(DeviceOrientation.values);
     super.dispose();
   }
 }

@@ -234,7 +234,9 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                   AspectRatio(
                     aspectRatio: _controller.value.aspectRatio,
                     child: Container(
-                      color: Colors.black.withOpacity((_opacity - 1.0).abs()),
+                      color: Colors.black.withOpacity(
+                        (_opacity - 1.0).abs(),
+                      ),
                     ),
                   ),
                   _showOverlay
@@ -716,24 +718,6 @@ class _VideoPlayerPageState extends State<VideoPlayerPage>
                 style: TextStyle(color: Colors.white, fontSize: 12.0),
               ),
             ),
-//            GestureDetector(
-//              child: Padding(
-//                padding: EdgeInsets.only(right: 16.0),
-//                child: Icon(
-//                  _controller.value.volume == 0.0
-//                      ? Icons.volume_off
-//                      : Icons.volume_up,
-//                  color: Colors.white,
-//                ),
-//              ),
-//              onTap: () {
-//                if (_controller.value.volume == 0.0) {
-//                  _controller.setVolume(100.0);
-//                }else {
-//                  _controller.setVolume(0.0);
-//                }
-//              },
-//            ),
           ],
         ),
       ],
