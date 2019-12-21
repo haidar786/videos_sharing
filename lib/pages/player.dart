@@ -40,10 +40,10 @@ class PlayerPage extends StatelessWidget {
                 globalKey: _globalKey,
               ),
               SeekDragContainer(),
-              Align(
-                alignment: Alignment.centerRight,
-                child: RightContainerWidget(),
-              ),
+//              Align(
+//                alignment: Alignment.centerRight,
+//                child: RightContainerWidget(),
+//              ),
               Align(
                 alignment: Alignment.topCenter,
                 child: TopBarWidget(),
