@@ -15,12 +15,8 @@ class SeekDragContainer extends StatefulWidget {
 
 class _SeekDragContainerState extends State<SeekDragContainer> {
   bool isVolume;
-//  double currentVolume = 8.0;
-//  double maxVolume = 15.0;
-
   @override
   void initState() {
-    //  _initPlatformState();
     super.initState();
   }
 
@@ -75,16 +71,4 @@ class _SeekDragContainerState extends State<SeekDragContainer> {
       },
     );
   }
-
-//  Future<void> _initPlatformState() async {
-//    num initVolume = await VolumeWatcher.getCurrentVolume;
-//    num maxVolume = await VolumeWatcher.getMaxVolume;
-//
-//    if (!mounted) return;
-//
-//    setState(() {
-//      this.maxVolume = maxVolume.toDouble();
-//      currentVolume = initVolume.toDouble();
-//    });
-//  }
 }
