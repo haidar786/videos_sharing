@@ -7,7 +7,7 @@ class BrightnessBloc extends Bloc<double, double> {
 
   @override
   Stream<double> mapEventToState(double event) async* {
-    Screen.setBrightness(event);
+    Screen.setBrightness(event.clamp(0.1, 1.0));
     yield event;
   }
 
@@ -18,7 +18,13 @@ class BrightnessBloc extends Bloc<double, double> {
 
   void _initBrightness() async {
     double _brightness = await Screen.brightness;
-    print("init brightness -> "+_brightness.toString());
+    // print("init brightness -> " + _brightness.toString());
     this.add(_brightness);
+  }
+
+  @override
+  Future<void> close() {
+    Screen.setBrightness(1.0);
+    return super.close();
   }
 }

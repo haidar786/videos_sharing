@@ -19,13 +19,15 @@ class _SeekDragContainerState extends State<SeekDragContainer> {
 
   @override
   Widget build(BuildContext context) {
-    var center = MediaQuery.of(context).size.width / 2;
+    var center = MediaQuery
+        .of(context)
+        .size
+        .width / 2;
     return BlocBuilder<ControllerBloc, VideoPlayerController>(
       builder: (BuildContext context, VideoPlayerController controller) {
         return BlocBuilder<VolumeBloc, VolumeControllerState>(
           builder: (BuildContext _, VolumeControllerState state) {
             return GestureDetector(
-              onTap: () {},
               onHorizontalDragUpdate: (update) {
                 double a = controller.value.position.inSeconds.toDouble();
                 a += update.primaryDelta * 0.5;
@@ -42,7 +44,7 @@ class _SeekDragContainerState extends State<SeekDragContainer> {
               onVerticalDragUpdate: (update) {
                 if (isVolume) {
                   state.currentVolume -=
-                      (update.primaryDelta * state.maxVolume / 300);
+                  (update.primaryDelta * state.maxVolume / 300);
                   state.currentVolume =
                       state.currentVolume.clamp(0.0, state.maxVolume);
                   //print(state.currentVolume / state.maxVolume);
@@ -51,10 +53,10 @@ class _SeekDragContainerState extends State<SeekDragContainer> {
                   );
                 } else {
                   print("brightness $update.globalPosition.dx");
-                  brightness -= (update.primaryDelta * 0.004);
-                  print("before "+brightness.toString());
-                  brightness = brightness.clamp(0.1, 1.0);
-                  print("after "+brightness.toString());
+                  brightness -= (update.primaryDelta * 0.0035);
+                  print("before " + brightness.toString());
+                  brightness = brightness.clamp(0.0, 1.0);
+                  print("after " + brightness.toString());
                   BlocProvider.of<BrightnessBloc>(context).add(brightness);
                 }
               },
@@ -63,7 +65,14 @@ class _SeekDragContainerState extends State<SeekDragContainer> {
                   isVolume = true;
                 } else {
                   isVolume = false;
+                  brightness = BlocProvider.of<BrightnessBloc>(context).state;
                 }
+              },
+              onDoubleTap: () {
+                print("double tap");
+              },
+              onTap: () {
+                print("tap");
               },
             );
           },
