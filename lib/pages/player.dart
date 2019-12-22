@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:videos_sharing/bloc/player/aspect_ratio_bloc.dart';
+import 'package:videos_sharing/bloc/player/brightness_bloc.dart';
 import 'package:videos_sharing/bloc/player/controller_bloc.dart';
 import 'package:videos_sharing/bloc/player/volume_bloc.dart';
 import 'package:videos_sharing/widgets/player/aspect_ratio_name.dart';
 import 'package:videos_sharing/widgets/player/bottom_widgets.dart';
+import 'package:videos_sharing/widgets/player/brightness_container.dart';
 import 'package:videos_sharing/widgets/player/seek_drag_container.dart';
 import 'package:videos_sharing/widgets/player/player_controllers.dart';
 import 'package:videos_sharing/widgets/player/volume_container.dart';
@@ -25,13 +27,16 @@ class PlayerPage extends StatelessWidget {
         body: MultiBlocProvider(
           providers: [
             BlocProvider<AspectRatioBloc>(
-              create: (context) => AspectRatioBloc(),
+              create: (BuildContext _) => AspectRatioBloc(),
             ),
             BlocProvider<ControllerBloc>(
-              create: (BuildContext context) => ControllerBloc(videoPath),
+              create: (BuildContext _) => ControllerBloc(videoPath),
             ),
             BlocProvider<VolumeBloc>(
-              create: (BuildContext context) => VolumeBloc(),
+              create: (BuildContext _) => VolumeBloc(),
+            ),
+            BlocProvider<BrightnessBloc>(
+              create: (BuildContext _) => BrightnessBloc(),
             )
           ],
           child: Stack(
@@ -45,6 +50,10 @@ class PlayerPage extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: VolumeContainerWidget(),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: BrightnessContainerWidget(),
               ),
               Align(
                 alignment: Alignment.topCenter,

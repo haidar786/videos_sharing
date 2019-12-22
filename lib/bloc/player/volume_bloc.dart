@@ -9,6 +9,7 @@ class VolumeBloc extends Bloc<VolumeControllerState, VolumeControllerState> {
   @override
   Stream<VolumeControllerState> mapEventToState(
       VolumeControllerState event) async* {
+    VolumeWatcher.setVolume(event.currentVolume);
     yield event;
   }
 
