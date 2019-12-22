@@ -21,10 +21,4 @@ class BrightnessBloc extends Bloc<double, double> {
     // print("init brightness -> " + _brightness.toString());
     this.add(_brightness);
   }
-
-  @override
-  Future<void> close() {
-    Screen.setBrightness(1.0);
-    return super.close();
-  }
 }
