@@ -2,12 +2,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:videos_sharing/backdrop/flutter_backdrop.dart';
 import 'package:videos_sharing/model/files_and_folder.dart';
 import 'package:videos_sharing/model/video_files.dart';
 import 'package:videos_sharing/pages/files_and_folders.dart';
 import 'package:videos_sharing/pages/videos_list.dart';
 import 'package:videos_sharing/services/database.dart';
-import 'package:flutter_backdrop/flutter_backdrop.dart';
 
 class HomePage extends StatefulWidget {
   HomePage(
@@ -44,7 +44,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Backdrop(
       appBarTitle: Text("Folders"),
-      frontHeaderHeight: 0.0,
+      frontHeaderHeight: 10.0,
+      shape: BeveledRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+        ),
+      ),
       appBarAnimatedLeadingMenuIcon: AnimatedIcons.close_menu,
       backLayer: PanelOne(),
       frontLayer: Scaffold(
@@ -228,6 +233,7 @@ class PanelOne extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Theme.of(context).primaryColor,
       child: Center(
         child: Text(
           'Panel ONE',

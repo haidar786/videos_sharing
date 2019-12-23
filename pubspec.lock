@@ -90,13 +90,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_backdrop:
-    dependency: "direct main"
-    description:
-      name: flutter_backdrop
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.4"
   flutter_bloc:
     dependency: "direct main"
     description:
@@ -200,13 +193,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.22.6"
-  scoped_model:
-    dependency: transitive
-    description:
-      name: scoped_model
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.1"
   screen:
     dependency: "direct main"
     description:
