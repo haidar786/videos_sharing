@@ -5,8 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:videos_sharing/model/files_and_folder.dart';
 import 'package:videos_sharing/model/video_files.dart';
 import 'package:videos_sharing/pages/files_and_folders.dart';
-import 'package:videos_sharing/pages/settings.dart';
-import 'package:videos_sharing/pages/torrent_history.dart';
 import 'package:videos_sharing/pages/videos_list.dart';
 import 'package:videos_sharing/services/database.dart';
 import 'package:flutter_backdrop/flutter_backdrop.dart';
@@ -46,54 +44,55 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Backdrop(
       appBarTitle: Text("Folders"),
+      frontHeaderHeight: 0.0,
       appBarAnimatedLeadingMenuIcon: AnimatedIcons.close_menu,
       backLayer: PanelOne(),
       frontLayer: Scaffold(
         key: _scaffoldKey,
-        drawer: Drawer(),
-        appBar: AppBar(
-          title: Text("Folders"),
-          actions: <Widget>[
-            PopupMenuButton<int>(
-              itemBuilder: (popUpContext) => <PopupMenuEntry<int>>[
-                PopupMenuItem(
-                  value: 1,
-                  child: Text("Torrents"),
-                ),
-                PopupMenuItem(
-                  value: 2,
-                  child: Text("Settings"),
-                ),
-              ],
-              onSelected: (value) {
-                switch (value) {
-                  case 1:
-                    Navigator.push(
-                      _scaffoldKey.currentContext,
-                      MaterialPageRoute(
-                        builder: (pageRouteContext) => TorrentHistory(
-                            sharedPreferences: widget.sharedPreferences,
-                            dataString: widget.dataString,
-                            baseDatabase: widget.baseDatabase),
-                      ),
-                    );
-                    break;
-                  case 2:
-                    Navigator.push(
-                      _scaffoldKey.currentContext,
-                      MaterialPageRoute(
-                        builder: (pageRouteContext) => SettingsPage(
-                          sharedPreferences: widget.sharedPreferences,
-                          onThemeChange: widget.onThemeChange,
-                        ),
-                      ),
-                    );
-                    break;
-                }
-              },
-            ),
-          ],
-        ),
+//        drawer: Drawer(),
+//        appBar: AppBar(
+//          title: Text("Folders"),
+//          actions: <Widget>[
+//            PopupMenuButton<int>(
+//              itemBuilder: (popUpContext) => <PopupMenuEntry<int>>[
+//                PopupMenuItem(
+//                  value: 1,
+//                  child: Text("Torrents"),
+//                ),
+//                PopupMenuItem(
+//                  value: 2,
+//                  child: Text("Settings"),
+//                ),
+//              ],
+//              onSelected: (value) {
+//                switch (value) {
+//                  case 1:
+//                    Navigator.push(
+//                      _scaffoldKey.currentContext,
+//                      MaterialPageRoute(
+//                        builder: (pageRouteContext) => TorrentHistory(
+//                            sharedPreferences: widget.sharedPreferences,
+//                            dataString: widget.dataString,
+//                            baseDatabase: widget.baseDatabase),
+//                      ),
+//                    );
+//                    break;
+//                  case 2:
+//                    Navigator.push(
+//                      _scaffoldKey.currentContext,
+//                      MaterialPageRoute(
+//                        builder: (pageRouteContext) => SettingsPage(
+//                          sharedPreferences: widget.sharedPreferences,
+//                          onThemeChange: widget.onThemeChange,
+//                        ),
+//                      ),
+//                    );
+//                    break;
+//                }
+//              },
+//            ),
+//          ],
+//        ),
         body: RefreshIndicator(
           key: _refreshIndicatorKey,
           onRefresh: _refresh,
