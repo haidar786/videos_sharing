@@ -37,7 +37,7 @@ dependencies:
   bloc: ^2.0.0
   flutter_bloc: ^2.1.1
   screen: ^0.0.5
-  backdrop: ^0.2.7
+  flutter_backdrop: ^1.0.4
 #  simple_torrent_flutter:
 #    git:
 #      url: git://github.com/haidar786/simple_torrent_flutter.git
