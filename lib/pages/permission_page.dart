@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:videos_sharing/app.dart';
-import 'package:videos_sharing/services/database.dart';
+import 'package:videos_sharing/app/app.dart';
+import 'package:videos_sharing/torrent/database/database.dart';
 
 class PermissionPage extends StatelessWidget {
   PermissionPage(
