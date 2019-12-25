@@ -32,21 +32,63 @@ List<AppCategory> _buildCategories() {
       icon: Icons.insert_drive_file,
     ),
     AppCategory._(
-      name: 'Media',
-      icon: Icons.wb_iridescent,
-    ),
-    AppCategory._(
-      name: 'Cupertino',
-      icon: Icons.drive_eta,
-    ),
-    AppCategory._(
-      name: 'Material',
-      icon: Icons.card_giftcard,
-    ),
-    AppCategory._(
       name: 'Media Player',
-      icon: Icons.videocam,
+      icon: Icons.movie,
     ),
+    AppCategory._(
+      name: 'Audio Player',
+      icon: Icons.audiotrack,
+    ),
+    AppCategory._(
+      name: 'Radio',
+      icon: Icons.radio,
+    ),
+    AppCategory._(
+      name: 'Television',
+      icon: Icons.tv,
+    ),
+    AppCategory._(
+      name: 'Photos',
+      icon: Icons.photo_library,
+    ),
+    AppCategory._(
+      name: 'Wallpapers',
+      icon: Icons.wallpaper,
+    ),
+    AppCategory._(
+      name: 'Drawing',
+      icon: Icons.palette,
+    ),
+    AppCategory._(
+      name: 'Books',
+      icon: Icons.book,
+    ),
+    AppCategory._(
+      name: 'Chat',
+      icon: Icons.chat,
+    ),
+    AppCategory._(
+      name: 'Social',
+      icon: Icons.group,
+    ),
+    AppCategory._(
+      name: 'News',
+      icon: Icons.chrome_reader_mode,
+    ),
+    AppCategory._(
+      name: 'Notes',
+      icon: Icons.event_note,
+    ),
+
+    AppCategory._(
+      name: 'Watch',
+      icon: Icons.watch,
+    ),
+    AppCategory._(
+      name: 'Web',
+      icon: Icons.web,
+    ),
+
   ];
   return galleryDemos;
 }
