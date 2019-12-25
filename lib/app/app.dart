@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:videos_sharing/home/home.dart';
+import 'package:videos_sharing/home/pages/home_.dart';
 import 'package:videos_sharing/pages/permission_page.dart';
 import 'package:videos_sharing/torrent/database/database.dart';
 
@@ -41,13 +41,16 @@ class _MyAppState extends State<MyApp> {
               );
             default:
               if (snapshot.data) {
-                return HomePage(
-                    sharedPreferences: widget.sharedPreferences,
-                    onThemeChange: () {
-                      setState(() {});
-                    },
-                    dataString: widget.dataString,
-                    baseDatabase: widget.baseDatabase);
+                return GalleryHome(
+                  optionsPage: Text("options"),
+                );
+//                return HomePage(
+//                    sharedPreferences: widget.sharedPreferences,
+//                    onThemeChange: () {
+//                      setState(() {});
+//                    },
+//                    dataString: widget.dataString,
+//                    baseDatabase: widget.baseDatabase);
               } else {
                 return PermissionPage(
                     sharedPreferences: widget.sharedPreferences,
