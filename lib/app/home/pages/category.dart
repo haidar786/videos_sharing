@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
-import 'package:videos_sharing/home/widgets/category/app_category.dart';
-import 'package:videos_sharing/home/widgets/category/category_item.dart';
+import 'package:videos_sharing/app/home/widgets/category/app_category.dart';
+import 'package:videos_sharing/app/home/widgets/category/category_item.dart';
 
 class CategoriesPage extends StatelessWidget {
   const CategoriesPage({

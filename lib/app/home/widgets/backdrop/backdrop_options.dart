@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:videos_sharing/home/widgets/backdrop/about.dart';
-import 'package:videos_sharing/home/widgets/backdrop/scales.dart';
-
+import 'package:videos_sharing/app/home/widgets/backdrop/about.dart';
+import 'package:videos_sharing/app/home/widgets/backdrop/scales.dart';
 
 class BackdropOptions {
   BackdropOptions({
@@ -403,8 +402,8 @@ class _PlatformItem extends StatelessWidget {
   }
 }
 
-class GalleryOptionsPage extends StatelessWidget {
-  const GalleryOptionsPage({
+class OptionsPage extends StatelessWidget {
+  const OptionsPage({
     Key key,
     this.options,
     this.onOptionsChanged,

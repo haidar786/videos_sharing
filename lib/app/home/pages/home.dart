@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:videos_sharing/home/constants.dart';
-import 'package:videos_sharing/home/pages/category.dart';
-import 'package:videos_sharing/home/pages/home.dart';
-import 'package:videos_sharing/home/widgets/backdrop/backdrop.dart';
-import 'package:videos_sharing/home/widgets/category/app_category.dart';
+import 'package:videos_sharing/app/home/constants.dart';
+import 'package:videos_sharing/app/home/pages/category.dart';
+import 'package:videos_sharing/app/home/widgets/backdrop/backdrop.dart';
+import 'package:videos_sharing/app/home/widgets/category/app_category.dart';
+import 'package:videos_sharing/player/pages/video_folder.dart';
 
-class GalleryHome extends StatefulWidget {
-  const GalleryHome({
+class HomePage extends StatefulWidget {
+  const HomePage({
     Key key,
     this.testMode = false,
     this.optionsPage,
@@ -16,19 +16,13 @@ class GalleryHome extends StatefulWidget {
   final Widget optionsPage;
   final bool testMode;
 
-  // In checked mode our MaterialApp will show the default "debug" banner.
-  // Otherwise show the "preview" banner.
-  static bool showPreviewBanner = true;
-
   @override
-  _GalleryHomeState createState() => _GalleryHomeState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _GalleryHomeState extends State<GalleryHome>
-    with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage> {
   static final GlobalKey<ScaffoldState> _scaffoldKey =
       GlobalKey<ScaffoldState>();
-  AnimationController _controller;
   AppCategory _category;
 
   static Widget _topHomeLayout(
@@ -44,22 +38,6 @@ class _GalleryHomeState extends State<GalleryHome>
 
   static const AnimatedSwitcherLayoutBuilder _centerHomeLayout =
       AnimatedSwitcher.defaultLayoutBuilder;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 600),
-      debugLabel: 'preview banner',
-      vsync: this,
-    )..forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,27 +110,6 @@ class _GalleryHomeState extends State<GalleryHome>
       ),
     );
 
-    assert(() {
-      GalleryHome.showPreviewBanner = false;
-      return true;
-    }());
-
-    if (GalleryHome.showPreviewBanner) {
-      home = Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          home,
-          FadeTransition(
-            opacity:
-                CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-            child: const Banner(
-              message: 'PREVIEW',
-              location: BannerLocation.topEnd,
-            ),
-          ),
-        ],
-      );
-    }
     home = AnnotatedRegion<SystemUiOverlayStyle>(
       child: home,
       value: SystemUiOverlayStyle.light,

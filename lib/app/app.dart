@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:videos_sharing/home/pages/home_.dart';
+import 'package:videos_sharing/app/home/pages/home.dart';
+import 'package:videos_sharing/app/home/widgets/backdrop/backdrop_options.dart';
 import 'package:videos_sharing/pages/permission_page.dart';
 import 'package:videos_sharing/torrent/database/database.dart';
+import 'package:videos_sharing/app/home/widgets/backdrop/scales.dart';
 
 class MyApp extends StatefulWidget {
   MyApp(
@@ -23,6 +25,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  BackdropOptions _backdropOptions;
+
+  @override
+  void initState() {
+    _backdropOptions = BackdropOptions(
+        themeMode: ThemeMode.system,
+        textScaleFactor: kAllGalleryTextScaleValues[0]);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -41,8 +53,8 @@ class _MyAppState extends State<MyApp> {
               );
             default:
               if (snapshot.data) {
-                return GalleryHome(
-                  optionsPage: Text("options"),
+                return HomePage(
+                  optionsPage: OptionsPage(),
                 );
 //                return HomePage(
 //                    sharedPreferences: widget.sharedPreferences,

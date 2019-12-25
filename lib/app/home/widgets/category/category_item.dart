@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:videos_sharing/home/widgets/category/app_category.dart';
-import 'package:videos_sharing/home/constants.dart';
+import 'package:videos_sharing/app/home/constants.dart';
+import 'package:videos_sharing/app/home/widgets/category/app_category.dart';
 
 class AppCategoryItem extends StatelessWidget {
   const AppCategoryItem({
