@@ -15,17 +15,11 @@ class MyApp extends StatefulWidget {
   const MyApp({
     Key key,
     this.updateUrlFetcher,
-    this.enablePerformanceOverlay = true,
-    this.enableRasterCacheImagesCheckerboard = true,
-    this.enableOffscreenLayersCheckerboard = true,
     this.onSendFeedback,
     this.testMode = false,
   }) : super(key: key);
 
   final UpdateUrlFetcher updateUrlFetcher;
-  final bool enablePerformanceOverlay;
-  final bool enableRasterCacheImagesCheckerboard;
-  final bool enableOffscreenLayersCheckerboard;
   final VoidCallback onSendFeedback;
   final bool testMode;
 
@@ -121,11 +115,9 @@ class _MyAppState extends State<MyApp> {
       theme: kLightGalleryTheme.copyWith(platform: _options.platform),
       darkTheme: kDarkGalleryTheme.copyWith(platform: _options.platform),
       themeMode: _options.themeMode,
-      title: 'Flutter Gallery',
+      debugShowCheckedModeBanner: false,
+      title: 'Apps Gallery',
       color: Colors.grey,
-      showPerformanceOverlay: _options.showPerformanceOverlay,
-      checkerboardOffscreenLayers: _options.showOffscreenLayersCheckerboard,
-      checkerboardRasterCacheImages: _options.showRasterCacheImagesCheckerboard,
       builder: (BuildContext context, Widget child) {
         return Directionality(
           textDirection: _options.textDirection,

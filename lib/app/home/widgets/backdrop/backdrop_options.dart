@@ -414,43 +414,43 @@ class OptionsPage extends StatelessWidget {
   final ValueChanged<BackdropOptions> onOptionsChanged;
   final VoidCallback onSendFeedback;
 
-  List<Widget> _enabledDiagnosticItems() {
-    // Boolean showFoo options with a value of null: don't display
-    // the showFoo option at all.
-    if (options.showOffscreenLayersCheckerboard == null &&
-        options.showRasterCacheImagesCheckerboard == null &&
-        options.showPerformanceOverlay == null)
-      return const <Widget>[];
-
-    return <Widget>[
-      const Divider(),
-      const _Heading('Diagnostics'),
-      if (options.showOffscreenLayersCheckerboard != null)
-        _BooleanItem(
-          'Highlight offscreen layers',
-          options.showOffscreenLayersCheckerboard,
-              (bool value) {
-            onOptionsChanged(options.copyWith(showOffscreenLayersCheckerboard: value));
-          },
-        ),
-      if (options.showRasterCacheImagesCheckerboard != null)
-        _BooleanItem(
-          'Highlight raster cache images',
-          options.showRasterCacheImagesCheckerboard,
-              (bool value) {
-            onOptionsChanged(options.copyWith(showRasterCacheImagesCheckerboard: value));
-          },
-        ),
-      if (options.showPerformanceOverlay != null)
-        _BooleanItem(
-          'Show performance overlay',
-          options.showPerformanceOverlay,
-              (bool value) {
-            onOptionsChanged(options.copyWith(showPerformanceOverlay: value));
-          },
-        ),
-    ];
-  }
+//  List<Widget> _enabledDiagnosticItems() {
+//    // Boolean showFoo options with a value of null: don't display
+//    // the showFoo option at all.
+//    if (options.showOffscreenLayersCheckerboard == null &&
+//        options.showRasterCacheImagesCheckerboard == null &&
+//        options.showPerformanceOverlay == null)
+//      return const <Widget>[];
+//
+//    return <Widget>[
+//      const Divider(),
+//      const _Heading('Diagnostics'),
+//      if (options.showOffscreenLayersCheckerboard != null)
+//        _BooleanItem(
+//          'Highlight offscreen layers',
+//          options.showOffscreenLayersCheckerboard,
+//              (bool value) {
+//            onOptionsChanged(options.copyWith(showOffscreenLayersCheckerboard: value));
+//          },
+//        ),
+//      if (options.showRasterCacheImagesCheckerboard != null)
+//        _BooleanItem(
+//          'Highlight raster cache images',
+//          options.showRasterCacheImagesCheckerboard,
+//              (bool value) {
+//            onOptionsChanged(options.copyWith(showRasterCacheImagesCheckerboard: value));
+//          },
+//        ),
+//      if (options.showPerformanceOverlay != null)
+//        _BooleanItem(
+//          'Show performance overlay',
+//          options.showPerformanceOverlay,
+//              (bool value) {
+//            onOptionsChanged(options.copyWith(showPerformanceOverlay: value));
+//          },
+//        ),
+//    ];
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -469,7 +469,6 @@ class OptionsPage extends StatelessWidget {
           const Divider(),
           const _Heading('Platform mechanics'),
           _PlatformItem(options, onOptionsChanged),
-          ..._enabledDiagnosticItems(),
           const Divider(),
           const _Heading('Flutter gallery'),
           _ActionItem('About Flutter Gallery', () {

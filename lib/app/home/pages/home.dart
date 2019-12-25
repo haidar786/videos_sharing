@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
               switchOutCurve: switchOutCurve,
               switchInCurve: switchInCurve,
               child: _category == null
-                  ? const Icon(Icons.looks) //_FlutterLogo()
+                  ? const Icon(Icons.apps) //_FlutterLogo()
                   : IconButton(
                       icon: const BackButtonIcon(),
                       tooltip: 'Back',
@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
             frontTitle: AnimatedSwitcher(
               duration: kFrontLayerSwitchDuration,
               child: _category == null
-                  ? const Text('Flutter gallery')
+                  ? const Text('Apps gallery')
                   : Text(_category.name),
             ),
             frontHeading: widget.testMode ? null : Container(height: 24.0),
