@@ -7,7 +7,7 @@ class AppCategoryItem extends StatelessWidget {
     Key key,
     this.category,
     this.onTap,
-  }) : super (key: key);
+  }) : super(key: key);
 
   final AppCategory category;
   final VoidCallback onTap;

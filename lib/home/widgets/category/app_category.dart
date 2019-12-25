@@ -79,7 +79,6 @@ List<AppCategory> _buildCategories() {
       name: 'Notes',
       icon: Icons.event_note,
     ),
-
     AppCategory._(
       name: 'Watch',
       icon: Icons.watch,
@@ -88,12 +87,11 @@ List<AppCategory> _buildCategories() {
       name: 'Web',
       icon: Icons.web,
     ),
-
   ];
   return galleryDemos;
 }
 
-final List<AppCategory> kAllGalleryDemos = _buildCategories();
-final Set<AppCategory> kAllGalleryDemoCategories = kAllGalleryDemos
-    .map<AppCategory>((AppCategory category) => category)
-    .toSet();
+final List<AppCategory> kAllCategories = _buildCategories();
+
+final Set<AppCategory> kAllGalleryDemoCategories =
+    kAllCategories.map<AppCategory>((AppCategory category) => category).toSet();
