@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> {
               switchOutCurve: switchOutCurve,
               switchInCurve: switchInCurve,
               child: _category == null
-                  ? const Icon(Icons.apps) //_FlutterLogo()
+                  ? const Icon(Icons.directions_car) //_FlutterLogo()
                   : IconButton(
                       icon: const BackButtonIcon(),
                       tooltip: 'Back',
