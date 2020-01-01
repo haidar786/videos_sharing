@@ -1,8 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:videos_sharing/player/bloc/UiBloc.dart';
 import 'package:videos_sharing/player/bloc/controller_bloc.dart';
 import 'package:videos_sharing/player/bloc/state/controller.dart';
+import 'package:videos_sharing/player/bloc/state/ui.dart';
 
 class BottomPlayerWidgets extends StatefulWidget {
   @override
@@ -15,57 +17,62 @@ class _BottomPlayerWidgets extends State<BottomPlayerWidgets> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ControllerBloc, PlayerControllerState>(
-      builder: (BuildContext context, PlayerControllerState state) {
-        if (state.controller.value.initialized) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12.0),
-                    child: AutoSizeText(
-                      _currentDuration(state.controller.value.position),
-                      style: TextStyle(color: Colors.white, fontSize: 12.0),
-                    ),
-                  ),
-                  Expanded(
-                    child: Slider(
-                      value: state.controller.value.position.inSeconds.toDouble(),
-                      min: 0.0,
-                      max: state.controller.value.duration.inSeconds.toDouble(),
-                      onChanged: (double value) {
-                        int seconds = value.toInt();
-                        Duration duration = Duration(
-                          hours: (seconds / 3600).floor(),
-                          minutes: ((seconds % 3600) / 60).floor(),
-                          seconds: (seconds % 60).floor(),
-                        );
-                        state.controller.seekTo(duration);
-                      },
-                      onChangeStart: (value) {
-//                    if (_timer != null && _timer.isActive) {
-//                      _timer.cancel();
-//                    }
-                      },
-                      onChangeEnd: (value) {},
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 12.0),
-                    child: AutoSizeText(
-                      _durationLeft(
-                          state.controller.value.duration, state.controller.value.position),
-                      style: TextStyle(color: Colors.white, fontSize: 12.0),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+      builder: (BuildContext context, PlayerControllerState controllerState) {
+        if (controllerState.controller.value.initialized) {
+          return BlocBuilder<UiBloc,UiState>(
+             builder: (BuildContext context, UiState uiState) {
+               return  Visibility(
+                 visible: uiState.showBottom,
+                 child: Column(
+                   mainAxisAlignment: MainAxisAlignment.end,
+                   children: <Widget>[
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                       children: <Widget>[
+                         Padding(
+                           padding: const EdgeInsets.only(left: 12.0),
+                           child: AutoSizeText(
+                             _currentDuration(controllerState.controller.value.position),
+                             style: TextStyle(color: Colors.white, fontSize: 12.0),
+                           ),
+                         ),
+                         Expanded(
+                           child: Slider(
+                             value: controllerState.controller.value.position.inSeconds.toDouble(),
+                             min: 0.0,
+                             max: controllerState.controller.value.duration.inSeconds.toDouble(),
+                             onChanged: (double value) {
+                               int seconds = value.toInt();
+                               Duration duration = Duration(
+                                 hours: (seconds / 3600).floor(),
+                                 minutes: ((seconds % 3600) / 60).floor(),
+                                 seconds: (seconds % 60).floor(),
+                               );
+                               controllerState.controller.seekTo(duration);
+                             },
+                             onChangeStart: (value) {
+                             },
+                             onChangeEnd: (value) {
+                             },
+                           ),
+                         ),
+                         Padding(
+                           padding: const EdgeInsets.only(right: 12.0),
+                           child: AutoSizeText(
+                             _durationLeft(
+                                 controllerState.controller.value.duration, controllerState.controller.value.position),
+                             style: TextStyle(color: Colors.white, fontSize: 12.0),
+                           ),
+                         ),
+                       ],
+                     ),
+                   ],
+                 ),
+               );
+             },
           );
         } else {
-          state.controller.addListener(() {
+          controllerState.controller.addListener(() {
             setState(() {});
           });
           return Container();

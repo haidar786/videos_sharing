@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:videos_sharing/player/bloc/UiBloc.dart';
 import 'package:videos_sharing/player/bloc/aspect_ratio_bloc.dart';
 import 'package:videos_sharing/player/bloc/brightness_bloc.dart';
 import 'package:videos_sharing/player/bloc/controller_bloc.dart';
@@ -37,6 +38,9 @@ class PlayerPage extends StatelessWidget {
             ),
             BlocProvider<BrightnessBloc>(
               create: (BuildContext _) => BrightnessBloc(),
+            ),
+            BlocProvider<UiBloc>(
+              create: (BuildContext _) => UiBloc(),
             )
           ],
           child: Stack(

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:video_player/video_player.dart';
 import 'package:videos_sharing/player/bloc/state/controller.dart';
@@ -8,7 +10,6 @@ class ControllerBloc extends Bloc<ControllerEvents, PlayerControllerState> {
   VideoPlayerController _controller;
   final String videoPath;
   ControllerBloc(this.videoPath);
-
   @override
   PlayerControllerState get initialState => initializePlayer();
 
@@ -16,7 +17,7 @@ class ControllerBloc extends Bloc<ControllerEvents, PlayerControllerState> {
   Stream<PlayerControllerState> mapEventToState(ControllerEvents event) async* {
     switch (event) {
       case ControllerEvents.play:
-         _controller.play();
+        _controller.play();
         break;
       case ControllerEvents.pause:
         _controller.pause();
@@ -28,7 +29,7 @@ class ControllerBloc extends Bloc<ControllerEvents, PlayerControllerState> {
 
   PlayerControllerState initializePlayer() {
     _controller = VideoPlayerController.network(videoPath);
-    return PlayerControllerState(_controller,false,false,false,false);
+    return PlayerControllerState(_controller);
   }
 
   @override
