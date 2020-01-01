@@ -26,7 +26,7 @@ class _BottomPlayerWidgets extends State<BottomPlayerWidgets> {
                   Padding(
                     padding: const EdgeInsets.only(left: 12.0),
                     child: AutoSizeText(
-                      format(controller.value.position),
+                      _currentDuration(controller.value.position),
                       style: TextStyle(color: Colors.white, fontSize: 12.0),
                     ),
                   ),
@@ -55,7 +55,8 @@ class _BottomPlayerWidgets extends State<BottomPlayerWidgets> {
                   Padding(
                     padding: const EdgeInsets.only(right: 12.0),
                     child: AutoSizeText(
-                      format(controller.value.duration),
+                      _durationLeft(
+                          controller.value.duration, controller.value.position),
                       style: TextStyle(color: Colors.white, fontSize: 12.0),
                     ),
                   ),
@@ -65,7 +66,7 @@ class _BottomPlayerWidgets extends State<BottomPlayerWidgets> {
           );
         } else {
           controller.addListener(() {
-              setState(() {});
+            setState(() {});
           });
           return Container();
         }
@@ -73,5 +74,20 @@ class _BottomPlayerWidgets extends State<BottomPlayerWidgets> {
     );
   }
 
-  format(Duration d) => d.toString().split('.').first.padLeft(8, "0");
+  String _currentDuration(Duration duration) {
+    if (duration.inHours == 0) {
+      return "${duration.inMinutes.remainder(60)}:${(duration.inSeconds.remainder(60).toString().padLeft(2, '0'))}";
+    } else {
+      return duration.toString().split('.').first;
+    }
+  }
+
+  String _durationLeft(Duration totalDuration, Duration position) {
+    var duration = totalDuration - position;
+    if (duration.inHours == 0) {
+      return "-${duration.inMinutes.remainder(60)}:${(duration.inSeconds.remainder(60).toString().padLeft(2, '0'))}";
+    } else {
+      return "-" + duration.toString().split('.').first;
+    }
+  }
 }
