@@ -50,7 +50,7 @@ class _SeekDragContainerState extends State<SeekDragContainer> {
                       state.currentVolume.clamp(0.0, state.maxVolume);
                   //print(state.currentVolume / state.maxVolume);
                   BlocProvider.of<VolumeBloc>(context).add(
-                    VolumeControllerState(state.currentVolume, state.maxVolume),
+                    VolumeControllerState(state.currentVolume, state.maxVolume,true),
                   );
                 } else {
                   print("brightness $update.globalPosition.dx");
@@ -68,6 +68,12 @@ class _SeekDragContainerState extends State<SeekDragContainer> {
                   isVolume = false;
                   brightness = BlocProvider.of<BrightnessBloc>(context).state;
                 }
+              },
+              onVerticalDragEnd: (details) {
+                if (isVolume) {
+                  BlocProvider.of<VolumeBloc>(context).add(
+                      VolumeControllerState(state.currentVolume, state.maxVolume,false));
+                }else{}
               },
               onDoubleTap: () {
                 print("double tap");

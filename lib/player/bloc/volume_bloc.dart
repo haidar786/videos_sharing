@@ -15,7 +15,7 @@ class VolumeBloc extends Bloc<VolumeControllerState, VolumeControllerState> {
 
   VolumeControllerState _getInitVolume() {
     _initVolumeState();
-    return VolumeControllerState(8, 15);
+    return VolumeControllerState(8, 15,false);
   }
 
   _initVolumeState() async {
@@ -25,6 +25,7 @@ class VolumeBloc extends Bloc<VolumeControllerState, VolumeControllerState> {
       VolumeControllerState(
         currentVolume.toDouble(),
         maxVolume.toDouble(),
+        false
       ),
     );
   }

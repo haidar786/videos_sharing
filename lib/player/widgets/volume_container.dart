@@ -22,8 +22,11 @@ class VolumeContainerWidget extends StatelessWidget {
             angle: -pi / 2,
             child: BlocBuilder<VolumeBloc, VolumeControllerState>(
               builder: (BuildContext context, VolumeControllerState state) {
-                return LinearProgressIndicator(
-                  value: state.currentVolume / state.maxVolume,
+                return Visibility(
+                  visible: state.shouldVisible,
+                  child: LinearProgressIndicator(
+                    value: state.currentVolume / state.maxVolume,
+                  ),
                 );
               },
             ),
