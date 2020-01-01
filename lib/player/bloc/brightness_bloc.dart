@@ -1,24 +1,28 @@
 import 'package:bloc/bloc.dart';
 import 'package:screen/screen.dart';
+import 'package:videos_sharing/player/bloc/state/brightness.dart';
 
-class BrightnessBloc extends Bloc<double, double> {
+class BrightnessBloc
+    extends Bloc<BrightnessControllerState, BrightnessControllerState> {
   @override
-  double get initialState => _getInitBrightness();
+  BrightnessControllerState get initialState => _getInitBrightness();
 
   @override
-  Stream<double> mapEventToState(double event) async* {
-    Screen.setBrightness(event.clamp(0.1, 1.0));
-    yield event;
+  Stream<BrightnessControllerState> mapEventToState(
+      BrightnessControllerState brightnessControllerState) async* {
+    Screen.setBrightness(
+        brightnessControllerState.currentBrightness.clamp(0.1, 1.0));
+    yield BrightnessControllerState(brightnessControllerState.currentBrightness,
+        brightnessControllerState.shouldVisible);
   }
 
-  double _getInitBrightness() {
+  BrightnessControllerState _getInitBrightness() {
     _initBrightness();
-    return 1.0;
+    return BrightnessControllerState(1.0, false);
   }
 
   void _initBrightness() async {
     double _brightness = await Screen.brightness;
-    // print("init brightness -> " + _brightness.toString());
-    this.add(_brightness);
+    this.add(BrightnessControllerState(_brightness, false));
   }
 }

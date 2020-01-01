@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_player/video_player.dart';
 import 'package:videos_sharing/player/bloc/brightness_bloc.dart';
 import 'package:videos_sharing/player/bloc/controller_bloc.dart';
+import 'package:videos_sharing/player/bloc/state/brightness.dart';
 import 'package:videos_sharing/player/bloc/state/volume.dart';
 import 'package:videos_sharing/player/bloc/volume_bloc.dart';
-
 
 class SeekDragContainer extends StatefulWidget {
   @override
@@ -20,10 +20,7 @@ class _SeekDragContainerState extends State<SeekDragContainer> {
 
   @override
   Widget build(BuildContext context) {
-    var center = MediaQuery
-        .of(context)
-        .size
-        .width / 2;
+    var center = MediaQuery.of(context).size.width / 2;
     return BlocBuilder<ControllerBloc, VideoPlayerController>(
       builder: (BuildContext context, VideoPlayerController controller) {
         return BlocBuilder<VolumeBloc, VolumeControllerState>(
@@ -45,20 +42,19 @@ class _SeekDragContainerState extends State<SeekDragContainer> {
               onVerticalDragUpdate: (update) {
                 if (isVolume) {
                   state.currentVolume -=
-                  (update.primaryDelta * state.maxVolume / 300);
+                      (update.primaryDelta * state.maxVolume / 300);
                   state.currentVolume =
                       state.currentVolume.clamp(0.0, state.maxVolume);
                   //print(state.currentVolume / state.maxVolume);
                   BlocProvider.of<VolumeBloc>(context).add(
-                    VolumeControllerState(state.currentVolume, state.maxVolume,true),
+                    VolumeControllerState(
+                        state.currentVolume, state.maxVolume, true),
                   );
                 } else {
-                  print("brightness $update.globalPosition.dx");
                   brightness -= (update.primaryDelta * 0.0035);
-                  print("before " + brightness.toString());
                   brightness = brightness.clamp(0.0, 1.0);
-                  print("after " + brightness.toString());
-                  BlocProvider.of<BrightnessBloc>(context).add(brightness);
+                  BlocProvider.of<BrightnessBloc>(context)
+                      .add(BrightnessControllerState(brightness, true));
                 }
               },
               onVerticalDragStart: (details) {
@@ -66,14 +62,20 @@ class _SeekDragContainerState extends State<SeekDragContainer> {
                   isVolume = true;
                 } else {
                   isVolume = false;
-                  brightness = BlocProvider.of<BrightnessBloc>(context).state;
+                  brightness = BlocProvider.of<BrightnessBloc>(context)
+                      .state
+                      .currentBrightness;
                 }
               },
               onVerticalDragEnd: (details) {
                 if (isVolume) {
                   BlocProvider.of<VolumeBloc>(context).add(
-                      VolumeControllerState(state.currentVolume, state.maxVolume,false));
-                }else{}
+                      VolumeControllerState(
+                          state.currentVolume, state.maxVolume, false));
+                } else {
+                  BlocProvider.of<BrightnessBloc>(context)
+                      .add(BrightnessControllerState(brightness, false));
+                }
               },
               onDoubleTap: () {
                 print("double tap");

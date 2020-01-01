@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:videos_sharing/player/bloc/brightness_bloc.dart';
+import 'package:videos_sharing/player/bloc/state/brightness.dart';
 
 class BrightnessContainerWidget extends StatelessWidget {
   @override
@@ -19,10 +20,13 @@ class BrightnessContainerWidget extends StatelessWidget {
               : mediaQuery.size.width / 3,
           child: Transform.rotate(
             angle: -pi / 2,
-            child: BlocBuilder<BrightnessBloc, double>(
-              builder: (BuildContext _, double state) {
-                return LinearProgressIndicator(
-                  value: state,
+            child: BlocBuilder<BrightnessBloc, BrightnessControllerState>(
+              builder: (BuildContext context, BrightnessControllerState state) {
+                return Visibility(
+                  visible: state.shouldVisible,
+                  child: LinearProgressIndicator(
+                    value: state.currentBrightness,
+                  ),
                 );
               },
             ),
