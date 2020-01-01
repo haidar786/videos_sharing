@@ -1,18 +1,19 @@
 import 'package:bloc/bloc.dart';
 import 'package:video_player/video_player.dart';
+import 'package:videos_sharing/player/bloc/state/controller.dart';
 
 enum ControllerEvents { play, pause }
 
-class ControllerBloc extends Bloc<ControllerEvents, VideoPlayerController> {
+class ControllerBloc extends Bloc<ControllerEvents, PlayerControllerState> {
   VideoPlayerController _controller;
   final String videoPath;
   ControllerBloc(this.videoPath);
 
   @override
-  VideoPlayerController get initialState => initializePlayer();
+  PlayerControllerState get initialState => initializePlayer();
 
   @override
-  Stream<VideoPlayerController> mapEventToState(ControllerEvents event) async* {
+  Stream<PlayerControllerState> mapEventToState(ControllerEvents event) async* {
     switch (event) {
       case ControllerEvents.play:
          _controller.play();
@@ -25,9 +26,9 @@ class ControllerBloc extends Bloc<ControllerEvents, VideoPlayerController> {
     }
   }
 
-  VideoPlayerController initializePlayer() {
+  PlayerControllerState initializePlayer() {
     _controller = VideoPlayerController.network(videoPath);
-    return _controller;
+    return PlayerControllerState(_controller,false,false,false,false);
   }
 
   @override

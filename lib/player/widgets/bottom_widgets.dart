@@ -1,8 +1,8 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:video_player/video_player.dart';
 import 'package:videos_sharing/player/bloc/controller_bloc.dart';
+import 'package:videos_sharing/player/bloc/state/controller.dart';
 
 class BottomPlayerWidgets extends StatefulWidget {
   @override
@@ -14,9 +14,9 @@ class BottomPlayerWidgets extends StatefulWidget {
 class _BottomPlayerWidgets extends State<BottomPlayerWidgets> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ControllerBloc, VideoPlayerController>(
-      builder: (BuildContext context, VideoPlayerController controller) {
-        if (controller.value.initialized) {
+    return BlocBuilder<ControllerBloc, PlayerControllerState>(
+      builder: (BuildContext context, PlayerControllerState state) {
+        if (state.controller.value.initialized) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
@@ -26,15 +26,15 @@ class _BottomPlayerWidgets extends State<BottomPlayerWidgets> {
                   Padding(
                     padding: const EdgeInsets.only(left: 12.0),
                     child: AutoSizeText(
-                      _currentDuration(controller.value.position),
+                      _currentDuration(state.controller.value.position),
                       style: TextStyle(color: Colors.white, fontSize: 12.0),
                     ),
                   ),
                   Expanded(
                     child: Slider(
-                      value: controller.value.position.inSeconds.toDouble(),
+                      value: state.controller.value.position.inSeconds.toDouble(),
                       min: 0.0,
-                      max: controller.value.duration.inSeconds.toDouble(),
+                      max: state.controller.value.duration.inSeconds.toDouble(),
                       onChanged: (double value) {
                         int seconds = value.toInt();
                         Duration duration = Duration(
@@ -42,7 +42,7 @@ class _BottomPlayerWidgets extends State<BottomPlayerWidgets> {
                           minutes: ((seconds % 3600) / 60).floor(),
                           seconds: (seconds % 60).floor(),
                         );
-                        controller.seekTo(duration);
+                        state.controller.seekTo(duration);
                       },
                       onChangeStart: (value) {
 //                    if (_timer != null && _timer.isActive) {
@@ -56,7 +56,7 @@ class _BottomPlayerWidgets extends State<BottomPlayerWidgets> {
                     padding: const EdgeInsets.only(right: 12.0),
                     child: AutoSizeText(
                       _durationLeft(
-                          controller.value.duration, controller.value.position),
+                          state.controller.value.duration, state.controller.value.position),
                       style: TextStyle(color: Colors.white, fontSize: 12.0),
                     ),
                   ),
@@ -65,7 +65,7 @@ class _BottomPlayerWidgets extends State<BottomPlayerWidgets> {
             ],
           );
         } else {
-          controller.addListener(() {
+          state.controller.addListener(() {
             setState(() {});
           });
           return Container();

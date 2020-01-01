@@ -5,6 +5,7 @@ import 'package:video_player/video_player.dart';
 import 'package:videos_sharing/player/bloc/aspect_ratio_bloc.dart';
 import 'package:videos_sharing/player/bloc/controller_bloc.dart';
 import 'package:videos_sharing/player/bloc/state/aspect_ratio.dart';
+import 'package:videos_sharing/player/bloc/state/controller.dart';
 import 'package:wakelock/wakelock.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
@@ -29,23 +30,23 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ControllerBloc, VideoPlayerController>(
-      builder: (BuildContext context, VideoPlayerController controller) {
-        if (controller.value.initialized) {
+    return BlocBuilder<ControllerBloc, PlayerControllerState>(
+      builder: (BuildContext context, PlayerControllerState state) {
+        if (state.controller.value.initialized) {
           return BlocBuilder<AspectRatioBloc, AspectRatioState>(
             builder: (context, ratioModel) {
               return AspectRatio(
                 aspectRatio: ratioModel.aspectRatio == 0.0
-                    ? controller.value.aspectRatio
+                    ? state.controller.value.aspectRatio
                     : ratioModel.aspectRatio,
-                child: VideoPlayer(controller),
+                child: VideoPlayer(state.controller),
               );
             },
           );
         } else {
-          controller.addListener(() {
-            if (controller.value.hasError) {
-              print(controller.value.errorDescription);
+          state.controller.addListener(() {
+            if (state.controller.value.hasError) {
+              print(state.controller.value.errorDescription);
               widget.globalKey.currentState.showSnackBar(
                 SnackBar(
                   content: Text(
@@ -54,9 +55,9 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
               );
             }
           });
-          controller.initialize().then((_) {
-            controller.play();
-            controller.setLooping(true);
+          state.controller.initialize().then((_) {
+            state.controller.play();
+            state.controller.setLooping(true);
             setState(() {});
           });
           return Center(

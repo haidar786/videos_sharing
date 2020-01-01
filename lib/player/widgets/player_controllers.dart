@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:video_player/video_player.dart';
 import 'package:videos_sharing/player/bloc/controller_bloc.dart';
+import 'package:videos_sharing/player/bloc/state/controller.dart';
 
 class PlayerControllerWidget extends StatefulWidget {
   @override
@@ -28,8 +28,8 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
       width: mediaQuery.orientation == Orientation.portrait
           ? mediaQuery.size.width
           : mediaQuery.size.height,
-      child: BlocBuilder<ControllerBloc, VideoPlayerController>(
-        builder: (BuildContext context, VideoPlayerController state) {
+      child: BlocBuilder<ControllerBloc, PlayerControllerState>(
+        builder: (BuildContext context, PlayerControllerState state) {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -49,12 +49,12 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
                   ),
                 ),
                 onTap: () {
-                  if (state.value.isPlaying) {
+                  if (state.controller.value.isPlaying) {
                     _animationController.forward();
-                    state.pause();
+                    state.controller.pause();
                   } else {
                     _animationController.reverse();
-                    state.play();
+                    state.controller.play();
                   }
                 },
               ),

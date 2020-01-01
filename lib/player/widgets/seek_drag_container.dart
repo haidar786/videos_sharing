@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:video_player/video_player.dart';
 import 'package:videos_sharing/player/bloc/brightness_bloc.dart';
 import 'package:videos_sharing/player/bloc/controller_bloc.dart';
 import 'package:videos_sharing/player/bloc/state/brightness.dart';
+import 'package:videos_sharing/player/bloc/state/controller.dart';
 import 'package:videos_sharing/player/bloc/state/volume.dart';
 import 'package:videos_sharing/player/bloc/volume_bloc.dart';
 
@@ -21,34 +21,32 @@ class _SeekDragContainerState extends State<SeekDragContainer> {
   @override
   Widget build(BuildContext context) {
     var center = MediaQuery.of(context).size.width / 2;
-    return BlocBuilder<ControllerBloc, VideoPlayerController>(
-      builder: (BuildContext context, VideoPlayerController controller) {
+    return BlocBuilder<ControllerBloc, PlayerControllerState>(
+      builder: (BuildContext context, PlayerControllerState playerState) {
         return BlocBuilder<VolumeBloc, VolumeControllerState>(
-          builder: (BuildContext _, VolumeControllerState state) {
+          builder: (BuildContext _, VolumeControllerState volumeState) {
             return GestureDetector(
               onHorizontalDragUpdate: (update) {
-                double a = controller.value.position.inSeconds.toDouble();
-                a += update.primaryDelta * 0.5;
+                double a = playerState.controller.value.position.inMicroseconds.toDouble();
+                a += (update.primaryDelta * ((playerState.controller.value.duration.inSeconds/550)*500000)).clamp(-8000000, 8000000);
                 a = a.clamp(
-                    0.0, controller.value.duration.inSeconds.toDouble());
-                int seconds = a.toInt();
+                    0.0, playerState.controller.value.duration.inMicroseconds.toDouble());
                 Duration duration = Duration(
-                  hours: (seconds / 3600).floor(),
-                  minutes: ((seconds % 3600) / 60).floor(),
-                  seconds: (seconds % 60).floor(),
+                  microseconds: a.toInt()
                 );
-                controller.seekTo(duration);
+                playerState.controller.seekTo(duration);
               },
+              onHorizontalDragEnd: (details) {},
               onVerticalDragUpdate: (update) {
                 if (isVolume) {
-                  state.currentVolume -=
-                      (update.primaryDelta * state.maxVolume / 300);
-                  state.currentVolume =
-                      state.currentVolume.clamp(0.0, state.maxVolume);
+                  volumeState.currentVolume -=
+                      (update.primaryDelta * volumeState.maxVolume / 300);
+                  volumeState.currentVolume =
+                      volumeState.currentVolume.clamp(0.0, volumeState.maxVolume);
                   //print(state.currentVolume / state.maxVolume);
                   BlocProvider.of<VolumeBloc>(context).add(
                     VolumeControllerState(
-                        state.currentVolume, state.maxVolume, true),
+                        volumeState.currentVolume, volumeState.maxVolume, true),
                   );
                 } else {
                   brightness -= (update.primaryDelta * 0.0035);
@@ -71,7 +69,7 @@ class _SeekDragContainerState extends State<SeekDragContainer> {
                 if (isVolume) {
                   BlocProvider.of<VolumeBloc>(context).add(
                       VolumeControllerState(
-                          state.currentVolume, state.maxVolume, false));
+                          volumeState.currentVolume, volumeState.maxVolume, false));
                 } else {
                   BlocProvider.of<BrightnessBloc>(context)
                       .add(BrightnessControllerState(brightness, false));
