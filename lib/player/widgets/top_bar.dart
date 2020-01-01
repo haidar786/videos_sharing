@@ -38,20 +38,17 @@ class TopBarWidget extends StatelessWidget {
                     switch (ratioModelState.aspectRatioEvents) {
                       case AspectRatioEvents.original:
                         BlocProvider.of<AspectRatioBloc>(context)
-                            .add(AspectRatioEvents.twoBYOne);
+                            .add(AspectRatioEvents.sixteenByNine);
                         break;
-                      case AspectRatioEvents.twoBYOne:
+                      case AspectRatioEvents.sixteenByNine:
                         BlocProvider.of<AspectRatioBloc>(context)
                             .add(AspectRatioEvents.fourByThree);
                         break;
                       case AspectRatioEvents.fourByThree:
                         BlocProvider.of<AspectRatioBloc>(context)
-                            .add(AspectRatioEvents.sixteenByNine);
-                        break;
-                      case AspectRatioEvents.sixteenByNine:
-                        BlocProvider.of<AspectRatioBloc>(context)
                             .add(AspectRatioEvents.original);
                         break;
+
                     }
                   },
                 );
