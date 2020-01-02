@@ -34,44 +34,45 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
         builder: (BuildContext context, PlayerControllerState controllerState) {
           return BlocBuilder<UiBloc, UiState>(
             builder: (BuildContext context, UiState uiState) {
-              return AnimatedOpacity(
-                opacity: uiState.showCenter ? 1.0 : 0.0,
+              return AnimatedSwitcher(
                 duration: Duration(milliseconds: 500),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Icon(
-                      Icons.skip_previous,
-                      size: 36.0,
-                      color: Colors.grey[600],
-                    ),
-                    InkWell(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: AnimatedIcon(
-                          icon: AnimatedIcons.pause_play,
-                          size: 56.0,
-                          color: Colors.white,
-                          progress: _animationController,
-                        ),
-                      ),
-                      onTap: () {
-                        if (controllerState.controller.value.isPlaying) {
-                          _animationController.forward();
-                          controllerState.controller.pause();
-                        } else {
-                          _animationController.reverse();
-                          controllerState.controller.play();
-                        }
-                      },
-                    ),
-                    Icon(
-                      Icons.skip_next,
-                      size: 36.0,
-                      color: Colors.grey[600],
-                    ),
-                  ],
-                ),
+                child: uiState.showCenter
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Icon(
+                            Icons.skip_previous,
+                            size: 36.0,
+                            color: Colors.grey[600],
+                          ),
+                          InkWell(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: AnimatedIcon(
+                                icon: AnimatedIcons.pause_play,
+                                size: 56.0,
+                                color: Colors.white,
+                                progress: _animationController,
+                              ),
+                            ),
+                            onTap: () {
+                              if (controllerState.controller.value.isPlaying) {
+                                _animationController.forward();
+                                controllerState.controller.pause();
+                              } else {
+                                _animationController.reverse();
+                                controllerState.controller.play();
+                              }
+                            },
+                          ),
+                          Icon(
+                            Icons.skip_next,
+                            size: 36.0,
+                            color: Colors.grey[600],
+                          ),
+                        ],
+                      )
+                    : SizedBox.shrink(),
               );
             },
           );

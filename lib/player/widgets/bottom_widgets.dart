@@ -19,58 +19,66 @@ class _BottomPlayerWidgets extends State<BottomPlayerWidgets> {
     return BlocBuilder<ControllerBloc, PlayerControllerState>(
       builder: (BuildContext context, PlayerControllerState controllerState) {
         if (controllerState.controller.value.initialized) {
-          return BlocBuilder<UiBloc,UiState>(
-             builder: (BuildContext context, UiState uiState) {
-               return  AnimatedOpacity(
-                 opacity: uiState.showBottom ? 1.0 :0.0,
-                 duration: Duration(milliseconds: 500),
-                 child: Column(
-                   mainAxisAlignment: MainAxisAlignment.end,
-                   children: <Widget>[
-                     Row(
-                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                       children: <Widget>[
-                         Padding(
-                           padding: const EdgeInsets.only(left: 12.0),
-                           child: AutoSizeText(
-                             _currentDuration(controllerState.controller.value.position),
-                             style: TextStyle(color: Colors.white, fontSize: 12.0),
-                           ),
-                         ),
-                         Expanded(
-                           child: Slider(
-                             value: controllerState.controller.value.position.inSeconds.toDouble(),
-                             min: 0.0,
-                             max: controllerState.controller.value.duration.inSeconds.toDouble(),
-                             onChanged: (double value) {
-                               int seconds = value.toInt();
-                               Duration duration = Duration(
-                                 hours: (seconds / 3600).floor(),
-                                 minutes: ((seconds % 3600) / 60).floor(),
-                                 seconds: (seconds % 60).floor(),
-                               );
-                               controllerState.controller.seekTo(duration);
-                             },
-                             onChangeStart: (value) {
-                             },
-                             onChangeEnd: (value) {
-                             },
-                           ),
-                         ),
-                         Padding(
-                           padding: const EdgeInsets.only(right: 12.0),
-                           child: AutoSizeText(
-                             _durationLeft(
-                                 controllerState.controller.value.duration, controllerState.controller.value.position),
-                             style: TextStyle(color: Colors.white, fontSize: 12.0),
-                           ),
-                         ),
-                       ],
-                     ),
-                   ],
-                 ),
-               );
-             },
+          return BlocBuilder<UiBloc, UiState>(
+            builder: (BuildContext context, UiState uiState) {
+              return AnimatedSwitcher(
+                duration: Duration(milliseconds: 500),
+                child: uiState.showBottom
+                    ? Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(left: 12.0),
+                                child: AutoSizeText(
+                                  _currentDuration(controllerState
+                                      .controller.value.position),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 12.0),
+                                ),
+                              ),
+                              Expanded(
+                                child: Slider(
+                                  value: controllerState
+                                      .controller.value.position.inSeconds
+                                      .toDouble(),
+                                  min: 0.0,
+                                  max: controllerState
+                                      .controller.value.duration.inSeconds
+                                      .toDouble(),
+                                  onChanged: (double value) {
+                                    int seconds = value.toInt();
+                                    Duration duration = Duration(
+                                      hours: (seconds / 3600).floor(),
+                                      minutes: ((seconds % 3600) / 60).floor(),
+                                      seconds: (seconds % 60).floor(),
+                                    );
+                                    controllerState.controller.seekTo(duration);
+                                  },
+                                  onChangeStart: (value) {},
+                                  onChangeEnd: (value) {},
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 12.0),
+                                child: AutoSizeText(
+                                  _durationLeft(
+                                      controllerState.controller.value.duration,
+                                      controllerState
+                                          .controller.value.position),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 12.0),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : SizedBox.shrink(),
+              );
+            },
           );
         } else {
           controllerState.controller.addListener(() {

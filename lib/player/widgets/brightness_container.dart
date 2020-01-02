@@ -22,8 +22,9 @@ class BrightnessContainerWidget extends StatelessWidget {
             angle: -pi / 2,
             child: BlocBuilder<BrightnessBloc, BrightnessControllerState>(
               builder: (BuildContext context, BrightnessControllerState state) {
-                return Visibility(
-                  visible: state.shouldVisible,
+                return AnimatedOpacity(
+                  opacity: state.shouldVisible ? 1.0 : 0.0,
+                  duration: Duration(milliseconds: 500),
                   child: LinearProgressIndicator(
                     value: state.currentBrightness,
                   ),

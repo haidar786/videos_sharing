@@ -22,8 +22,9 @@ class VolumeContainerWidget extends StatelessWidget {
             angle: -pi / 2,
             child: BlocBuilder<VolumeBloc, VolumeControllerState>(
               builder: (BuildContext context, VolumeControllerState state) {
-                return Visibility(
-                  visible: state.shouldVisible,
+                return AnimatedOpacity(
+                  opacity: state.shouldVisible ? 1.0 : 0.0,
+                  duration: Duration(milliseconds: 500),
                   child: LinearProgressIndicator(
                     value: state.currentVolume / state.maxVolume,
                   ),

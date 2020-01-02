@@ -9,7 +9,7 @@ class AspectRatioNameWidget extends StatelessWidget {
     return BlocBuilder<AspectRatioBloc, AspectRatioState>(
       builder: (BuildContext context, AspectRatioState state) {
         return Visibility(
-          visible: true,
+          visible: false,
           child: Text(
             state.aspectRatioName,
             style: TextStyle(color: Colors.white, fontSize: 40.0),

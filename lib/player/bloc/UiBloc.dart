@@ -48,7 +48,7 @@ class UiBloc extends Bloc<UiEvents, UiState> {
       _timerAll.cancel();
       _hideAll();
     } else {
-      _timerAll = Timer(Duration(seconds: 2), _hideAll);
+      _timerAll = Timer(Duration(seconds: 3), _hideAll);
     }
   }
 

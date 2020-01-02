@@ -10,59 +10,60 @@ class TopBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UiBloc, UiState>(
       builder: (BuildContext context, UiState uiState) {
-        return AnimatedOpacity(
-          opacity: uiState.showTop ? 1.0 : 0.0,
+        return AnimatedSwitcher(
           duration: Duration(milliseconds: 500),
-          child: Column(
-            children: <Widget>[
-              AppBar(
-                backgroundColor: Colors.transparent,
-                elevation: 0.0,
-                actions: <Widget>[
-                  InkWell(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(Icons.lock_outline),
-                    ),
-                    onTap: () {},
-                  ),
-                  InkWell(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Icon(Icons.subtitles),
-                    ),
-                    onTap: () {},
-                  ),
-                  BlocBuilder<AspectRatioBloc, AspectRatioState>(
-                    builder: (context, ratioModelState) {
-                      return InkWell(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Icon(ratioModelState.icon),
+          child: uiState.showTop
+              ? Column(
+                  children: <Widget>[
+                    AppBar(
+                      backgroundColor: Colors.transparent,
+                      elevation: 0.0,
+                      actions: <Widget>[
+                        InkWell(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(Icons.lock_outline),
+                          ),
+                          onTap: () {},
                         ),
-                        onTap: () {
-                          switch (ratioModelState.aspectRatioEvents) {
-                            case AspectRatioEvents.original:
-                              BlocProvider.of<AspectRatioBloc>(context)
-                                  .add(AspectRatioEvents.sixteenByNine);
-                              break;
-                            case AspectRatioEvents.sixteenByNine:
-                              BlocProvider.of<AspectRatioBloc>(context)
-                                  .add(AspectRatioEvents.fourByThree);
-                              break;
-                            case AspectRatioEvents.fourByThree:
-                              BlocProvider.of<AspectRatioBloc>(context)
-                                  .add(AspectRatioEvents.original);
-                              break;
-                          }
-                        },
-                      );
-                    },
-                  ),
-                ],
-              )
-            ],
-          ),
+                        InkWell(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Icon(Icons.subtitles),
+                          ),
+                          onTap: () {},
+                        ),
+                        BlocBuilder<AspectRatioBloc, AspectRatioState>(
+                          builder: (context, ratioModelState) {
+                            return InkWell(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(ratioModelState.icon),
+                              ),
+                              onTap: () {
+                                switch (ratioModelState.aspectRatioEvents) {
+                                  case AspectRatioEvents.original:
+                                    BlocProvider.of<AspectRatioBloc>(context)
+                                        .add(AspectRatioEvents.sixteenByNine);
+                                    break;
+                                  case AspectRatioEvents.sixteenByNine:
+                                    BlocProvider.of<AspectRatioBloc>(context)
+                                        .add(AspectRatioEvents.fourByThree);
+                                    break;
+                                  case AspectRatioEvents.fourByThree:
+                                    BlocProvider.of<AspectRatioBloc>(context)
+                                        .add(AspectRatioEvents.original);
+                                    break;
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    )
+                  ],
+                )
+              : SizedBox.shrink(),
         );
       },
     );
