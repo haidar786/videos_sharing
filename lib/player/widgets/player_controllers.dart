@@ -32,10 +32,11 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
           : mediaQuery.size.height,
       child: BlocBuilder<ControllerBloc, PlayerControllerState>(
         builder: (BuildContext context, PlayerControllerState controllerState) {
-          return BlocBuilder<UiBloc,UiState>(
+          return BlocBuilder<UiBloc, UiState>(
             builder: (BuildContext context, UiState uiState) {
-              return Visibility(
-                visible: uiState.showCenter,
+              return AnimatedOpacity(
+                opacity: uiState.showCenter ? 1.0 : 0.0,
+                duration: Duration(milliseconds: 500),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -72,7 +73,7 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
                   ],
                 ),
               );
-          },
+            },
           );
         },
       ),

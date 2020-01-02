@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/services.dart';
 import 'package:videos_sharing/player/bloc/state/ui.dart';
 
 enum UiEvents {
@@ -33,6 +34,7 @@ class UiBloc extends Bloc<UiEvents, UiState> {
         break;
       case UiEvents.showAll:
         yield UiState(true, true, true, true);
+       // _showStatusBar();
         _hideAllTimer();
         break;
       case UiEvents.hideAll:
@@ -52,5 +54,13 @@ class UiBloc extends Bloc<UiEvents, UiState> {
 
   _hideAll() {
     this.add(UiEvents.hideAll);
+    _hideStatusBar();
+  }
+
+  _showStatusBar() {
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+  }
+  _hideStatusBar() {
+    SystemChrome.setEnabledSystemUIOverlays([]);
   }
 }

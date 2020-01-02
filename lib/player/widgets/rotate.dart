@@ -11,8 +11,9 @@ class RotateWidget extends StatelessWidget {
 
     return BlocBuilder<UiBloc, UiState>(
       builder: (BuildContext context, UiState state) {
-        return Visibility(
-          visible: state.showRotation,
+        return AnimatedOpacity(
+          opacity: state.showRotation ? 1.0 :0.0,
+          duration: Duration(milliseconds: 500),
           child: Container(
             alignment: Alignment.bottomCenter,
             width: 56.0,

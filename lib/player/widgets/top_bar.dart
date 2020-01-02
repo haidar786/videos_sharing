@@ -10,8 +10,9 @@ class TopBarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UiBloc, UiState>(
       builder: (BuildContext context, UiState uiState) {
-        return Visibility(
-          visible: uiState.showTop,
+        return AnimatedOpacity(
+          opacity: uiState.showTop ? 1.0 : 0.0,
+          duration: Duration(milliseconds: 500),
           child: Column(
             children: <Widget>[
               AppBar(

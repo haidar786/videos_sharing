@@ -21,8 +21,9 @@ class _BottomPlayerWidgets extends State<BottomPlayerWidgets> {
         if (controllerState.controller.value.initialized) {
           return BlocBuilder<UiBloc,UiState>(
              builder: (BuildContext context, UiState uiState) {
-               return  Visibility(
-                 visible: uiState.showBottom,
+               return  AnimatedOpacity(
+                 opacity: uiState.showBottom ? 1.0 :0.0,
+                 duration: Duration(milliseconds: 500),
                  child: Column(
                    mainAxisAlignment: MainAxisAlignment.end,
                    children: <Widget>[
