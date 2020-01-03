@@ -57,8 +57,16 @@ class _BottomPlayerWidgets extends State<BottomPlayerWidgets> {
                                     );
                                     controllerState.controller.seekTo(duration);
                                   },
-                                  onChangeStart: (value) {},
-                                  onChangeEnd: (value) {},
+                                  onChangeStart: (value) {
+                                    BlocProvider.of<UiBloc>(context)
+                                        .hideShowAllTimer(
+                                        addTime: true,autoHide: false);
+                                  },
+                                  onChangeEnd: (value) {
+                                    BlocProvider.of<UiBloc>(context)
+                                        .hideShowAllTimer(
+                                        addTime: true,autoHide: controllerState.controller.value.isPlaying);
+                                  },
                                 ),
                               ),
                               Padding(

@@ -14,7 +14,7 @@ enum UiEvents {
 }
 
 class UiBloc extends Bloc<UiEvents, UiState> {
-  bool _isPlaying = true;
+  bool _autoHide = true;
 
   @override
   UiState get initialState => _initValue();
@@ -46,42 +46,36 @@ class UiBloc extends Bloc<UiEvents, UiState> {
     }
   }
 
-
-
-  hideShowAllTimer({bool addTime = false, bool isPlaying}) {
-    if (isPlaying != null){
-      _isPlaying = isPlaying;
+  hideShowAllTimer({bool addTime = false, bool autoHide}) {
+    if (autoHide != null) {
+      _autoHide = autoHide;
     }
     if (_timerAll != null && _timerAll.isActive) {
       _timerAll.cancel();
       if (addTime) {
-        _addTime(_isPlaying);
+        _addTime();
       } else {
-        _hideAll(_isPlaying);
+        _hideAll();
       }
     } else if (state.showCenter && !addTime) {
       this.add(UiEvents.hideAll);
     } else {
-      _addTime(_isPlaying);
+      _addTime();
     }
   }
 
-  UiState _initValue() {
-    _hideStatusBar();
-    return UiState(false, false, false, false);
+  _addTime() {
+    if (_autoHide) {
+      _timerAll = Timer(Duration(seconds: 3), () {
+        _hideAll();
+      });
+    }
   }
 
-  _addTime(bool isPlaying) {
-    _timerAll = Timer(Duration(seconds: 3), (){
-      _hideAll(isPlaying);
-    });
-  }
-
-  _hideAll(bool isPlaying) {
-    if(isPlaying){
+  _hideAll() {
+    if (_autoHide) {
       this.add(UiEvents.hideAll);
     }
-
   }
 
   _showStatusBar() {
@@ -89,28 +83,13 @@ class UiBloc extends Bloc<UiEvents, UiState> {
   }
 
   _hideStatusBar() {
-    Future.delayed(Duration(milliseconds: 500),(){
+    Future.delayed(Duration(milliseconds: 500), () {
       SystemChrome.setEnabledSystemUIOverlays([]);
     });
   }
 
-//  hideShowOverlay({bool isPlaying = true}) {
-//    if (_timerAll != null && _timerAll.isActive) {
-//      _timerAll.cancel();
-//      SystemChrome.setEnabledSystemUIOverlays([]);
-//      this.add(UiEvents.hideAll);
-//    } else if (state.showCenter) {
-//      SystemChrome.setEnabledSystemUIOverlays([]);
-//      this.add(UiEvents.hideAll);
-//    } else {
-//      SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-//      this.add(UiEvents.showAll);
-//      _timerAll = Timer(Duration(seconds: 3), (){
-//        if (isPlaying) {
-//          this.add(UiEvents.hideAll);
-//          SystemChrome.setEnabledSystemUIOverlays([]);
-//        }
-//      });
-//    }
-//  }
+  UiState _initValue() {
+    _hideStatusBar();
+    return UiState(false, false, false, false);
+  }
 }
