@@ -66,7 +66,7 @@ class UiBloc extends Bloc<UiEvents, UiState> {
 
   _addTime() {
     if (_autoHide) {
-      _timerAll = Timer(Duration(seconds: 3), () {
+      _timerAll = Timer(Duration(seconds: 2), () {
         _hideAll();
       });
     }
