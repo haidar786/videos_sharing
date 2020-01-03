@@ -6,7 +6,7 @@ import 'package:videos_sharing/player/bloc/state/brightness.dart';
 import 'package:videos_sharing/player/bloc/state/controller.dart';
 import 'package:videos_sharing/player/bloc/state/volume.dart';
 import 'package:videos_sharing/player/bloc/volume_bloc.dart';
-import 'package:videos_sharing/player/bloc/UiBloc.dart';
+import 'package:videos_sharing/player/bloc/ui_bloc.dart';
 
 class SeekDragContainer extends StatefulWidget {
   @override

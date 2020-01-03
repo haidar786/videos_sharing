@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:videos_sharing/player/bloc/UiBloc.dart';
+import 'package:videos_sharing/player/bloc/ui_bloc.dart';
 import 'package:videos_sharing/player/bloc/controller_bloc.dart';
 import 'package:videos_sharing/player/bloc/state/controller.dart';
 import 'package:videos_sharing/player/bloc/state/ui.dart';

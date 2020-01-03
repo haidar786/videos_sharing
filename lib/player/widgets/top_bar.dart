@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:videos_sharing/player/bloc/UiBloc.dart';
+import 'package:videos_sharing/player/bloc/ui_bloc.dart';
 import 'package:videos_sharing/player/bloc/aspect_ratio_bloc.dart';
 import 'package:videos_sharing/player/bloc/state/aspect_ratio.dart';
 import 'package:videos_sharing/player/bloc/state/ui.dart';
@@ -44,15 +44,30 @@ class TopBarWidget extends StatelessWidget {
                                 switch (ratioModelState.aspectRatioEvents) {
                                   case AspectRatioEvents.original:
                                     BlocProvider.of<AspectRatioBloc>(context)
-                                        .add(AspectRatioEvents.sixteenByNine);
+                                        .add(AspectRatioState(
+                                            16 / 9,
+                                            Icons.crop_5_4,
+                                            "16:9",
+                                            AspectRatioEvents.sixteenByNine,
+                                            true));
                                     break;
                                   case AspectRatioEvents.sixteenByNine:
                                     BlocProvider.of<AspectRatioBloc>(context)
-                                        .add(AspectRatioEvents.fourByThree);
+                                        .add(AspectRatioState(
+                                            4 / 3,
+                                            Icons.crop_din,
+                                            "4:3",
+                                            AspectRatioEvents.fourByThree,
+                                            true));
                                     break;
                                   case AspectRatioEvents.fourByThree:
                                     BlocProvider.of<AspectRatioBloc>(context)
-                                        .add(AspectRatioEvents.original);
+                                        .add(AspectRatioState(
+                                            0.0,
+                                            Icons.aspect_ratio,
+                                            "Original",
+                                            AspectRatioEvents.original,
+                                            true));
                                     break;
                                 }
                               },

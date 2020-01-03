@@ -8,12 +8,14 @@ class AspectRatioNameWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AspectRatioBloc, AspectRatioState>(
       builder: (BuildContext context, AspectRatioState state) {
-        return Visibility(
-          visible: false,
-          child: Text(
-            state.aspectRatioName,
-            style: TextStyle(color: Colors.white, fontSize: 40.0),
-          ),
+        return AnimatedSwitcher(
+          duration: Duration(milliseconds: 500),
+          child: state.shouldVisible
+              ? Text(
+                  state.aspectRatioName,
+                  style: TextStyle(color: Colors.white, fontSize: 40.0),
+                )
+              : SizedBox.shrink(),
         );
       },
     );

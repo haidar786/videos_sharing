@@ -6,6 +6,8 @@ class AspectRatioState {
   double aspectRatio;
   String aspectRatioName;
   AspectRatioEvents aspectRatioEvents;
+  bool shouldVisible;
 
-  AspectRatioState(this.aspectRatio, this.icon, this.aspectRatioName,this.aspectRatioEvents);
+  AspectRatioState(this.aspectRatio, this.icon, this.aspectRatioName,this.aspectRatioEvents,this.shouldVisible);
 }
+

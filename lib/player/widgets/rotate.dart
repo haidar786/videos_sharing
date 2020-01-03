@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:videos_sharing/player/bloc/UiBloc.dart';
+import 'package:videos_sharing/player/bloc/ui_bloc.dart';
 import 'package:videos_sharing/player/bloc/state/ui.dart';
 
 class RotateWidget extends StatelessWidget {

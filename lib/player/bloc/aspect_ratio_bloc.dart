@@ -1,28 +1,19 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:videos_sharing/player/bloc/state/aspect_ratio.dart';
 
-enum AspectRatioEvents { original ,fourByThree, sixteenByNine }
+enum AspectRatioEvents { original, fourByThree, sixteenByNine }
 
-class AspectRatioBloc extends Bloc<AspectRatioEvents, AspectRatioState> {
+class AspectRatioBloc extends Bloc<AspectRatioState, AspectRatioState> {
   @override
   AspectRatioState get initialState => AspectRatioState(
-      0.0, Icons.aspect_ratio, "Original", AspectRatioEvents.original);
+      0.0, Icons.aspect_ratio, "Original", AspectRatioEvents.original, false);
 
   @override
-  Stream<AspectRatioState> mapEventToState(AspectRatioEvents event) async* {
-    switch (event) {
-      case AspectRatioEvents.original:
-        yield AspectRatioState(0.0, Icons.aspect_ratio, "Original", event);
-        break;
-      case AspectRatioEvents.sixteenByNine:
-        yield AspectRatioState(16 / 9, Icons.crop_5_4, "16:9", event);
-        break;
-      case AspectRatioEvents.fourByThree:
-        yield AspectRatioState(4 / 3, Icons.crop_din, "4:3", event);
-        break;
-      default:
-        throw Exception('unhandled event: $event');
-    }
+  Stream<AspectRatioState> mapEventToState(
+      AspectRatioState aspectRatioState) async* {
+    yield aspectRatioState;
   }
 }
