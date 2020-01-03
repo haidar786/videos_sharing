@@ -17,7 +17,7 @@ class UiBloc extends Bloc<UiEvents, UiState> {
   bool _isPlaying = true;
 
   @override
-  UiState get initialState => UiState(false, false, false, false);
+  UiState get initialState => _initValue();
   Timer _timerAll;
   @override
   Stream<UiState> mapEventToState(UiEvents event) async* {
@@ -40,6 +40,7 @@ class UiBloc extends Bloc<UiEvents, UiState> {
         yield UiState(true, true, true, true);
         break;
       case UiEvents.hideAll:
+        _hideStatusBar();
         yield UiState(false, false, false, false);
         break;
     }
@@ -65,6 +66,11 @@ class UiBloc extends Bloc<UiEvents, UiState> {
     }
   }
 
+  UiState _initValue() {
+    _hideStatusBar();
+    return UiState(false, false, false, false);
+  }
+
   _addTime(bool isPlaying) {
     _timerAll = Timer(Duration(seconds: 3), (){
       _hideAll(isPlaying);
@@ -74,7 +80,6 @@ class UiBloc extends Bloc<UiEvents, UiState> {
   _hideAll(bool isPlaying) {
     if(isPlaying){
       this.add(UiEvents.hideAll);
-      _hideStatusBar();
     }
 
   }
