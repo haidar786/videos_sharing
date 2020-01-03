@@ -22,6 +22,7 @@ class PlayerPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var mediaQuery = MediaQuery.of(context);
     return Scaffold(
         key: _globalKey,
         backgroundColor: Colors.black,
@@ -63,8 +64,8 @@ class PlayerPage extends StatelessWidget {
                 alignment: Alignment.topCenter,
                 child: TopBarWidget(),
               ),
-              Align(
-                alignment: Alignment.center,
+              Positioned(
+                top: mediaQuery.size.height / 4,
                 child: AspectRatioNameWidget(),
               ),
               Align(

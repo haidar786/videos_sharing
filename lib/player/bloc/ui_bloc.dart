@@ -35,7 +35,7 @@ class UiBloc extends Bloc<UiEvents, UiState> {
       case UiEvents.showAll:
         yield UiState(true, true, true, true);
        // _showStatusBar();
-        _hideAllTimer();
+        hideAllTimer(false);
         break;
       case UiEvents.hideAll:
         yield UiState(false, false, false, false);
@@ -43,10 +43,14 @@ class UiBloc extends Bloc<UiEvents, UiState> {
     }
   }
 
-  _hideAllTimer() {
+  hideAllTimer(bool addTime) {
     if (_timerAll != null && _timerAll.isActive) {
       _timerAll.cancel();
-      _hideAll();
+      if (addTime){
+        _timerAll = Timer(Duration(seconds: 3), _hideAll);
+      }else{
+        _hideAll();
+      }
     } else {
       _timerAll = Timer(Duration(seconds: 3), _hideAll);
     }
