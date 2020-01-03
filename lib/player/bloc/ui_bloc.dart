@@ -32,11 +32,12 @@ class UiBloc extends Bloc<UiEvents, UiState> {
         yield UiState(false, false, true, false);
         break;
       case UiEvents.showBottom:
+        _hideStatusBar();
         yield UiState(true, false, false, false);
         break;
       case UiEvents.showAll:
-        _showStatusBar();
         hideShowAllTimer();
+        _showStatusBar();
         yield UiState(true, true, true, true);
         break;
       case UiEvents.hideAll:

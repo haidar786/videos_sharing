@@ -59,6 +59,8 @@ class _BottomPlayerWidgets extends State<BottomPlayerWidgets> {
                                   },
                                   onChangeStart: (value) {
                                     BlocProvider.of<UiBloc>(context)
+                                        .add(UiEvents.showBottom);
+                                    BlocProvider.of<UiBloc>(context)
                                         .hideShowAllTimer(
                                         addTime: true,autoHide: false);
                                   },
