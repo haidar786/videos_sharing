@@ -89,7 +89,9 @@ class UiBloc extends Bloc<UiEvents, UiState> {
   }
 
   _hideStatusBar() {
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    Future.delayed(Duration(milliseconds: 500),(){
+      SystemChrome.setEnabledSystemUIOverlays([]);
+    });
   }
 
 //  hideShowOverlay({bool isPlaying = true}) {

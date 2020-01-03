@@ -60,8 +60,7 @@ class PlayerPage extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: BrightnessContainerWidget(),
               ),
-              Align(
-                alignment: Alignment.topCenter,
+              Positioned(
                 child: TopBarWidget(),
               ),
               Positioned(
