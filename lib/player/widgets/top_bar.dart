@@ -41,7 +41,8 @@ class TopBarWidget extends StatelessWidget {
                                 child: Icon(ratioModelState.icon),
                               ),
                               onTap: () {
-                                BlocProvider.of<UiBloc>(context).hideAllTimer(true);
+                               BlocProvider.of<UiBloc>(context).hideShowAllTimer(addTime: true);
+                               // BlocProvider.of<UiBloc>(context).hideShowOverlay();
                                 switch (ratioModelState.aspectRatioEvents) {
                                   case AspectRatioEvents.original:
                                     BlocProvider.of<AspectRatioBloc>(context)

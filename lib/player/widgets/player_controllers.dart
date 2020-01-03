@@ -59,6 +59,12 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
                               if (controllerState.controller.value.isPlaying) {
                                 _animationController.forward();
                                 controllerState.controller.pause();
+                                BlocProvider.of<UiBloc>(context)
+                                    .hideShowAllTimer(
+                                        addTime: true,
+                                        isPlaying: controllerState
+                                            .controller.value.isPlaying);
+                                //  BlocProvider.of<UiBloc>(context).hideShowOverlay();
                               } else {
                                 _animationController.reverse();
                                 controllerState.controller.play();
