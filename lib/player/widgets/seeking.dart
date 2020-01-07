@@ -58,7 +58,6 @@ class _SeekingState extends State<Seeking> {
                                     controllerState.controller.seekTo(duration);
                                   },
                                   onChangeStart: (value) {
-
 //                                    BlocProvider.of<UiBloc>(context)
 //                                        .add(UiEvents.showBottom);
 //                                    BlocProvider.of<UiBloc>(context)
@@ -93,7 +92,9 @@ class _SeekingState extends State<Seeking> {
           );
         } else {
           controllerState.controller.addListener(() {
-            setState(() {});
+            if(BlocProvider.of<UiBloc>(context).state.showRotation){
+              setState(() {});
+            }
           });
           return Container();
         }
