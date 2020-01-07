@@ -95,19 +95,19 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
                                     .controller.value.isPlaying) {
                                   _animationController.forward();
                                   controllerState.controller.pause();
-                                  BlocProvider.of<UiBloc>(context)
-                                      .hideShowAllTimer(
-                                          addTime: true,
-                                          autoHide: controllerState
-                                              .controller.value.isPlaying);
+//                                  BlocProvider.of<UiBloc>(context)
+//                                      .hideShowAllTimer(
+//                                          addTime: true,
+//                                          autoHide: controllerState
+//                                              .controller.value.isPlaying);
                                 } else {
                                   _animationController.reverse();
                                   controllerState.controller.play();
-                                  BlocProvider.of<UiBloc>(context)
-                                      .hideShowAllTimer(
-                                          addTime: false,
-                                          autoHide: controllerState
-                                              .controller.value.isPlaying);
+//                                  BlocProvider.of<UiBloc>(context)
+//                                      .hideShowAllTimer(
+//                                          addTime: false,
+//                                          autoHide: controllerState
+//                                              .controller.value.isPlaying);
                                 }
                               },
                             ),
@@ -148,10 +148,10 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
                                     ),
                                   ),
                                   onTap: () {
-                                    BlocProvider.of<UiBloc>(context)
-                                        .hideShowAllTimer(addTime: true);
-                                    BlocProvider.of<UiBloc>(context)
-                                        .add(UiEvents.showTop);
+//                                    BlocProvider.of<UiBloc>(context)
+//                                        .hideShowAllTimer(addTime: true);
+//                                    BlocProvider.of<UiBloc>(context)
+//                                        .add(UiEvents.showTop);
                                     switch (ratioModelState.aspectRatioEvents) {
                                       case AspectRatioEvents.original:
                                         BlocProvider.of<AspectRatioBloc>(

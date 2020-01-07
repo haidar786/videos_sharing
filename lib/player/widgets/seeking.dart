@@ -58,16 +58,17 @@ class _SeekingState extends State<Seeking> {
                                     controllerState.controller.seekTo(duration);
                                   },
                                   onChangeStart: (value) {
-                                    BlocProvider.of<UiBloc>(context)
-                                        .add(UiEvents.showBottom);
-                                    BlocProvider.of<UiBloc>(context)
-                                        .hideShowAllTimer(
-                                        addTime: true,autoHide: false);
+
+//                                    BlocProvider.of<UiBloc>(context)
+//                                        .add(UiEvents.showBottom);
+//                                    BlocProvider.of<UiBloc>(context)
+//                                        .hideShowAllTimer(
+//                                        addTime: true,autoHide: false);
                                   },
                                   onChangeEnd: (value) {
-                                    BlocProvider.of<UiBloc>(context)
-                                        .hideShowAllTimer(
-                                        addTime: true,autoHide: controllerState.controller.value.isPlaying);
+//                                    BlocProvider.of<UiBloc>(context)
+//                                        .hideShowAllTimer(
+//                                        addTime: true,autoHide: controllerState.controller.value.isPlaying);
                                   },
                                 ),
                               ),

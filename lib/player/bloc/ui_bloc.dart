@@ -14,11 +14,11 @@ enum UiEvents {
 }
 
 class UiBloc extends Bloc<UiEvents, UiState> {
-  bool _autoHide = true;
+ // bool _autoHide = true;
 
   @override
   UiState get initialState => _initValue();
-  Timer _timerAll;
+  //Timer _timerAll;
   @override
   Stream<UiState> mapEventToState(UiEvents event) async* {
     switch (event) {
@@ -36,48 +36,58 @@ class UiBloc extends Bloc<UiEvents, UiState> {
         yield UiState(true, false, false, false);
         break;
       case UiEvents.showAll:
-        hideShowAllTimer();
-        _showStatusBar();
+   //     hideShowAllTimer();
+   //     _showStatusBar();
         yield UiState(true, true, true, true);
         break;
       case UiEvents.hideAll:
-        _hideStatusBar();
+   //     _hideStatusBar();
         yield UiState(false, false, false, false);
         break;
     }
   }
 
-  hideShowAllTimer({bool addTime = false, bool autoHide}) {
-    if (autoHide != null) {
-      _autoHide = autoHide;
-    }
-    if (_timerAll != null && _timerAll.isActive) {
-      _timerAll.cancel();
-      if (addTime) {
-        _addTime();
-      } else {
-        _hideAll();
-      }
-    } else if (state.showCenter && !addTime) {
+  hideShowUi(){
+    if (this.state.showRotation){
       this.add(UiEvents.hideAll);
-    } else {
-      _addTime();
+      _hideStatusBar();
+    }else{
+      this.add(UiEvents.showAll);
+      _showStatusBar();
     }
   }
 
-  _addTime() {
-    if (_autoHide) {
-      _timerAll = Timer(Duration(seconds: 2), () {
-        _hideAll();
-      });
-    }
-  }
-
-  _hideAll() {
-    if (_autoHide) {
-      this.add(UiEvents.hideAll);
-    }
-  }
+//  hideShowAllTimer({bool addTime = false, bool autoHide}) {
+//    if (autoHide != null) {
+//      _autoHide = autoHide;
+//    }
+//    if (_timerAll != null && _timerAll.isActive) {
+//      _timerAll.cancel();
+//      if (addTime) {
+//        _addTime();
+//      } else {
+//        _hideAll();
+//      }
+//    } else if (state.showCenter && !addTime) {
+//      this.add(UiEvents.hideAll);
+//    } else {
+//      _addTime();
+//    }
+//  }
+//
+//  _addTime() {
+//    if (_autoHide) {
+//      _timerAll = Timer(Duration(seconds: 2), () {
+//        _hideAll();
+//      });
+//    }
+//  }
+//
+//  _hideAll() {
+//    if (_autoHide) {
+//      this.add(UiEvents.hideAll);
+//    }
+//  }
 
   _showStatusBar() {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);

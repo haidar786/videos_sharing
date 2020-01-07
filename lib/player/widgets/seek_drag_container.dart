@@ -85,7 +85,8 @@ class _SeekDragContainerState extends State<SeekDragContainer> {
                 print("double tap");
               },
               onTap: () {
-                BlocProvider.of<UiBloc>(context).add(UiEvents.showAll);
+//                BlocProvider.of<UiBloc>(context).add(UiEvents.showAll);
+                BlocProvider.of<UiBloc>(context).hideShowUi();
               },
             );
           },
