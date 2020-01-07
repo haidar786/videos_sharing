@@ -9,7 +9,7 @@ class BottomPlayerWidgets extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         Container(
-          color: Colors.black.withOpacity(0.3),
+          color: Colors.black.withOpacity(0.6),
           child: Column(
             children: <Widget>[
               Seeking(),

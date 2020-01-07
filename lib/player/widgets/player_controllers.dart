@@ -43,11 +43,11 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
                             child: InkWell(
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                    const EdgeInsets.only(bottom: 12.0,top: 12.0),
                                 child: Icon(
                                   Icons.lock_outline,
                                   color: Colors.white,
-                                  size: 28.0,
+                                  size: 27.0,
                                 ),
                               ),
                               onTap: () {},
@@ -60,7 +60,7 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
                             child: InkWell(
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                const EdgeInsets.only(bottom: 12.0,top: 12.0),
                                 child: Icon(
                                   Icons.skip_previous,
                                   color: Colors.white,
@@ -77,7 +77,7 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
                             child: InkWell(
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                const EdgeInsets.only(bottom: 12.0,top: 12.0),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -119,7 +119,7 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
                             child: InkWell(
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                const EdgeInsets.only(bottom: 12.0,top: 12.0),
                                 child: Icon(
                                   Icons.skip_next,
                                   color: Colors.white,
@@ -138,12 +138,13 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
                                 color: Colors.transparent,
                                 child: InkWell(
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 8.0),
+                                    padding:
+                                    const EdgeInsets.only(bottom: 12.0,top: 12.0),
+
                                     child: Icon(
                                       ratioModelState.icon,
                                       color: Colors.white,
-                                      size: 28.0,
+                                      size: 27.0,
                                     ),
                                   ),
                                   onTap: () {

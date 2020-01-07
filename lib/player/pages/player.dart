@@ -7,10 +7,8 @@ import 'package:videos_sharing/player/bloc/controller_bloc.dart';
 import 'package:videos_sharing/player/bloc/volume_bloc.dart';
 import 'package:videos_sharing/player/widgets/aspect_ratio_name.dart';
 import 'package:videos_sharing/player/widgets/bottom_widgets.dart';
-import 'package:videos_sharing/player/widgets/seeking.dart';
 import 'package:videos_sharing/player/widgets/brightness_container.dart';
 import 'package:videos_sharing/player/widgets/seek_drag_container.dart';
-import 'package:videos_sharing/player/widgets/player_controllers.dart';
 import 'package:videos_sharing/player/widgets/volume_container.dart';
 import 'package:videos_sharing/player/widgets/rotate.dart';
 import 'package:videos_sharing/player/widgets/top_bar.dart';
@@ -63,7 +61,7 @@ class PlayerPage extends StatelessWidget {
               ),
               Align(
                 alignment: Alignment.topCenter,
-                child: TopBarWidget(),
+                child: TopBarWidget(title: videoPath.split('/').last,),
               ),
               Align(
                 alignment: Alignment.center,
