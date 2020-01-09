@@ -57,7 +57,6 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
           });
           state.controller.initialize().then((_) {
             state.controller.play();
-            state.controller.setLooping(true);
             setState(() {});
           });
           return Center(

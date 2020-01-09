@@ -6,6 +6,8 @@ import 'package:videos_sharing/player/bloc/controller_bloc.dart';
 import 'package:videos_sharing/player/bloc/state/controller.dart';
 
 class PlayerControllerWidget extends StatefulWidget {
+  PlayerControllerWidget({@required this.isRotation});
+  final bool isRotation;
   @override
   State<StatefulWidget> createState() {
     return _PlayerControllerWidgetState();
@@ -27,14 +29,15 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
   Widget build(BuildContext context) {
     return BlocBuilder<ControllerBloc, PlayerControllerState>(
       builder: (BuildContext context, PlayerControllerState controllerState) {
-//        controllerState.controller.addListener((){
-//          if (!controllerState.controller.value.isPlaying) {
-//            _animationController.forward();
-//          } else {
-//            _animationController.reverse();
-//          }
-//        });
-
+        controllerState.controller.addListener(() {
+          if (widget.isRotation) {
+            if (controllerState.controller.value.isPlaying) {
+              _animationController.reverse();
+            } else {
+              _animationController.forward();
+            }
+          }
+        });
         return Row(
           children: <Widget>[
             Expanded(
@@ -79,9 +82,7 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         AnimatedIcon(
-                          icon: controllerState.controller.value.isPlaying
-                              ? AnimatedIcons.pause_play
-                              : AnimatedIcons.play_pause,
+                          icon: AnimatedIcons.pause_play,
                           size: 38.0,
                           color: Colors.white,
                           progress: _animationController,
@@ -91,10 +92,10 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
                   ),
                   onTap: () {
                     if (controllerState.controller.value.isPlaying) {
-                       _animationController.forward();
+                      //  _animationController.forward();
                       controllerState.controller.pause();
                     } else {
-                         _animationController.reverse();
+                      //     _animationController.reverse();
                       controllerState.controller.play();
                     }
                   },

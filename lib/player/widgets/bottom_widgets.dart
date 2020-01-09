@@ -20,8 +20,12 @@ class BottomPlayerWidgets extends StatelessWidget {
                       color: Colors.black.withOpacity(0.6),
                       child: Column(
                         children: <Widget>[
-                          Seeking(isRotation: state.showRotation,),
-                          PlayerControllerWidget(),
+                          Seeking(
+                            isRotation: state.showRotation,
+                          ),
+                          PlayerControllerWidget(
+                            isRotation: state.showRotation,
+                          ),
                         ],
                       ),
                     )
