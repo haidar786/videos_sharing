@@ -12,7 +12,7 @@ class RotateWidget extends StatelessWidget {
     return BlocBuilder<UiBloc, UiState>(
       builder: (BuildContext context, UiState uiState) {
         return AnimatedSwitcher(
-          duration: Duration(milliseconds: 500),
+          duration: Duration(milliseconds: 300),
           child: uiState.showRotation
               ? Container(
                   alignment: Alignment.bottomCenter,

@@ -1,11 +1,12 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:videos_sharing/player/bloc/ui_bloc.dart';
 import 'package:videos_sharing/player/bloc/controller_bloc.dart';
 import 'package:videos_sharing/player/bloc/state/controller.dart';
 
 class Seeking extends StatefulWidget {
+  Seeking({@required this.isRotation});
+  final bool isRotation;
   @override
   State<StatefulWidget> createState() {
     return _SeekingState();
@@ -17,7 +18,12 @@ class _SeekingState extends State<Seeking> {
   Widget build(BuildContext context) {
     return BlocBuilder<ControllerBloc, PlayerControllerState>(
       builder: (BuildContext context, PlayerControllerState controllerState) {
-        if (controllerState.controller.value.initialized) {
+        if (widget.isRotation) {
+          controllerState.controller.addListener(() {
+            if (mounted){
+              setState(() {});
+            }
+          });
           return Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
@@ -27,20 +33,17 @@ class _SeekingState extends State<Seeking> {
                   Padding(
                     padding: const EdgeInsets.only(left: 12.0),
                     child: AutoSizeText(
-                      _currentDuration(controllerState
-                          .controller.value.position),
-                      style: TextStyle(
-                          color: Colors.white, fontSize: 12.0),
+                      _currentDuration(
+                          controllerState.controller.value.position),
+                      style: TextStyle(color: Colors.white, fontSize: 12.0),
                     ),
                   ),
                   Expanded(
                     child: Slider(
-                      value: controllerState
-                          .controller.value.position.inSeconds
+                      value: controllerState.controller.value.position.inSeconds
                           .toDouble(),
                       min: 0.0,
-                      max: controllerState
-                          .controller.value.duration.inSeconds
+                      max: controllerState.controller.value.duration.inSeconds
                           .toDouble(),
                       onChanged: (double value) {
                         int seconds = value.toInt();
@@ -68,12 +71,9 @@ class _SeekingState extends State<Seeking> {
                   Padding(
                     padding: const EdgeInsets.only(right: 12.0),
                     child: AutoSizeText(
-                      _durationLeft(
-                          controllerState.controller.value.duration,
-                          controllerState
-                              .controller.value.position),
-                      style: TextStyle(
-                          color: Colors.white, fontSize: 12.0),
+                      _durationLeft(controllerState.controller.value.duration,
+                          controllerState.controller.value.position),
+                      style: TextStyle(color: Colors.white, fontSize: 12.0),
                     ),
                   ),
                 ],
@@ -81,11 +81,6 @@ class _SeekingState extends State<Seeking> {
             ],
           );
         } else {
-          controllerState.controller.addListener(() {
-            if(BlocProvider.of<UiBloc>(context).state.showRotation){
-              setState(() {});
-            }
-          });
           return Container();
         }
       },

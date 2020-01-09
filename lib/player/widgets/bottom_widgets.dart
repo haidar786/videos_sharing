@@ -11,7 +11,7 @@ class BottomPlayerWidgets extends StatelessWidget {
     return BlocBuilder<UiBloc, UiState>(
       builder: (BuildContext context, UiState state) {
         return AnimatedSwitcher(
-          duration: Duration(milliseconds: 500),
+          duration: Duration(milliseconds: 300),
           child: state.showRotation
               ? Column(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -20,7 +20,7 @@ class BottomPlayerWidgets extends StatelessWidget {
                       color: Colors.black.withOpacity(0.6),
                       child: Column(
                         children: <Widget>[
-                          Seeking(),
+                          Seeking(isRotation: state.showRotation,),
                           PlayerControllerWidget(),
                         ],
                       ),

@@ -94,7 +94,7 @@ class UiBloc extends Bloc<UiEvents, UiState> {
   }
 
   _hideStatusBar() {
-    Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(Duration(milliseconds: 300), () {
       SystemChrome.setEnabledSystemUIOverlays([]);
     });
   }

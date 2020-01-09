@@ -27,6 +27,14 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
   Widget build(BuildContext context) {
     return BlocBuilder<ControllerBloc, PlayerControllerState>(
       builder: (BuildContext context, PlayerControllerState controllerState) {
+//        controllerState.controller.addListener((){
+//          if (!controllerState.controller.value.isPlaying) {
+//            _animationController.forward();
+//          } else {
+//            _animationController.reverse();
+//          }
+//        });
+
         return Row(
           children: <Widget>[
             Expanded(
@@ -71,7 +79,9 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         AnimatedIcon(
-                          icon: AnimatedIcons.pause_play,
+                          icon: controllerState.controller.value.isPlaying
+                              ? AnimatedIcons.pause_play
+                              : AnimatedIcons.play_pause,
                           size: 38.0,
                           color: Colors.white,
                           progress: _animationController,
@@ -81,21 +91,11 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
                   ),
                   onTap: () {
                     if (controllerState.controller.value.isPlaying) {
-                      _animationController.forward();
+                       _animationController.forward();
                       controllerState.controller.pause();
-//                                  BlocProvider.of<UiBloc>(context)
-//                                      .hideShowAllTimer(
-//                                          addTime: true,
-//                                          autoHide: controllerState
-//                                              .controller.value.isPlaying);
                     } else {
-                      _animationController.reverse();
+                         _animationController.reverse();
                       controllerState.controller.play();
-//                                  BlocProvider.of<UiBloc>(context)
-//                                      .hideShowAllTimer(
-//                                          addTime: false,
-//                                          autoHide: controllerState
-//                                              .controller.value.isPlaying);
                     }
                   },
                 ),
