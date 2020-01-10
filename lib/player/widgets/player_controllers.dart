@@ -30,6 +30,12 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
     return BlocBuilder<ControllerBloc, PlayerControllerState>(
       builder: (BuildContext context, PlayerControllerState controllerState) {
         _playPause(controllerState);
+        controllerState.controller.addListener(() {
+          if (controllerState.controller.value.duration ==
+              controllerState.controller.value.position) {
+
+          }
+        });
 //        _playPause(controllerState, widget.isRotation);
 //        controllerState.controller.addListener(() {
 //          if (controllerState.controller.value.duration ==
