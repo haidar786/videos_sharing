@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:videos_sharing/player/bloc/ui_bloc.dart';
 import 'package:videos_sharing/player/bloc/state/ui.dart';
@@ -49,33 +50,33 @@ class _LockWidgetState extends State<LockWidget> {
   @override
   Widget build(BuildContext context) {
     return _showLock
-        ? Container(
-            alignment: Alignment.bottomCenter,
-            width: 56.0,
-            height: kToolbarHeight + 72.0,
-            child: InkWell(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Icon(
-                  Icons.lock_outline,
-                  color: Colors.white,
-                  size: 24.0,
+        ? Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Card(
+              child: InkWell(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Icon(
+                    Icons.lock_outline,
+                    size: 24.0,
+                  ),
                 ),
+                onTap: () {
+                  BlocProvider.of<UiBloc>(context).add(UiEvents.showAll);
+                  SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+                },
               ),
-              onTap: () {
-                BlocProvider.of<UiBloc>(context).add(UiEvents.hideAll);
-              },
             ),
-          )
+        )
         : SizedBox.shrink();
   }
 
   _hideLockTimer() {
     if (_timer != null && _timer.isActive) {
       _timer.cancel();
-      _timer = Timer(Duration(seconds: 1), _hideLock);
+      _timer = Timer(Duration(seconds: 2), _hideLock);
     } else {
-      _timer = Timer(Duration(seconds: 1), _hideLock);
+      _timer = Timer(Duration(seconds: 2), _hideLock);
     }
   }
 
