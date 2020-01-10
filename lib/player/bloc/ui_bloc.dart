@@ -10,7 +10,8 @@ enum UiEvents {
   showTop,
   showCenter,
   showRotation,
-  showBottom
+  showBottom,
+  showLock
 }
 
 class UiBloc extends Bloc<UiEvents, UiState> {
@@ -23,38 +24,44 @@ class UiBloc extends Bloc<UiEvents, UiState> {
   Stream<UiState> mapEventToState(UiEvents event) async* {
     switch (event) {
       case UiEvents.showTop:
-        yield UiState(false, false, false, true);
+        yield UiState(false, false, false, true,false);
         break;
       case UiEvents.showCenter:
-        yield UiState(false, true, false, false);
+        yield UiState(false, true, false, false,false);
         break;
       case UiEvents.showRotation:
-        yield UiState(false, false, true, false);
+        yield UiState(false, false, true, false,false);
         break;
       case UiEvents.showBottom:
         _hideStatusBar();
-        yield UiState(true, false, false, false);
+        yield UiState(true, false, false, false,false);
         break;
       case UiEvents.showAll:
-   //     hideShowAllTimer();
-   //     _showStatusBar();
-        yield UiState(true, true, true, true);
+        yield UiState(true, true, true, true, false);
         break;
       case UiEvents.hideAll:
-   //     _hideStatusBar();
-        yield UiState(false, false, false, false);
+        yield UiState(false, false, false, false, false);
+        break;
+      case UiEvents.showLock:
+        yield UiState(false, false, false, false, true);
+        _hideStatusBar();
         break;
     }
   }
 
   hideShowUi(){
-    if (this.state.showRotation){
-      this.add(UiEvents.hideAll);
-      _hideStatusBar();
-    }else{
-      this.add(UiEvents.showAll);
-      _showStatusBar();
+    if (this.state.showLock){
+      this.add(UiEvents.showLock);
+    }else {
+      if (this.state.showRotation){
+        this.add(UiEvents.hideAll);
+        _hideStatusBar();
+      }else{
+        this.add(UiEvents.showAll);
+        _showStatusBar();
+      }
     }
+
   }
 
 //  hideShowAllTimer({bool addTime = false, bool autoHide}) {
@@ -101,6 +108,6 @@ class UiBloc extends Bloc<UiEvents, UiState> {
 
   UiState _initValue() {
     _hideStatusBar();
-    return UiState(false, false, false, false);
+    return UiState(false, false, false, false,false);
   }
 }

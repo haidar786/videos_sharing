@@ -8,6 +8,7 @@ import 'package:videos_sharing/player/bloc/volume_bloc.dart';
 import 'package:videos_sharing/player/widgets/aspect_ratio_name.dart';
 import 'package:videos_sharing/player/widgets/bottom_widgets.dart';
 import 'package:videos_sharing/player/widgets/brightness_container.dart';
+import 'package:videos_sharing/player/widgets/lock.dart';
 import 'package:videos_sharing/player/widgets/seek_drag_container.dart';
 import 'package:videos_sharing/player/widgets/volume_container.dart';
 import 'package:videos_sharing/player/widgets/rotate.dart';
@@ -70,6 +71,10 @@ class PlayerPage extends StatelessWidget {
               Align(
                 alignment: Alignment.topLeft,
                 child: RotateWidget(),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: LockBlocWidget(),
               ),
               Align(
                 alignment: Alignment.bottomCenter,

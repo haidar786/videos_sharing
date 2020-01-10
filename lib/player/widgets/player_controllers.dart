@@ -4,6 +4,7 @@ import 'package:videos_sharing/player/bloc/aspect_ratio_bloc.dart';
 import 'package:videos_sharing/player/bloc/state/aspect_ratio.dart';
 import 'package:videos_sharing/player/bloc/controller_bloc.dart';
 import 'package:videos_sharing/player/bloc/state/controller.dart';
+import 'package:videos_sharing/player/bloc/ui_bloc.dart';
 
 class PlayerControllerWidget extends StatefulWidget {
   PlayerControllerWidget({@required this.isRotation});
@@ -33,21 +34,9 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
         controllerState.controller.addListener(() {
           if (controllerState.controller.value.duration ==
               controllerState.controller.value.position) {
-
+            Navigator.pop(context);
           }
         });
-//        _playPause(controllerState, widget.isRotation);
-//        controllerState.controller.addListener(() {
-//          if (controllerState.controller.value.duration ==
-//              controllerState.controller.value.position) {
-//            setState(() {
-//              _isFinish = true;
-//              controllerState.controller.pause();
-//            });
-//          }else{
-//            _playPause(controllerState, widget.isRotation);
-//          }
-//        });
         return Row(
           children: <Widget>[
             Expanded(
@@ -62,7 +51,9 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
                       size: 27.0,
                     ),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    BlocProvider.of<UiBloc>(context).add(UiEvents.showLock);
+                  },
                 ),
               ),
             ),
