@@ -91,7 +91,7 @@ class _VideoFolderPageState extends State<VideoFolderPage> {
               //subtitle: Text("internal storage"),
               onTap: () {
                 Navigator.push(
-                  _scaffoldKey.currentContext,
+                  context,
                   MaterialPageRoute(
                     builder: (context) {
                       return FilesAndFoldersPage(

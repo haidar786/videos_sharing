@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:subtitle_wrapper_package/subtitle_controller.dart';
+import 'package:subtitle_wrapper_package/subtitle_wrapper_package.dart';
 import 'package:video_player/video_player.dart';
 import 'package:videos_sharing/player/bloc/aspect_ratio_bloc.dart';
 import 'package:videos_sharing/player/bloc/controller_bloc.dart';
@@ -12,7 +14,7 @@ class VideoPlayerWidget extends StatefulWidget {
   VideoPlayerWidget(
       {Key key, @required this.videoPath, @required this.globalKey})
       : super(key: key);
-  final videoPath;
+  final String videoPath;
   final GlobalKey<ScaffoldState> globalKey;
   @override
   State<StatefulWidget> createState() {
@@ -24,7 +26,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
   @override
   void initState() {
     Wakelock.enable();
-   // SystemChrome.setEnabledSystemUIOverlays([]);
+    // SystemChrome.setEnabledSystemUIOverlays([]);
     super.initState();
   }
 
@@ -39,7 +41,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                 aspectRatio: ratioModel.aspectRatio == 0.0
                     ? state.controller.value.aspectRatio
                     : ratioModel.aspectRatio,
-                child: VideoPlayer(state.controller),
+                child: SubTitleWrapper(
+                  videoChild: VideoPlayer(state.controller),
+                  videoPlayerController: state.controller,
+                  subtitleController: SubtitleController(showSubtitles: false),
+                ),
               );
             },
           );
@@ -65,6 +71,13 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         }
       },
     );
+  }
+
+  String _getSubUrl(){
+    int dotIndex = widget.videoPath.lastIndexOf('.');
+    String subUrl = widget.videoPath.substring(1,dotIndex) + ".srt";
+    print(subUrl);
+    return subUrl;
   }
 
   @override
