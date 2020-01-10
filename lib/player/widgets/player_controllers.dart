@@ -17,7 +17,6 @@ class PlayerControllerWidget extends StatefulWidget {
 class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
     with SingleTickerProviderStateMixin {
   AnimationController _animationController;
-  bool _isFinish = false;
 
   @override
   void initState() {
@@ -30,16 +29,19 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
   Widget build(BuildContext context) {
     return BlocBuilder<ControllerBloc, PlayerControllerState>(
       builder: (BuildContext context, PlayerControllerState controllerState) {
-        _playPause(controllerState, widget.isRotation);
-        controllerState.controller.addListener(() {
-          if (controllerState.controller.value.duration ==
-              controllerState.controller.value.position) {
-            setState(() {
-              _isFinish = true;
-            });
-          }
-          _playPause(controllerState, widget.isRotation);
-        });
+        _playPause(controllerState);
+//        _playPause(controllerState, widget.isRotation);
+//        controllerState.controller.addListener(() {
+//          if (controllerState.controller.value.duration ==
+//              controllerState.controller.value.position) {
+//            setState(() {
+//              _isFinish = true;
+//              controllerState.controller.pause();
+//            });
+//          }else{
+//            _playPause(controllerState, widget.isRotation);
+//          }
+//        });
         return Row(
           children: <Widget>[
             Expanded(
@@ -74,63 +76,36 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
                 ),
               ),
             ),
-            _isFinish
-                ? Expanded(
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.only(bottom: 12.0, top: 12.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Icon(
-                                Icons.replay,
-                                size: 38.0,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
+            Expanded(
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 12.0, top: 12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        AnimatedIcon(
+                          icon: AnimatedIcons.pause_play,
+                          size: 38.0,
+                          color: Colors.white,
+                          progress: _animationController,
                         ),
-                        onTap: () {
-                          controllerState.controller
-                              .seekTo(Duration(seconds: 0));
-                        },
-                      ),
-                    ),
-                  )
-                : Expanded(
-                    child: Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        child: Padding(
-                          padding:
-                              const EdgeInsets.only(bottom: 12.0, top: 12.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              AnimatedIcon(
-                                icon: AnimatedIcons.pause_play,
-                                size: 38.0,
-                                color: Colors.white,
-                                progress: _animationController,
-                              ),
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          if (controllerState.controller.value.isPlaying) {
-                            //  _animationController.forward();
-                            controllerState.controller.pause();
-                          } else {
-                            //     _animationController.reverse();
-                            controllerState.controller.play();
-                          }
-                        },
-                      ),
+                      ],
                     ),
                   ),
+                  onTap: () {
+                    if (controllerState.controller.value.isPlaying) {
+                      _animationController.forward();
+                      controllerState.controller.pause();
+                    } else {
+                      _animationController.reverse();
+                      controllerState.controller.play();
+                    }
+                  },
+                ),
+              ),
+            ),
             Expanded(
               child: Material(
                 color: Colors.transparent,
@@ -200,11 +175,13 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
     );
   }
 
-  _playPause(PlayerControllerState controllerState, bool isRotation) {
-    if (isRotation) {
-      if (controllerState.controller.value.isPlaying) {
+  _playPause(PlayerControllerState controllerState) {
+    if (controllerState.controller.value.isPlaying) {
+      if (_animationController.status != AnimationStatus.reverse) {
         _animationController.reverse();
-      } else {
+      }
+    } else {
+      if (_animationController.status != AnimationStatus.forward) {
         _animationController.forward();
       }
     }
