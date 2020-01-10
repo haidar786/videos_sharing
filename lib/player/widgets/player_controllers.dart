@@ -29,12 +29,12 @@ class _PlayerControllerWidgetState extends State<PlayerControllerWidget>
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ControllerBloc, PlayerControllerState>(
-      builder: (BuildContext context, PlayerControllerState controllerState) {
+      builder: (BuildContext _, PlayerControllerState controllerState) {
         _playPause(controllerState);
         controllerState.controller.addListener(() {
           if (controllerState.controller.value.duration ==
               controllerState.controller.value.position) {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           }
         });
         return Row(
