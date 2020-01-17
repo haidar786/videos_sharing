@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,7 +28,7 @@ class VideoPlayerWidget extends StatefulWidget {
 }
 
 class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
-  String data = '''1
+  String srtData = '''1
 00:02:26,407 --> 00:02:31,356  X1:100 X2:100 Y1:100 Y2:100
 + time to move on, <u><b><font color="#00ff00">Arman</font></b></u>.
 - OK
@@ -35,10 +38,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 + Lukas is publishing his library.
 - I like the man.
 ''';
-
+  String vvtData =
+"1 00:00:01.251 --> 00:00:03.963 line:14 align:middle - Ahoj, jmenuji se Steven M. R. Covey. 2 00:00:03.965 --> 00:00:06.631 line:14 align:middle Ve Speed of Trust jste se dozvěděli 3 00:00:06.633 --> 00:00:08.133 line:14 align:middle o tom, jak je důležitá důvěra 4 00:00:08.135 --> 00:00:11.721 line:13 align:middle a proč je to jediná věc, která dokáže vše změnit. 5 00:00:11.723 --> 00:00:14.848 line:13 align:middle Během následujících 52 týdnů se naučíte, jak";
   @override
   void initState() {
-    _sub();
+    _getSubUrl();
     Wakelock.enable();
     // SystemChrome.setEnabledSystemUIOverlays([]);
     super.initState();
@@ -58,12 +62,13 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                 child: SubTitleWrapper(
                   videoChild: VideoPlayer(state.controller),
                   subtitleController: SubtitleController(
-                   // subtitlesContent: dData,
-                    subtitleUrl: "https://translatesubtitles.com/uploads_iota/1578973604_1578525770_Jexi.2019.720p.WEBRip.x264-[YTS.LT]-eng_Croatian_English.srt",
+                   // subtitlesContent: utf8.decode(utf8.encode(vvtData)),
+                  //  subtitleUrl: "https://duoidi6ujfbv.cloudfront.net/media/115/subtitles/5ccb556be8e7f.vtt",
+                  //  subtitlesContent: File(_getSubUrl()).toString(),
                     showSubtitles: false,
                   ),
                   subtitleStyle:
-                      SubtitleStyle(textColor: Colors.white, hasBorder: true),
+                      SubtitleStyle(textColor: Colors.white, hasBorder: true,fontSize: 40.0),
                   videoPlayerController: state.controller,
                 ),
               );
@@ -95,26 +100,33 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   String _getSubUrl() {
     int dotIndex = widget.videoPath.lastIndexOf('.');
-    String subUrl = widget.videoPath.substring(1, dotIndex) + ".srt";
+    String subUrl = widget.videoPath.substring(1, dotIndex) + ".vvt";
     print(subUrl);
     return subUrl;
   }
 
-  void _sub() {
-    List<Subtitle> subtitles = parseSrt(data);
+  String _sub() {
+    String vvtSub = "";
+    List<Subtitle> subtitles = parseSrt(srtData);
     for (Subtitle item in subtitles) {
-      print('subtitle\'s ID is: ${item.id}');
-      print(
-          'subtitle\'s Begin is: ${item.range.begin} and End is: ${item.range.end}');
+      Duration startTime = Duration(milliseconds: item.range.begin);
+      Duration endTime = Duration(milliseconds: item.range.end);
+      vvtSub = vvtSub +
+          startTime.toString().substring(0, 11).padLeft(12, '0') +
+          " --> " +
+          endTime.toString().substring(0, 11).padLeft(12, '0') +
+          "\n";
+
       item.parsedLines.forEach((Line line) {
-        return line.subLines.forEach((SubLine subLine) => print(
-            'line${item.parsedLines.indexOf(line)} subline${line.subLines.indexOf(subLine)} is: ${subLine.rawString}'));
+        return line.subLines.forEach((SubLine subLine) {
+          vvtSub = vvtSub + subLine.rawString;
+        });
       });
-      print('----');
+
+      vvtSub = vvtSub + "\n\n";
     }
-    if (subtitles[0].parsedLines[0].subLines[1].htmlCode.b == true) {
-      print('true');
-    }
+    //print(vvtSub);
+    return vvtSub;
   }
 
   @override
