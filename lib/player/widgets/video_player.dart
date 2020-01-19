@@ -64,11 +64,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                   subtitleController: SubtitleController(
                    // subtitlesContent: utf8.decode(utf8.encode(vvtData)),
                   //  subtitleUrl: "https://duoidi6ujfbv.cloudfront.net/media/115/subtitles/5ccb556be8e7f.vtt",
-                  //  subtitlesContent: File(_getSubUrl()).toString(),
-                    showSubtitles: false,
+                    subtitlesContent: _srtSub(),
+                    showSubtitles: true,
                   ),
                   subtitleStyle:
-                      SubtitleStyle(textColor: Colors.white, hasBorder: true,fontSize: 40.0),
+                      SubtitleStyle(textColor: Colors.white, hasBorder: true,fontSize: 20.0),
                   videoPlayerController: state.controller,
                 ),
               );
@@ -100,14 +100,17 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
 
   String _getSubUrl() {
     int dotIndex = widget.videoPath.lastIndexOf('.');
-    String subUrl = widget.videoPath.substring(1, dotIndex) + ".vvt";
-    print(subUrl);
+    String subUrl = widget.videoPath.substring(1, dotIndex) + ".srt";
+//    File(subUrl).readAsString().then((s){
+//      print(s);
+//    });
+//    print(File(subUrl).readAsStringSync());
     return subUrl;
   }
 
-  String _sub() {
+  String _srtSub() {
     String vvtSub = "";
-    List<Subtitle> subtitles = parseSrt(srtData);
+    List<Subtitle> subtitles = parseSrt(File(_getSubUrl()).readAsStringSync());
     for (Subtitle item in subtitles) {
       Duration startTime = Duration(milliseconds: item.range.begin);
       Duration endTime = Duration(milliseconds: item.range.end);
