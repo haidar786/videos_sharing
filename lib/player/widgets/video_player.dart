@@ -62,9 +62,8 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
                 child: SubTitleWrapper(
                   videoChild: VideoPlayer(state.controller),
                   subtitleController: SubtitleController(
-                   // subtitlesContent: utf8.decode(utf8.encode(vvtData)),
-                  //  subtitleUrl: "https://duoidi6ujfbv.cloudfront.net/media/115/subtitles/5ccb556be8e7f.vtt",
-                    subtitlesContent: _srtSub(),
+                    subtitleUrl: "https://duoidi6ujfbv.cloudfront.net/media/115/subtitles/5ccb556be8e7f.vtt",
+                //    subtitlesContent: _srtSub(),
                     showSubtitles: true,
                   ),
                   subtitleStyle:
