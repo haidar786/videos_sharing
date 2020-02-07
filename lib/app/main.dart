@@ -17,3 +17,30 @@ void main() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   runApp(MyApp());
 }
+//
+//class Test extends StatelessWidget {
+//  @override
+//  Widget build(BuildContext context) {
+//    return MaterialApp(
+//      home: Scaffold(
+//        body: Row(
+//          children: <Widget>[
+//            Text(
+//              '420 Posts',
+//              style: TextStyle(color: Color(0xff666666)),
+//            ),
+//            VerticalDivider(
+//              thickness: 2,
+//              width: 20,
+//              color: Colors.black,
+//            ),
+//            Text(
+//              '420 Posts',
+//              style: TextStyle(color: Color(0xff666666)),
+//            )
+//          ],
+//        ),
+//      ),
+//    );
+//  }
+//}
